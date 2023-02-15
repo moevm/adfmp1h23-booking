@@ -1,4 +1,4 @@
-package com.example.booking
+package com.etu.booking
 
 import org.junit.Test
 

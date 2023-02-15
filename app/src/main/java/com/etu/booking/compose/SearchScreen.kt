@@ -1,4 +1,4 @@
-package com.example.booking.compose
+package com.etu.booking.compose
 
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable

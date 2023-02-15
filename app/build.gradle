@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.booking'
+    namespace 'com.etu.booking'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.booking"
+        applicationId "com.etu.booking"
         minSdk 26
         targetSdk 33
         versionCode 1
