@@ -1,4 +1,4 @@
-package com.example.booking
+package com.etu.booking
 
 class SearchScreenActivity {
 }

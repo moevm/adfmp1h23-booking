@@ -1,4 +1,4 @@
-package com.example.booking
+package com.etu.booking
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,12 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.booking.compose.Greeting
-import com.example.booking.ui.theme.BookingTheme
+import com.etu.booking.compose.Greeting
+import com.etu.booking.ui.theme.BookingTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

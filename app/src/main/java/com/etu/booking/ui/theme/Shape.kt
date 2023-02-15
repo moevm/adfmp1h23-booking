@@ -1,4 +1,4 @@
-package com.example.booking.ui.theme
+package com.etu.booking.ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
