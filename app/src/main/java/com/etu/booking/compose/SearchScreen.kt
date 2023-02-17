@@ -1,9 +1,12 @@
 package com.etu.booking.compose
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun SearchScreen() {
+    Column {
+        Text(text = "SearchScreen")
+    }
 }

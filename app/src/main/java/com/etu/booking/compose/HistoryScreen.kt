@@ -5,8 +5,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun PersonScreen() {
+fun HistoryScreen() {
     Column {
-        Text(text = "PersonScreen")
+        Text(text = "HistoryScreen")
     }
 }
