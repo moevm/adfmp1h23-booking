@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import com.etu.booking.compose.BookingSearch
 import com.etu.booking.compose.navigation.NavigationBar
+import com.etu.booking.compose.screen.SearchScreen
 import com.etu.booking.ui.theme.BookingTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,8 +19,8 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
-                    BookingSearch()
                     Column {
+                        SearchScreen()
                         NavigationBar()
                     }
                 }
