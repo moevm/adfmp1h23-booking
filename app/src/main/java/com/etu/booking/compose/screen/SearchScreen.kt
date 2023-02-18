@@ -1,12 +1,12 @@
-package com.etu.booking.compose
+package com.etu.booking.compose.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun PersonScreen() {
+fun SearchScreen() {
     Column {
-        Text(text = "PersonScreen")
+        Text(text = "SearchScreen")
     }
 }
