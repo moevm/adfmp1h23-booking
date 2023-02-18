@@ -3,4 +3,14 @@
     <string name="search_screen">Search</string>
     <string name="history_screen">History</string>
     <string name="person_screen">Person</string>
+
+    <string name="price_per_night">Per night</string>
+    <string name="guests">" guests"</string>
+
+    <string name="space">" "</string>
+    <string name="colon_with_space_after">": "</string>
+    <string name="comma_with_space_after">", "</string>
+    <string name="dash_with_spaces_around">" - "</string>
+
+    <string name="unknown">Unknown</string>
 </resources>

@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.etu.booking.SearchScreenActivity
+import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.LocationModel
 import com.etu.booking.view.BookingSearchViewModel
 import java.time.LocalDate
@@ -33,7 +34,7 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()){
+fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -52,9 +53,6 @@ fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()){
         Button(viewModel)
     }
 }
-
-val cities: List<LocationModel>  = listOf(LocationModel("Vitebsk","Belarus"), LocationModel("Minsk", "Belarus"))
-
 
 @Composable
 fun LocationInput(
@@ -90,7 +88,7 @@ fun LocationInput(
                     .fillMaxWidth()
                     .background(shape = RoundedCornerShape(20.dp), color = Color.White)
             ) {
-                for (city in cities) {
+                for (city in DefaultModels.CITIES) { // TODO: change to a repository call
                     Text(
                         modifier = Modifier
                             .clickable {
@@ -110,7 +108,7 @@ fun LocationInput(
 @Composable
 fun IntInput(
     viewModel: BookingSearchViewModel,
-){
+) {
     val focusManager = LocalFocusManager.current
 
     Input(
@@ -136,7 +134,7 @@ fun CheckInDate(
     val context = LocalContext.current
     Input(
         modifier = Modifier.clickable {
-            showDatePickerDialog(context, viewModel.checkIn){date -> viewModel.checkIn = date }
+            showDatePickerDialog(context, viewModel.checkIn) { date -> viewModel.checkIn = date }
         },
         text = if (viewModel.checkIn != null) dateFormat.format(viewModel.checkIn) else "",
         placeholder = "CheckIn",
@@ -154,10 +152,10 @@ fun CheckOutDate(
     val context = LocalContext.current
     Input(
         modifier = Modifier.clickable {
-            showDatePickerDialog(context, viewModel.checkOut){date -> viewModel.checkOut = date }
+            showDatePickerDialog(context, viewModel.checkOut) { date -> viewModel.checkOut = date }
         },
         text = if (viewModel.checkOut != null) dateFormat.format(viewModel.checkOut) else "",
-        placeholder = "CheckIn",
+        placeholder = "CheckOut",
         onChange = {
             viewModel.checkOut = LocalDate.parse(it, dateFormat)
         },
@@ -193,7 +191,7 @@ fun Input(
     imeAction: ImeAction = ImeAction.Next,
     keyboardType: KeyboardType = KeyboardType.Text,
     keyBoardActions: KeyboardActions = KeyboardActions(),
-    isEnabled: Boolean = true
+    isEnabled: Boolean = true,
 ) {
     OutlinedTextField(
         modifier = modifier.fillMaxWidth(),
@@ -233,6 +231,7 @@ fun showDatePickerDialog(
     )
         .show()
 }
+
 private fun getCalendar(date: LocalDate?) = if (date == null) {
     Calendar.getInstance()
 } else {

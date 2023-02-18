@@ -17,5 +17,5 @@ data class BookingSearchModel(
 
     @field:Min(1)
     @field:Max(10)
-    var guestAmount: Int? = null,
+    var guestsAmount: Int? = null,
 )

@@ -13,6 +13,6 @@ class BookingSearchViewModel : ViewModel()  {
     var location by mutableStateOf(bookingSearchModel.location)
     var checkIn by mutableStateOf(bookingSearchModel.checkIn)
     var checkOut by mutableStateOf(bookingSearchModel.checkOut)
-    var guestNumber by mutableStateOf(bookingSearchModel.guestAmount)
+    var guestNumber by mutableStateOf(bookingSearchModel.guestsAmount)
 
 }
