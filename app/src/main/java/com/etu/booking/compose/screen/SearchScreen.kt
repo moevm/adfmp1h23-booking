@@ -20,6 +20,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -35,12 +37,20 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()) {
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
+        Text(
+            modifier = Modifier.padding(50.dp),
+            fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            fontSize = 50.sp,
+            text = "Booking"
+        )
         Text(
             text = "Book your hotel",
             fontSize = 20.sp,
@@ -170,6 +180,7 @@ fun Button(
 ) {
     val context = LocalContext.current
     Button(
+        modifier = Modifier.padding(bottom = 30.dp),
         onClick = {
             val intent = Intent(context, SearchScreenActivity::class.java)
             context.startActivity(intent)
@@ -194,7 +205,7 @@ fun Input(
     isEnabled: Boolean = true,
 ) {
     OutlinedTextField(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 2.dp),
         value = text,
         onValueChange = onChange,
         leadingIcon = leadingIcon,
