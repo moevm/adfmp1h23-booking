@@ -80,7 +80,7 @@ fun LocationInput(
             )
         )
         DropdownMenu(
-            modifier = modifier.fillMaxWidth(1f),
+            modifier = modifier.fillMaxWidth(),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
@@ -172,7 +172,6 @@ fun Button(
     Button(
         onClick = {
             val intent = Intent(context, SearchScreenActivity::class.java)
-            intent.putExtra("booking_location", viewModel.location!!.city)
             context.startActivity(intent)
         },
         border = BorderStroke(1.dp, Color.Black),

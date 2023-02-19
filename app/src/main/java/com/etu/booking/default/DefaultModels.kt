@@ -2,6 +2,7 @@ package com.etu.booking.default
 
 import com.etu.booking.R
 import com.etu.booking.model.BookingSearchModel
+import com.etu.booking.model.HotelCardModel
 import com.etu.booking.model.HistoryHotelModel
 import com.etu.booking.model.HotelModel
 import com.etu.booking.model.LocationModel
@@ -26,29 +27,29 @@ object DefaultModels {
         guestsAmount = 3
     )
 
-    val HOTELS_MODELS = listOf(
-        HotelModel(
+    val HOTEL_CARDS_MODELS = listOf(
+        HotelCardModel(
             imageResource = R.drawable.default_hotel_1,
             name = HOTEL_NAMES[0],
             score = 8,
             pricePerNight = 87,
             currency = EURO_CURRENCY,
         ),
-        HotelModel(
+        HotelCardModel(
             imageResource = R.drawable.default_hotel_2,
             name = HOTEL_NAMES[1],
             score = 9,
             pricePerNight = 120,
             currency = EURO_CURRENCY,
         ),
-        HotelModel(
+        HotelCardModel(
             imageResource = R.drawable.default_hotel_3,
             name = HOTEL_NAMES[2],
             score = 7,
             pricePerNight = 64,
             currency = EURO_CURRENCY,
         ),
-        HotelModel(
+        HotelCardModel(
             imageResource = R.drawable.default_hotel_4,
             name = HOTEL_NAMES[3],
             score = 8,
@@ -57,6 +58,30 @@ object DefaultModels {
         ),
     )
 
+    val HOTEL_MODELS = listOf(
+        HotelModel(
+            imageResource = R.drawable.default_hotel_1,
+            name = HOTEL_NAMES[0],
+            address = "Belarus, Vitebsk, Chapaeva st. 34",
+            score = 8,
+            pricePerNight = 87,
+            currency = EURO_CURRENCY,
+            availableSeatsCount = 12,
+            facilities = listOf("WIFI", "Bath"),
+            description = "Beautiful hotel with great view"
+        ),
+        HotelModel(
+            imageResource = R.drawable.default_hotel_2,
+            name = HOTEL_NAMES[1],
+            address = "Belarus, Vitebsk, Chapaeva st. 34",
+            score = 9,
+            pricePerNight = 120,
+            currency = EURO_CURRENCY,
+            availableSeatsCount = 2,
+            facilities = listOf("WIFI", "Breakfast"),
+            description = "Beautiful hotel in historical place"
+        ),
+    )
 
     val CITIES = listOf(
         LocationModel(CITY, COUNTRY),
