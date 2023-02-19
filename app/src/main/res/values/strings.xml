@@ -4,7 +4,7 @@
     <!--Navigation-->
     <string name="search_screen">Search</string>
     <string name="history_screen">History</string>
-    <string name="person_screen">Person</string>
+    <string name="profile_screen">Profile</string>
     <string name="more_screen">More</string>
     <!--Navigation-->
 
@@ -21,9 +21,9 @@
     <string name="guests">" guests"</string>
     <!--BookingListScreen-->
 
-    <!--PersonScreen-->
-    <string name="person_screen_title">Profile</string>
-    <!--PersonScreen-->
+    <!--ProfileScreen-->
+    <string name="profile_screen_title">Profile</string>
+    <!--ProfileScreen-->
 
     <!--MoreScreen-->
     <string name="more_screen_title">More options</string>

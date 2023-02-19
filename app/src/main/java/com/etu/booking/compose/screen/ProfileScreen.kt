@@ -7,7 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.AccountBox
-import androidx.compose.material.icons.twotone.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,7 +24,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun PersonScreen() {
+fun ProfileScreen() {
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceBetween,
@@ -33,7 +32,7 @@ fun PersonScreen() {
         ProfileTopBar()
         PersonInfo(DefaultModels.PERSON_MODEL)
         PassportInfo(DefaultModels.PERSON_MODEL)
-        PersonButtons()
+        ProfileButtons()
     }
 }
 
@@ -42,7 +41,7 @@ private fun ProfileTopBar() {
     TopAppBar {
         Column(modifier = Modifier.padding(horizontal = 8.dp)) {
             Text(
-                text = stringResource(id = R.string.person_screen_title),
+                text = stringResource(id = R.string.profile_screen_title),
                 style = MaterialTheme.typography.h6
             )
         }
@@ -126,24 +125,21 @@ fun InfoText(info: String, text: String) {
 }
 
 @Composable
-fun PersonButtons() {
+fun ProfileButtons() {
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
-        PersonButton(Icons.TwoTone.AccountBox, "Add document") {
+        ProfileButton(Icons.TwoTone.AccountBox, "Add document") {
             // TODO: add on click handle for adding document
         }
-        PersonButton(Icons.TwoTone.AccountBox, "Show documents") {
+        ProfileButton(Icons.TwoTone.AccountBox, "Show documents") {
             // TODO: add on click handle for showing document
-        }
-        PersonButton(Icons.TwoTone.Menu, "History") {
-            // TODO: add on click handle for history activity
         }
     }
 }
 
 @Composable
-fun PersonButton(
+fun ProfileButton(
     image: ImageVector,
     text: String,
     onClick: () -> Unit,
