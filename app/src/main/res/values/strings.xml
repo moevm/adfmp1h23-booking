@@ -21,6 +21,10 @@
     <string name="guests">" guests"</string>
     <!--BookingListScreen-->
 
+    <!--PersonScreen-->
+    <string name="person_screen_title">Profile</string>
+    <!--PersonScreen-->
+
     <!--MoreScreen-->
     <string name="more_screen_title">More options</string>
     <string name="about_us_button">About us</string>
