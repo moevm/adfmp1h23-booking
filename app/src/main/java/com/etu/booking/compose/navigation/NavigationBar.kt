@@ -26,7 +26,7 @@ fun NavigationBar(
     val screensWithIcons = mapOf(
         Screen.Search to Icons.TwoTone.Search,
         Screen.History to Icons.TwoTone.List,
-        Screen.Person to Icons.TwoTone.AccountCircle,
+        Screen.Profile to Icons.TwoTone.AccountCircle,
         Screen.More to Icons.TwoTone.MoreVert,
     )
 
