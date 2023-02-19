@@ -28,30 +28,43 @@ object DefaultModels {
         guestsAmount = 3
     )
 
+    val IMAGES = listOf(
+        R.drawable.default_hotel_1,
+        R.drawable.default_hotel_2,
+        R.drawable.default_hotel_3,
+        R.drawable.default_hotel_4,
+    )
+    val PASSPORT_IMAGES = listOf(
+        R.drawable.passport,
+        R.drawable.passport,
+        R.drawable.passport,
+        R.drawable.passport,
+    )
+
     val HOTEL_CARDS_MODELS = listOf(
         HotelCardModel(
-            imageResource = R.drawable.default_hotel_1,
+            imageResource = IMAGES[0],
             name = HOTEL_NAMES[0],
             score = 8,
             pricePerNight = 87,
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
-            imageResource = R.drawable.default_hotel_2,
+            imageResource = IMAGES[1],
             name = HOTEL_NAMES[1],
             score = 9,
             pricePerNight = 120,
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
-            imageResource = R.drawable.default_hotel_3,
+            imageResource = IMAGES[2],
             name = HOTEL_NAMES[2],
             score = 7,
             pricePerNight = 64,
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
-            imageResource = R.drawable.default_hotel_4,
+            imageResource = IMAGES[3],
             name = HOTEL_NAMES[3],
             score = 8,
             pricePerNight = 104,
@@ -61,7 +74,7 @@ object DefaultModels {
 
     val HOTEL_MODELS = listOf(
         HotelModel(
-            imageResource = R.drawable.default_hotel_1,
+            imageResource = IMAGES[0],
             name = HOTEL_NAMES[0],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             score = 8,
@@ -72,7 +85,7 @@ object DefaultModels {
             description = "Beautiful hotel with great view"
         ),
         HotelModel(
-            imageResource = R.drawable.default_hotel_2,
+            imageResource = IMAGES[1],
             name = HOTEL_NAMES[1],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             score = 9,
