@@ -85,7 +85,7 @@ object DefaultModels {
             pricePerNight = 87,
             currency = EURO_CURRENCY,
             availableSeatsCount = 12,
-            facilities = listOf("WIFI", "Bath"),
+            facilities = listOf("Wi-Fi", "Bath"),
             description = "Beautiful hotel with great view"
         ),
         HotelModel(
@@ -96,7 +96,7 @@ object DefaultModels {
             pricePerNight = 120,
             currency = EURO_CURRENCY,
             availableSeatsCount = 2,
-            facilities = listOf("WIFI", "Breakfast"),
+            facilities = listOf("Wi-Fi", "Breakfast"),
             description = "Beautiful hotel in historical place"
         ),
     )
