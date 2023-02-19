@@ -145,6 +145,8 @@ object DefaultModels {
     const val DEFAULT_AVATAR: Int = R.drawable.default_avatar
 
     val PERSON_MODEL = PersonModel(
+        login = "kate",
+        password = "1234",
         name = "Ekaterina",
         surname = "Aksyonova",
         birthdate = LocalDate.of(2001, 11, 14),
