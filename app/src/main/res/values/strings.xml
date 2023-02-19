@@ -34,8 +34,8 @@
     <!--MoreScreen-->
 
     <!--UnauthorizedScreen-->
-    <string name="unauthorized_description">To use this section, you must be logged in</string>
-    <string name="authorization_button">Log in</string>
+    <string name="unauthorized_description">To use this section, you must be signed in</string>
+    <string name="authorization_button">Sign in</string>
     <!--UnauthorizedScreen-->
 
     <!--AboutUsScreen-->
