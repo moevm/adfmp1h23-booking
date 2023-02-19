@@ -1,5 +1,6 @@
 package com.etu.booking.compose.screen
 
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -13,10 +14,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.etu.booking.DocumentActivity
 import com.etu.booking.R
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.PersonModel
@@ -72,7 +75,9 @@ fun PersonInfo(personModel: PersonModel) {
 @Composable
 fun PassportInfo(personModel: PersonModel) {
     Column(
-        modifier = Modifier.padding(1.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(1.dp)
+            .fillMaxWidth(),
     ) {
         InfoText(
             info = "Birthdate:",
@@ -105,7 +110,9 @@ fun InfoText(info: String, text: String) {
         ) {
             Text(
                 text = info,
-                modifier = Modifier.padding(start = 8.dp, bottom = 2.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 8.dp, bottom = 2.dp)
+                    .fillMaxWidth(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.body1,
@@ -113,7 +120,9 @@ fun InfoText(info: String, text: String) {
             )
             Text(
                 text = text,
-                modifier = Modifier.padding(start = 24.dp, bottom = 2.dp).fillMaxWidth(),
+                modifier = Modifier
+                    .padding(start = 24.dp, bottom = 2.dp)
+                    .fillMaxWidth(),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 style = MaterialTheme.typography.body1,
@@ -126,6 +135,7 @@ fun InfoText(info: String, text: String) {
 
 @Composable
 fun ProfileButtons() {
+    val context = LocalContext.current
     Column(
         modifier = Modifier.fillMaxWidth(),
     ) {
@@ -133,7 +143,7 @@ fun ProfileButtons() {
             // TODO: add on click handle for adding document
         }
         ProfileButton(Icons.TwoTone.AccountBox, "Show documents") {
-            // TODO: add on click handle for showing document
+            context.startActivity(Intent(context, DocumentActivity::class.java))
         }
     }
 }
@@ -145,7 +155,9 @@ fun ProfileButton(
     onClick: () -> Unit,
 ) {
     Button(
-        modifier = Modifier.padding(8.dp).fillMaxWidth(),
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxWidth(),
         onClick = onClick,
         border = BorderStroke(1.dp, Color.Black),
         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
