@@ -5,6 +5,7 @@
     <string name="search_screen">Search</string>
     <string name="history_screen">History</string>
     <string name="person_screen">Person</string>
+    <string name="more_screen">More</string>
     <!--Navigation-->
 
     <!--HistoryScreen-->
@@ -19,6 +20,21 @@
     <string name="price_per_night">Per night</string>
     <string name="guests">" guests"</string>
     <!--BookingListScreen-->
+
+    <!--MoreScreen-->
+    <string name="more_screen_title">More options</string>
+    <string name="about_us_button">About us</string>
+    <!--MoreScreen-->
+
+    <!--AboutUsScreen-->
+    <string name="about_us_screen_title">About us</string>
+    <string name="about_us_description">
+        Hello, we are a small team of developers from Russia and Belarus.
+        This application was written by us while performing a group project at our university.
+        \n\nThis application helps to book hotels in different parts of the world in a few clicks.
+        \n\nThe Booking team with love.
+    </string>
+    <!--AboutUsScreen-->
 
     <!--Common-->
     <string name="space">" "</string>

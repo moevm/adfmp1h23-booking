@@ -6,9 +6,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.twotone.AccountCircle
+import androidx.compose.material.icons.twotone.List
+import androidx.compose.material.icons.twotone.MoreVert
+import androidx.compose.material.icons.twotone.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -23,9 +24,10 @@ fun NavigationBar(
     navController: NavHostController = rememberNavController(),
 ) {
     val screensWithIcons = mapOf(
-        Screen.Search to Icons.Filled.Search,
-        Screen.History to Icons.Filled.List,
-        Screen.Person to Icons.Filled.AccountCircle,
+        Screen.Search to Icons.TwoTone.Search,
+        Screen.History to Icons.TwoTone.List,
+        Screen.Person to Icons.TwoTone.AccountCircle,
+        Screen.More to Icons.TwoTone.MoreVert,
     )
 
     Scaffold(
