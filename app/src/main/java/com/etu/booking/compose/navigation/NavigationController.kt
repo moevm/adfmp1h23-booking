@@ -8,6 +8,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.etu.booking.compose.screen.HistoryScreen
+import com.etu.booking.compose.screen.MoreScreen
 import com.etu.booking.compose.screen.PersonScreen
 import com.etu.booking.compose.screen.SearchScreen
 
@@ -24,5 +25,6 @@ fun NavigationController(
         composable(Screen.Search.route) { SearchScreen() }
         composable(Screen.History.route) { HistoryScreen() }
         composable(Screen.Person.route) { PersonScreen() }
+        composable(Screen.More.route) { MoreScreen() }
     }
 }

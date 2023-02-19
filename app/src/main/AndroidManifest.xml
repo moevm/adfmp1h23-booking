@@ -21,8 +21,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.etu.booking.SearchScreenActivity"/>
-        <activity android:name="com.etu.booking.BookingActivity"/>
+        <activity android:name="com.etu.booking.SearchScreenActivity" />
+        <activity android:name="com.etu.booking.BookingActivity" />
+        <activity android:name="com.etu.booking.AboutUsActivity" />
     </application>
 
 </manifest>
