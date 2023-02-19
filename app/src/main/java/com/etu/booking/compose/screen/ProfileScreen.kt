@@ -3,12 +3,25 @@ package com.etu.booking.compose.screen
 import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.AccountBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,19 +36,26 @@ import com.etu.booking.DocumentActivity
 import com.etu.booking.R
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.PersonModel
+import com.etu.booking.view.AuthorizationViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(authorizationViewModel: AuthorizationViewModel) {
+    val authorizationState by authorizationViewModel.authorizationState.collectAsState()
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         ProfileTopBar()
-        PersonInfo(DefaultModels.PERSON_MODEL)
-        PassportInfo(DefaultModels.PERSON_MODEL)
-        ProfileButtons()
+        if (authorizationState.isAuthorized) {
+            PersonInfo(DefaultModels.PERSON_MODEL)
+            PassportInfo(DefaultModels.PERSON_MODEL)
+            ProfileButtons()
+        } else {
+            UnauthorizedScreen()
+        }
     }
 }
 
@@ -97,6 +117,7 @@ fun PassportInfo(personModel: PersonModel) {
         )
     }
 }
+
 @Composable
 fun InfoText(info: String, text: String) {
     Card(
