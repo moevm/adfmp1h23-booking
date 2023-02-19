@@ -5,22 +5,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import com.etu.booking.compose.screen.BookingListScreen
-import com.etu.booking.compose.screen.HotelScreen
-import com.etu.booking.default.DefaultModels
+import com.etu.booking.compose.screen.BookingScreen
 import com.etu.booking.ui.theme.BookingTheme
 
-class SearchScreenActivity : ComponentActivity() {
-
+class BookingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             BookingTheme {
+                // A surface container using the 'background' color from the theme
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
-//                    HotelScreen()
-                    BookingListScreen(DefaultModels.BOOKING_SEARCH_MODEL) // TODO: change to a repository call
+                    BookingScreen()
                 }
             }
         }

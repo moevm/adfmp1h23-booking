@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.etu.booking.R
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
-import com.etu.booking.model.HotelModel
+import com.etu.booking.model.HotelCardModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -37,8 +37,8 @@ fun BookingListScreen(
     Column(modifier = Modifier.fillMaxWidth()) {
         BookingSearchTopBar(bookingSearchModel)
         LazyColumn {
-            items(DefaultModels.HOTELS_MODELS) { place -> // TODO: change to a repository call
-                HotelCard(hotelModel = place)
+            items(DefaultModels.HOTEL_CARDS_MODELS) { place -> // TODO: change to a repository call
+                HotelCard(hotelCardModel = place)
             }
         }
     }
@@ -76,24 +76,24 @@ private fun getFormattedDateOrDefault(date: LocalDate?, defaultValue: String): S
 }
 
 @Composable
-private fun HotelCard(hotelModel: HotelModel) {
+private fun HotelCard(hotelCardModel: HotelCardModel) {
     Surface(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(15.dp),
         elevation = 8.dp,
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
-            HotelCardImage(hotelModel)
-            HotelCardDescription(hotelModel)
+            HotelCardImage(hotelCardModel)
+            HotelCardDescription(hotelCardModel)
         }
     }
 }
 
 @Composable
-private fun HotelCardImage(hotelModel: HotelModel) {
+private fun HotelCardImage(hotelCardModel: HotelCardModel) {
     Image(
-        painter = painterResource(id = hotelModel.imageResource),
-        contentDescription = hotelModel.name,
+        painter = painterResource(id = hotelCardModel.imageResource),
+        contentDescription = hotelCardModel.name,
         contentScale = ContentScale.Crop,
         modifier = Modifier
             .fillMaxWidth()
@@ -102,9 +102,9 @@ private fun HotelCardImage(hotelModel: HotelModel) {
 }
 
 @Composable
-private fun HotelCardDescription(hotelModel: HotelModel) {
+private fun HotelCardDescription(hotelCardModel: HotelCardModel) {
     Column(modifier = Modifier.padding(16.dp)) {
-        Text(hotelModel.name, style = MaterialTheme.typography.h4)
+        Text(hotelCardModel.name, style = MaterialTheme.typography.h4)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -112,16 +112,16 @@ private fun HotelCardDescription(hotelModel: HotelModel) {
             Text(
                 stringResource(id = R.string.price_per_night) +
                         stringResource(id = R.string.colon_with_space_after) +
-                        hotelModel.pricePerNight +
+                        hotelCardModel.pricePerNight +
                         stringResource(id = R.string.space) +
-                        hotelModel.currency
+                        hotelCardModel.currency
             )
             Row {
                 Icon(
                     imageVector = Icons.TwoTone.Star,
                     contentDescription = Icons.TwoTone.Star.name,
                 )
-                Text(text = hotelModel.score.toString())
+                Text(text = hotelCardModel.score.toString())
             }
         }
     }
