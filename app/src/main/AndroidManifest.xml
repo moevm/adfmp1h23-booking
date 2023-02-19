@@ -25,6 +25,7 @@
         <activity android:name="com.etu.booking.BookingActivity" />
         <activity android:name="com.etu.booking.AboutUsActivity" />
         <activity android:name="com.etu.booking.DocumentActivity" />
+        <activity android:name="com.etu.booking.HotelActivity" />
     </application>
 
 </manifest>
