@@ -1,5 +1,6 @@
 package com.etu.booking.compose.screen
 
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -20,9 +22,11 @@ import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.etu.booking.HotelActivity
 import com.etu.booking.R
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
@@ -76,11 +80,14 @@ private fun getFormattedDateOrDefault(date: LocalDate?, defaultValue: String): S
 }
 
 @Composable
+@OptIn(ExperimentalMaterialApi::class)
 private fun HotelCard(hotelCardModel: HotelCardModel) {
+    val context = LocalContext.current
     Surface(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(15.dp),
         elevation = 8.dp,
+        onClick = { context.startActivity(Intent(context, HotelActivity::class.java)) }
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             HotelCardImage(hotelCardModel)
