@@ -11,23 +11,32 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.HistoryHotelModel
+import com.etu.booking.view.AuthorizationViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun HistoryScreen() {
+fun HistoryScreen(authorizationViewModel: AuthorizationViewModel) {
+    val authorizationState by authorizationViewModel.authorizationState.collectAsState()
+
     Column(modifier = Modifier.fillMaxWidth()) {
         HistoryTopBar()
-        LazyColumn {
-            items(DefaultModels.HISTORY_HOTELS_MODELS) { place -> // TODO: change to a repository call
-                HistoryHotelCard(historyHotelModel = place)
+        if (authorizationState.isAuthorized) {
+            LazyColumn {
+                items(DefaultModels.HISTORY_HOTELS_MODELS) { place -> // TODO: change to a repository call
+                    HistoryHotelCard(historyHotelModel = place)
+                }
             }
+        } else {
+            UnauthorizedScreen()
         }
     }
 }

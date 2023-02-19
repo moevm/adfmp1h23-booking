@@ -28,7 +28,13 @@
     <!--MoreScreen-->
     <string name="more_screen_title">More options</string>
     <string name="about_us_button">About us</string>
+    <string name="authorization_toggle">Authorization Toggle</string>
     <!--MoreScreen-->
+
+    <!--UnauthorizedScreen-->
+    <string name="unauthorized_description">To use this section, you must be logged in</string>
+    <string name="authorization_button">Log in</string>
+    <!--UnauthorizedScreen-->
 
     <!--AboutUsScreen-->
     <string name="about_us_screen_title">About us</string>
