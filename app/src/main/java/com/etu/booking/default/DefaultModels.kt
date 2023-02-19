@@ -128,5 +128,10 @@ object DefaultModels {
         surname = "Aksyonova",
         birthdate = LocalDate.of(2001, 11, 14),
         avatarResource = R.drawable.default_avatar_1,
+        passport = PersonModel.PassportModel(
+            nationality = "Belarus",
+            number = "PP5672456",
+            expiresAt = LocalDate.now(),
+        )
     )
 }

@@ -14,6 +14,17 @@ data class PersonModel(
     var birthdate: LocalDate,
 
     @DrawableRes
-    val avatarResource: Int? = null
+    val avatarResource: Int? = null,
 
-)
+    val passport: PassportModel,
+
+) {
+    data class PassportModel(
+
+        val nationality: String,
+
+        val number: String,
+
+        val expiresAt: LocalDate,
+    )
+}

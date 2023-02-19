@@ -18,6 +18,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
+
                     SearchScreen()
                     NavigationBar()
                 }
