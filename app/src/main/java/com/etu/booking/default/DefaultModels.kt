@@ -5,6 +5,7 @@ import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HistoryHotelModel
 import com.etu.booking.model.HotelModel
 import com.etu.booking.model.LocationModel
+import com.etu.booking.model.PersonModel
 import java.time.LocalDate
 
 object DefaultModels {
@@ -93,5 +94,14 @@ object DefaultModels {
             fullPrice = 120,
             currency = EURO_CURRENCY,
         )
+    )
+
+    const val DEFAULT_AVATAR: Int = R.drawable.default_avatar
+
+    val PERSON_MODEL = PersonModel(
+        name = "Ekaterina",
+        surname = "Aksyonova",
+        birthdate = LocalDate.of(2001, 11, 14),
+        avatarResource = R.drawable.default_avatar_1,
     )
 }
