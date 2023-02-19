@@ -25,10 +25,10 @@ data class PersonModel(
 ) {
     data class PassportModel(
 
-        val nationality: String,
+        var nationality: String,
 
-        val number: String,
+        var number: String,
 
-        val expiresAt: LocalDate,
+        var expiresAt: LocalDate,
     )
 }

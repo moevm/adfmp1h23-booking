@@ -136,6 +136,37 @@ fun SignUp(
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
+            value = viewModel.passport.nationality,
+            placeholder = "Nationality",
+            onValueChange = {
+                viewModel.passport.nationality = it
+            },
+        )
+        AuthInput(
+            modifier = Modifier.fillMaxWidth(),
+            value = viewModel.passport.number,
+            placeholder = "Passport number",
+            onValueChange = {
+                viewModel.passport.number = it
+            },
+        )
+        AuthInput(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    showDatePickerDialog(context, viewModel.passport.expiresAt) {
+                            date -> viewModel.birthdate = date
+                    }
+                },
+            value = dateFormat.format(viewModel.passport.expiresAt),
+            placeholder = "Expires at",
+            onValueChange = {
+                viewModel.passport.expiresAt = LocalDate.parse(it, dateFormat)
+            },
+            isEnabled = false,
+        )
+        AuthInput(
+            modifier = Modifier.fillMaxWidth(),
             value = viewModel.login,
             placeholder = "Login",
             onValueChange = {

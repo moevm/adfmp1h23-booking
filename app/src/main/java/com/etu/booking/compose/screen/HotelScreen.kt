@@ -27,7 +27,8 @@ import com.etu.booking.model.HotelModel
 fun HotelScreen() {
     val hotel = HOTEL_MODELS[0]
     Column(
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Banner(hotelModel = hotel)
         MainHotelInfo(hotelModel = hotel)
@@ -91,7 +92,7 @@ fun HotelBookingInfo(hotelModel: HotelModel) {
         elevation = 1.dp,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -117,7 +118,7 @@ fun HotelFacilities(hotelModel: HotelModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(5.dp),
+            .padding(8.dp),
         elevation = 1.dp,
     ) {
         Column {
@@ -138,7 +139,7 @@ fun HotelFacilities(hotelModel: HotelModel) {
 @Composable
 fun HotelName(hotelModel: HotelModel) {
     Column {
-        Text(text = hotelModel.name, style = TextStyle(fontSize = 18.sp, color = Color.Black))
+        Text(text = hotelModel.name, style = MaterialTheme.typography.h4)
         Text(text = hotelModel.address, style = TextStyle(fontSize = 18.sp, color = Color.Black))
     }
 }

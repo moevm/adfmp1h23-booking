@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.etu.booking.model.AuthModel
 import com.etu.booking.model.PersonModel
+import com.etu.booking.model.PersonModel.PassportModel
 import java.time.LocalDate
 
 class AuthViewModel : ViewModel()  {
@@ -19,7 +20,12 @@ class AuthViewModel : ViewModel()  {
             name = "",
             surname = "",
             birthdate = LocalDate.now(),
-            avatarResource = null
+            avatarResource = null,
+            passport = PassportModel(
+                number = "",
+                nationality = "",
+                expiresAt = LocalDate.now(),
+            )
         )
     )
 
@@ -29,5 +35,6 @@ class AuthViewModel : ViewModel()  {
     var surname by mutableStateOf(authModel.personModel.surname)
     var birthdate by mutableStateOf(authModel.personModel.birthdate)
     var avatarResource by mutableStateOf(authModel.personModel.avatarResource)
+    var passport by mutableStateOf(authModel.personModel.passport)
 
 }
