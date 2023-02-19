@@ -80,6 +80,7 @@ fun LocationInput(
             )
         )
         DropdownMenu(
+            modifier = modifier.fillMaxWidth(1f),
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
