@@ -12,12 +12,14 @@
     <string name="history_screen_title">Booking history</string>
     <string name="history_full_date_pattern">dd MMM, yyyy</string>
     <string name="full_price">Price</string>
+    <string name="address">Address</string>
     <string name="check_in_date">Check-in date</string>
     <string name="check_out_date">Check-out date</string>
     <!--HistoryScreen-->
 
     <!--BookingListScreen-->
     <string name="price_per_night">Per night</string>
+    <string name="from_center">From center</string>
     <string name="guests">" guests"</string>
     <!--BookingListScreen-->
 
@@ -48,6 +50,7 @@
     <string name="colon_with_space_after">": "</string>
     <string name="comma_with_space_after">", "</string>
     <string name="dash_with_spaces_around">" - "</string>
+    <string name="km">km</string>
     <string name="unknown">Unknown</string>
     <!--Common-->
 </resources>

@@ -105,6 +105,13 @@ private fun HotelCardImage(hotelCardModel: HotelCardModel) {
 private fun HotelCardDescription(hotelCardModel: HotelCardModel) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(hotelCardModel.name, style = MaterialTheme.typography.h4)
+        Text(
+            stringResource(id = R.string.from_center) +
+                    stringResource(id = R.string.colon_with_space_after) +
+                    hotelCardModel.kmFromCenter +
+                    stringResource(id = R.string.space) +
+                    stringResource(id = R.string.km)
+        )
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween

@@ -73,6 +73,11 @@ private fun HotelCardDescription(historyHotelModel: HistoryHotelModel) {
                         getFormattedDate(historyHotelModel.checkOut)
             )
             Text(
+                stringResource(id = R.string.address) +
+                        stringResource(id = R.string.colon_with_space_after) +
+                        historyHotelModel.address
+            )
+            Text(
                 stringResource(id = R.string.full_price) +
                         stringResource(id = R.string.colon_with_space_after) +
                         historyHotelModel.fullPrice +
