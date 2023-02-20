@@ -7,15 +7,29 @@ import android.icu.util.Calendar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.DropdownMenu
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -26,9 +40,11 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.window.PopupProperties
 import com.etu.booking.SearchScreenActivity
+import com.etu.booking.control.addSerializableToIntent
 import com.etu.booking.default.DefaultModels
+import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
 import com.etu.booking.view.BookingSearchViewModel
 import java.time.LocalDate
@@ -36,7 +52,9 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()) {
+fun SearchScreen(viewModel: BookingSearchViewModel) {
+
+    val bookingState by viewModel.booking.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -45,7 +63,7 @@ fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()) {
     ) {
 
         Text(
-            modifier = Modifier.padding(50.dp),
+            modifier = Modifier.padding(top = 50.dp),
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Italic,
             fontSize = 50.sp,
@@ -56,43 +74,56 @@ fun SearchScreen(viewModel: BookingSearchViewModel = viewModel()) {
             fontSize = 20.sp,
             modifier = Modifier.padding(10.dp)
         )
-        LocationInput(viewModel = viewModel)
-        CheckInDate(viewModel)
-        CheckOutDate(viewModel)
-        IntInput(viewModel)
-        Button(viewModel)
+        LocationInput(
+            bookingSearchModel = bookingState,
+            onChange= { viewModel.setLocation(it) },
+        )
+        DateSearch(viewModel = viewModel, bookingSearchModel = bookingState)
+        PriceSearch(viewModel = viewModel, bookingSearchModel = bookingState)
+        MaxDistance(
+            bookingSearchModel = bookingState,
+            onChange = { viewModel.setMaxDistanceToCenterInKm(it) }
+        )
+        GuestInput(
+            bookingSearchModel = bookingState,
+            onChange= { viewModel.setGuestAmount(it) }
+        )
+        Button(viewModel = viewModel)
     }
 }
 
 @Composable
 fun LocationInput(
-    modifier: Modifier = Modifier,
-    viewModel: BookingSearchViewModel,
+    bookingSearchModel: BookingSearchModel,
+    onChange: (LocationModel) -> Unit,
 ) {
-    val focusManager = LocalFocusManager.current
     var expanded by remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
 
     Column {
         Input(
-            modifier = modifier,
-            text = viewModel.location?.let { "${it.country} ${it.city}" } ?: "",
+            modifier = Modifier
+                .padding(horizontal = 8.dp, vertical = 2.dp)
+                .fillMaxWidth(),
+            text = bookingSearchModel.location?.let { "${it.country} ${it.city}" } ?: "",
             placeholder = "Location",
             onChange = {
-                viewModel.location = LocationModel.create(it)
+                onChange(LocationModel.create(it))
                 expanded = true
             },
             imeAction = ImeAction.Next,
             keyboardType = KeyboardType.Text,
             keyBoardActions = KeyboardActions(
-                onNext = {
-                    focusManager.moveFocus(FocusDirection.Down)
+                onAny = {
+                    focusManager.clearFocus()
                 }
             )
         )
         DropdownMenu(
-            modifier = modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             expanded = expanded,
-            onDismissRequest = { expanded = false }
+            onDismissRequest = { expanded = false },
+            properties = PopupProperties(focusable = false),
         ) {
             Column(
                 Modifier
@@ -103,7 +134,7 @@ fun LocationInput(
                     Text(
                         modifier = Modifier
                             .clickable {
-                                viewModel.location = city
+                                onChange(city)
                                 expanded = false
                             }
                             .fillMaxWidth()
@@ -117,60 +148,172 @@ fun LocationInput(
 }
 
 @Composable
-fun IntInput(
+fun DateSearch(
+    bookingSearchModel: BookingSearchModel,
     viewModel: BookingSearchViewModel,
 ) {
-    val focusManager = LocalFocusManager.current
-
-    Input(
-        text = if (viewModel.guestNumber != null) viewModel.guestNumber.toString() else "",
-        placeholder = "Guests",
-        onChange = {
-            viewModel.guestNumber = it.toInt()
-        },
-        imeAction = ImeAction.Next,
-        keyboardType = KeyboardType.Decimal,
-        keyBoardActions = KeyboardActions(
-            onNext = {
-                focusManager.clearFocus()
-            }
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ){
+        CheckInDate(
+            bookingSearchModel = bookingSearchModel,
+            onChange = { viewModel.setCheckIn(it) },
         )
-    )
+        CheckOutDate(
+            bookingSearchModel = bookingSearchModel,
+            onChange = { viewModel.setCheckOut(it) },
+        )
+    }
 }
 
 @Composable
 fun CheckInDate(
-    viewModel: BookingSearchViewModel,
+    bookingSearchModel: BookingSearchModel,
+    onChange: (LocalDate) -> Unit,
 ) {
     val context = LocalContext.current
     Input(
-        modifier = Modifier.clickable {
-            showDatePickerDialog(context, viewModel.checkIn) { date -> viewModel.checkIn = date }
-        },
-        text = if (viewModel.checkIn != null) dateFormat.format(viewModel.checkIn) else "",
-        placeholder = "CheckIn",
+        modifier = Modifier
+            .fillMaxWidth(0.5f)
+            .padding(start = 8.dp, end = 1.dp, bottom = 2.dp, top = 2.dp)
+            .clickable {
+                showDatePickerDialog(context, bookingSearchModel.checkIn) { date -> onChange(date) }
+            },
+        text = if (bookingSearchModel.checkIn != null) dateFormat.format(bookingSearchModel.checkIn) else "",
+        placeholder = "Check-in",
         onChange = {
-            viewModel.checkIn = LocalDate.parse(it, dateFormat)
+            onChange(LocalDate.parse(it, dateFormat))
         },
-        isEnabled = false
+        imeAction = ImeAction.Next,
+        isEnabled = false,
     )
 }
 
 @Composable
 fun CheckOutDate(
-    viewModel: BookingSearchViewModel,
+    bookingSearchModel: BookingSearchModel,
+    onChange: (LocalDate) -> Unit,
 ) {
     val context = LocalContext.current
     Input(
-        modifier = Modifier.clickable {
-            showDatePickerDialog(context, viewModel.checkOut) { date -> viewModel.checkOut = date }
-        },
-        text = if (viewModel.checkOut != null) dateFormat.format(viewModel.checkOut) else "",
-        placeholder = "CheckOut",
+        modifier = Modifier
+            .padding(start = 1.dp, end = 8.dp, bottom = 2.dp, top = 2.dp)
+            .clickable {
+                showDatePickerDialog(context, bookingSearchModel.checkOut) { date -> onChange(date) }
+            },
+        text = if (bookingSearchModel.checkOut != null) dateFormat.format(bookingSearchModel.checkOut) else "",
+        placeholder = "Check-out",
         onChange = {
-            viewModel.checkOut = LocalDate.parse(it, dateFormat)
+            onChange(LocalDate.parse(it, dateFormat))
         },
+        imeAction = ImeAction.Next,
         isEnabled = false
+    )
+}
+
+@Composable
+fun PriceSearch(
+    bookingSearchModel: BookingSearchModel,
+    viewModel: BookingSearchViewModel,
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth()
+    ){
+        MinPrice(
+            bookingSearchModel = bookingSearchModel,
+            onChange = { viewModel.setMinPriceRepNight(it) },
+        )
+        MaxPrice(
+            bookingSearchModel = bookingSearchModel,
+            onChange = { viewModel.setMaxPriceRepNight(it) },
+        )
+    }
+}
+
+@Composable
+fun MinPrice(
+    bookingSearchModel: BookingSearchModel,
+    onChange: (Int) -> Unit,
+) {
+
+    Input(
+        modifier = Modifier
+            .fillMaxWidth(0.5f)
+            .padding(start = 8.dp, end = 1.dp, bottom = 2.dp, top = 2.dp),
+        text = if (bookingSearchModel.minPricePerNight != null) bookingSearchModel.minPricePerNight.toString() else "",
+        placeholder = "Min price per night",
+        onChange = {
+            onChange(it.toInt())
+        },
+        imeAction = ImeAction.Next,
+        keyboardType = KeyboardType.Decimal,
+    )
+}
+
+@Composable
+fun MaxPrice(
+    bookingSearchModel: BookingSearchModel,
+    onChange: (Int) -> Unit,
+) {
+
+    Input(
+        modifier = Modifier
+            .padding(start = 1.dp, end = 8.dp, bottom = 2.dp, top = 2.dp),
+        text = if (bookingSearchModel.maxPricePerNight!= null) bookingSearchModel.maxPricePerNight.toString() else "",
+        placeholder = "Max price per night",
+        onChange = {
+            onChange(it.toInt())
+        },
+        imeAction = ImeAction.Next,
+        keyboardType = KeyboardType.Decimal,
+    )
+}
+
+@Composable
+fun MaxDistance(
+    bookingSearchModel: BookingSearchModel,
+    onChange: (Int) -> Unit,
+) {
+    Input(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 2.dp),
+        text = if (bookingSearchModel.maxDistanceToCenterInKm != null)
+            bookingSearchModel.maxDistanceToCenterInKm.toString()
+        else
+            "",
+        placeholder = "Max destination from center",
+        onChange = {
+            onChange(it.toInt())
+        },
+        imeAction = ImeAction.Next,
+        keyboardType = KeyboardType.Decimal,
+    )
+}
+
+@Composable
+fun GuestInput(
+    bookingSearchModel: BookingSearchModel,
+    onChange: (Int) -> Unit,
+) {
+    val focusManager = LocalFocusManager.current
+
+    Input(
+        modifier = Modifier
+            .padding(horizontal = 8.dp, vertical = 2.dp)
+            .fillMaxWidth(),
+        text = if (bookingSearchModel.guestsAmount != null) bookingSearchModel.guestsAmount.toString() else "",
+        placeholder = "Guests",
+        onChange = {
+            onChange(it.toInt())
+        },
+        imeAction = ImeAction.Done,
+        keyboardType = KeyboardType.Decimal,
+        keyBoardActions = KeyboardActions(
+            onDone = {
+                focusManager.clearFocus()
+            }
+        )
     )
 }
 
@@ -183,6 +326,7 @@ fun Button(
         modifier = Modifier.padding(bottom = 30.dp),
         onClick = {
             val intent = Intent(context, SearchScreenActivity::class.java)
+            addSerializableToIntent("search", viewModel.booking.value, intent)
             context.startActivity(intent)
         },
         border = BorderStroke(1.dp, Color.Black),
@@ -205,7 +349,7 @@ fun Input(
     isEnabled: Boolean = true,
 ) {
     OutlinedTextField(
-        modifier = modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 2.dp),
+        modifier = modifier,
         value = text,
         onValueChange = onChange,
         leadingIcon = leadingIcon,

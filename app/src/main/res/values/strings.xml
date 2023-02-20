@@ -38,6 +38,15 @@
     <string name="authorization_button">Sign in</string>
     <!--UnauthorizedScreen-->
 
+    <!--DocumentScreen-->
+    <string name="warning_title">Warning</string>
+    <string name="warning_description">
+        You take responsibility for your documents stored in your account.
+        \nThe application is not responsible for the leakage of personal data
+    </string>
+    <string name="warning_button">Warning</string>
+    <!--DocumentScreen-->
+
     <!--AboutUsScreen-->
     <string name="about_us_screen_title">About us</string>
     <string name="about_us_description">

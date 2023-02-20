@@ -6,8 +6,9 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import com.etu.booking.compose.screen.BookingListScreen
-import com.etu.booking.compose.screen.HotelScreen
-import com.etu.booking.default.DefaultModels
+import com.etu.booking.compose.screen.SomethingWentWrongScreen
+import com.etu.booking.control.readFromIntent
+import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.ui.theme.BookingTheme
 
 class SearchScreenActivity : ComponentActivity() {
@@ -19,8 +20,13 @@ class SearchScreenActivity : ComponentActivity() {
                 Surface(
                     color = MaterialTheme.colors.background
                 ) {
-//                    HotelScreen()
-                    BookingListScreen(DefaultModels.BOOKING_SEARCH_MODEL) // TODO: change to a repository call
+                    val searchModel = try {
+                        readFromIntent("search", intent) as BookingSearchModel
+                    } catch (ex: Exception) {
+                        null
+                    }
+                    searchModel?.let { BookingListScreen(searchModel) }
+                        ?: SomethingWentWrongScreen() // TODO go out and come in okay
                 }
             }
         }

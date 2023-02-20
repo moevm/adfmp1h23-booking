@@ -8,7 +8,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.etu.booking.compose.dependecyinjection.DIService
-import com.etu.booking.compose.screen.SearchScreen
 
 @Composable
 fun NavigationController(
@@ -20,7 +19,7 @@ fun NavigationController(
         startDestination = Screen.Search.route,
         modifier = Modifier.padding(innerPadding)
     ) {
-        composable(Screen.Search.route) { SearchScreen() }
+        composable(Screen.Search.route) { DIService.SearchScreen() }
         composable(Screen.History.route) { DIService.HistoryScreen() }
         composable(Screen.Profile.route) { DIService.ProfileScreen() }
         composable(Screen.More.route) { DIService.MoreScreen() }

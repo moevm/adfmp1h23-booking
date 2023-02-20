@@ -1,18 +1,44 @@
 package com.etu.booking.view
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.etu.booking.model.BookingSearchModel
+import com.etu.booking.model.LocationModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import java.time.LocalDate
 
 class BookingSearchViewModel : ViewModel()  {
 
-    private var bookingSearchModel = BookingSearchModel()
+    private var _booking = MutableStateFlow(BookingSearchModel())
 
-    var location by mutableStateOf(bookingSearchModel.location)
-    var checkIn by mutableStateOf(bookingSearchModel.checkIn)
-    var checkOut by mutableStateOf(bookingSearchModel.checkOut)
-    var guestNumber by mutableStateOf(bookingSearchModel.guestsAmount)
+    val booking: StateFlow<BookingSearchModel> = _booking.asStateFlow()
 
+    fun setLocation(location: LocationModel) {
+        _booking.value = _booking.value.copy(location = location)
+    }
+
+    fun setCheckIn(checkIn: LocalDate) {
+        _booking.value = _booking.value.copy(checkIn = checkIn)
+    }
+
+    fun setCheckOut(checkOut: LocalDate) {
+        _booking.value = _booking.value.copy(checkOut = checkOut)
+    }
+
+    fun setMinPriceRepNight(minPriceRepNight: Int) {
+        _booking.value = _booking.value.copy(minPricePerNight = minPriceRepNight)
+    }
+
+    fun setMaxPriceRepNight(maxPriceRepNight: Int) {
+        _booking.value = _booking.value.copy(maxPricePerNight = maxPriceRepNight)
+    }
+
+    fun setMaxDistanceToCenterInKm(maxDistanceToCenterInKm: Int) {
+        _booking.value = _booking.value.copy(maxDistanceToCenterInKm = maxDistanceToCenterInKm)
+    }
+
+    fun setGuestAmount(guestsAmount: Int) {
+        _booking.value = _booking.value.copy(guestsAmount = guestsAmount)
+    }
 }
