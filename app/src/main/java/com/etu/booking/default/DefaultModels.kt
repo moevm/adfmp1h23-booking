@@ -21,6 +21,8 @@ object DefaultModels {
         "Prince's Shield Hotel",
     )
 
+    val BOOKING_STATUSES = listOf("All", "Booked", "Stayed")
+
     val BOOKING_SEARCH_MODEL = BookingSearchModel(
         location = LocationModel(city = CITY, country = COUNTRY),
         checkIn = LocalDate.of(2022, 7, 10),

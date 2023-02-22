@@ -1,9 +1,11 @@
 package com.etu.booking.model
 
+import java.io.Serializable
+
 data class LocationModel(
     val city: String,
     val country: String,
-) {
+): Serializable {
 
     companion object {
         fun create(location: String): LocationModel {

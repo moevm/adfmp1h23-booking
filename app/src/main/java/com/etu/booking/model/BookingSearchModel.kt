@@ -1,5 +1,6 @@
 package com.etu.booking.model
 
+import java.io.Serializable
 import java.time.LocalDate
 import javax.validation.constraints.FutureOrPresent
 import javax.validation.constraints.Max
@@ -15,7 +16,13 @@ data class BookingSearchModel(
     @field:FutureOrPresent
     var checkOut: LocalDate? = null,
 
+    var minPricePerNight: Int? = null,
+
+    var maxPricePerNight: Int? = null,
+
+    var maxDistanceToCenterInKm: Int? = null,
+
     @field:Min(1)
     @field:Max(10)
     var guestsAmount: Int? = null,
-)
+): Serializable

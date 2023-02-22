@@ -14,12 +14,17 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -40,6 +45,7 @@ fun BookingListScreen(
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         BookingSearchTopBar(bookingSearchModel)
+        SearchSortButtons()
         LazyColumn {
             items(DefaultModels.HOTEL_CARDS_MODELS) { place -> // TODO: change to a repository call
                 HotelCard(hotelCardModel = place)
@@ -77,6 +83,60 @@ private fun BookingSearchTopBar(bookingSearchModel: BookingSearchModel) {
 private fun getFormattedDateOrDefault(date: LocalDate?, defaultValue: String): String {
     val dateTimeFormatter = DateTimeFormatter.ofPattern("dd MMM")
     return date?.format(dateTimeFormatter) ?: defaultValue
+}
+
+@Composable
+private fun SearchSortButtons() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+
+        PriceSort()
+        RatingSort()
+        DestinationSort()
+    }
+}
+
+@Composable
+fun RatingSort() {
+    var sort by remember { mutableStateOf(0) }
+
+    OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
+        Text(
+            text = "Rating",
+            style = MaterialTheme.typography.body2
+        )
+        SortType(sort = sort)
+    }
+}
+
+@Composable
+fun PriceSort() {
+    var sort by remember { mutableStateOf(0) }
+
+    OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
+        Text(
+            text = "Price",
+            style = MaterialTheme.typography.body2
+        )
+        SortType(sort = sort)
+    }
+}
+
+@Composable
+fun DestinationSort() {
+    var sort by remember { mutableStateOf(0) }
+
+    OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
+        Text(
+            text = "Distance",
+            style = MaterialTheme.typography.body2
+        )
+        SortType(sort = sort)
+    }
 }
 
 @Composable
