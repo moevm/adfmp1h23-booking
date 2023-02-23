@@ -2,7 +2,6 @@ package com.etu.booking.compose.screen
 
 import android.app.DatePickerDialog
 import android.content.Context
-import android.content.Intent
 import android.icu.util.Calendar
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -41,8 +40,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
-import com.etu.booking.SearchScreenActivity
-import com.etu.booking.control.addSerializableToIntent
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
@@ -52,7 +49,10 @@ import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun SearchScreen(viewModel: BookingSearchViewModel) {
+fun SearchScreen(
+    viewModel: BookingSearchViewModel,
+    onSearch: () -> Unit,
+) {
 
     val bookingState by viewModel.booking.collectAsState()
 
@@ -76,7 +76,7 @@ fun SearchScreen(viewModel: BookingSearchViewModel) {
         )
         LocationInput(
             bookingSearchModel = bookingState,
-            onChange= { viewModel.setLocation(it) },
+            onChange = { viewModel.setLocation(it) },
         )
         DateSearch(viewModel = viewModel, bookingSearchModel = bookingState)
         PriceSearch(viewModel = viewModel, bookingSearchModel = bookingState)
@@ -86,9 +86,9 @@ fun SearchScreen(viewModel: BookingSearchViewModel) {
         )
         GuestInput(
             bookingSearchModel = bookingState,
-            onChange= { viewModel.setGuestAmount(it) }
+            onChange = { viewModel.setGuestAmount(it) }
         )
-        Button(viewModel = viewModel)
+        SearchButton(onClick = onSearch)
     }
 }
 
@@ -154,7 +154,7 @@ fun DateSearch(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
-    ){
+    ) {
         CheckInDate(
             bookingSearchModel = bookingSearchModel,
             onChange = { viewModel.setCheckIn(it) },
@@ -199,7 +199,10 @@ fun CheckOutDate(
         modifier = Modifier
             .padding(start = 1.dp, end = 8.dp, bottom = 2.dp, top = 2.dp)
             .clickable {
-                showDatePickerDialog(context, bookingSearchModel.checkOut) { date -> onChange(date) }
+                showDatePickerDialog(
+                    context,
+                    bookingSearchModel.checkOut
+                ) { date -> onChange(date) }
             },
         text = if (bookingSearchModel.checkOut != null) dateFormat.format(bookingSearchModel.checkOut) else "",
         placeholder = "Check-out",
@@ -218,7 +221,7 @@ fun PriceSearch(
 ) {
     Row(
         modifier = Modifier.fillMaxWidth()
-    ){
+    ) {
         MinPrice(
             bookingSearchModel = bookingSearchModel,
             onChange = { viewModel.setMinPriceRepNight(it) },
@@ -259,7 +262,7 @@ fun MaxPrice(
     Input(
         modifier = Modifier
             .padding(start = 1.dp, end = 8.dp, bottom = 2.dp, top = 2.dp),
-        text = if (bookingSearchModel.maxPricePerNight!= null) bookingSearchModel.maxPricePerNight.toString() else "",
+        text = if (bookingSearchModel.maxPricePerNight != null) bookingSearchModel.maxPricePerNight.toString() else "",
         placeholder = "Max price per night",
         onChange = {
             onChange(it.toInt())
@@ -318,17 +321,12 @@ fun GuestInput(
 }
 
 @Composable
-fun Button(
-    viewModel: BookingSearchViewModel,
+fun SearchButton(
+    onClick: () -> Unit,
 ) {
-    val context = LocalContext.current
     Button(
         modifier = Modifier.padding(bottom = 30.dp),
-        onClick = {
-            val intent = Intent(context, SearchScreenActivity::class.java)
-            addSerializableToIntent("search", viewModel.booking.value, intent)
-            context.startActivity(intent)
-        },
+        onClick = onClick,
         border = BorderStroke(1.dp, Color.Black),
         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
     ) {

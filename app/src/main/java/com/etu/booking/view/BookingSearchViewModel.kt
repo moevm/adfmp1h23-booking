@@ -1,6 +1,7 @@
 package com.etu.booking.view
 
 import androidx.lifecycle.ViewModel
+import com.etu.booking.messaging.SnackbarManager
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,7 +9,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.time.LocalDate
 
-class BookingSearchViewModel : ViewModel()  {
+class BookingSearchViewModel(
+    private val snackbarManager: SnackbarManager,
+) : ViewModel() {
 
     private var _booking = MutableStateFlow(BookingSearchModel())
 

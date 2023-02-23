@@ -1,6 +1,5 @@
 package com.etu.booking.compose.screen
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,20 +18,30 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.etu.booking.AboutUsActivity
 import com.etu.booking.R
+import com.etu.booking.model.AuthorizationModel
 import com.etu.booking.view.AuthorizationViewModel
 
 @Composable
-fun MoreScreen(authorizationViewModel: AuthorizationViewModel) {
+fun MoreScreen(
+    authorizationViewModel: AuthorizationViewModel,
+    onAboutUsCardClick: () -> Unit,
+) {
+    val authorizationState by authorizationViewModel.authorizationState.collectAsState()
+
     Column(modifier = Modifier.fillMaxWidth()) {
         MoreTopBar()
         LazyColumn {
-            item { AuthorizationCard(authorizationViewModel) }
-            item { AboutUsCard() }
+            item {
+                AuthorizationCard(
+                    authorizationState = authorizationState,
+                    onSwitchEnable = authorizationViewModel::logIn,
+                    onSwitchDisable = authorizationViewModel::logOut,
+                )
+            }
+            item { AboutUsCard(onClick = onAboutUsCardClick) }
         }
     }
 }
@@ -51,13 +60,14 @@ private fun MoreTopBar() {
 
 @Composable
 @OptIn(ExperimentalMaterialApi::class)
-private fun AboutUsCard() {
-    val context = LocalContext.current
+private fun AboutUsCard(
+    onClick: () -> Unit,
+) {
     Card(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(15.dp),
         elevation = 8.dp,
-        onClick = { context.startActivity(Intent(context, AboutUsActivity::class.java)) }
+        onClick = onClick
     ) {
         Text(
             text = stringResource(id = R.string.about_us_button),
@@ -69,9 +79,11 @@ private fun AboutUsCard() {
 }
 
 @Composable
-private fun AuthorizationCard(authorizationViewModel: AuthorizationViewModel) {
-    val authorizationState by authorizationViewModel.authorizationState.collectAsState()
-
+private fun AuthorizationCard(
+    authorizationState: AuthorizationModel,
+    onSwitchEnable: () -> Unit,
+    onSwitchDisable: () -> Unit,
+) {
     Card(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(15.dp),
@@ -90,9 +102,9 @@ private fun AuthorizationCard(authorizationViewModel: AuthorizationViewModel) {
                 checked = authorizationState.isAuthorized,
                 onCheckedChange = {
                     if (it) {
-                        authorizationViewModel.logIn()
+                        onSwitchEnable()
                     } else {
-                        authorizationViewModel.logOut()
+                        onSwitchDisable()
                     }
                 }
             )

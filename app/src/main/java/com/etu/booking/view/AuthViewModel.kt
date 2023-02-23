@@ -1,40 +1,101 @@
 package com.etu.booking.view
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.etu.booking.messaging.SnackbarManager
 import com.etu.booking.model.AuthModel
 import com.etu.booking.model.PersonModel
 import com.etu.booking.model.PersonModel.PassportModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
-class AuthViewModel : ViewModel()  {
+class AuthViewModel(
+    private val snackbarManager: SnackbarManager,
+) : ViewModel() {
 
-    private var authModel = AuthModel(
-        login = "",
-        password = "",
-        personModel = PersonModel(
+    private val _authState = MutableStateFlow(
+        AuthModel(
             login = "",
             password = "",
-            name = "",
-            surname = "",
-            birthdate = LocalDate.now(),
-            avatarResource = null,
-            passport = PassportModel(
-                number = "",
-                nationality = "",
-                expiresAt = LocalDate.now(),
+            personModel = PersonModel(
+                login = "",
+                password = "",
+                name = "",
+                surname = "",
+                birthdate = LocalDate.now(),
+                avatarResource = null,
+                passport = PassportModel(
+                    number = "",
+                    nationality = "",
+                    expiresAt = LocalDate.now(),
+                )
             )
         )
     )
 
-    var login by mutableStateOf(authModel.login)
-    var password by mutableStateOf(authModel.password)
-    var name by mutableStateOf(authModel.personModel.name)
-    var surname by mutableStateOf(authModel.personModel.surname)
-    var birthdate by mutableStateOf(authModel.personModel.birthdate)
-    var avatarResource by mutableStateOf(authModel.personModel.avatarResource)
-    var passport by mutableStateOf(authModel.personModel.passport)
+    val authState: StateFlow<AuthModel> = _authState.asStateFlow()
 
+    fun updateLogin(login: String) {
+        _authState.update { it.copy(login = login) }
+    }
+
+    fun updatePassword(password: String) {
+        _authState.update { it.copy(password = password) }
+    }
+
+    fun updateName(name: String) {
+        _authState.update { it.copy(personModel = it.personModel.copy(name = name)) }
+    }
+
+    fun updateSurname(surname: String) {
+        _authState.update { it.copy(personModel = it.personModel.copy(surname = surname)) }
+    }
+
+    fun updateBirthdate(birthdate: LocalDate) {
+        _authState.update { it.copy(personModel = it.personModel.copy(birthdate = birthdate)) }
+    }
+
+    fun updateNationality(nationality: String) {
+        _authState.update {
+            it.copy(
+                personModel = it.personModel.copy(
+                    passport = it.personModel.passport.copy(
+                        nationality = nationality,
+                    )
+                )
+            )
+        }
+    }
+
+    fun updatePassportNumber(number: String) {
+        _authState.update {
+            it.copy(
+                personModel = it.personModel.copy(
+                    passport = it.personModel.passport.copy(
+                        number = number,
+                    )
+                )
+            )
+        }
+    }
+
+    fun updatePassportExpiresAt(expiresAt: LocalDate) {
+        _authState.update {
+            it.copy(
+                personModel = it.personModel.copy(
+                    passport = it.personModel.passport.copy(
+                        expiresAt = expiresAt
+                    )
+                )
+            )
+        }
+    }
+
+    fun updateAvatarResource(avatarResource: Int?) {
+        _authState.update {
+            it.copy(personModel = it.personModel.copy(avatarResource = avatarResource))
+        }
+    }
 }
