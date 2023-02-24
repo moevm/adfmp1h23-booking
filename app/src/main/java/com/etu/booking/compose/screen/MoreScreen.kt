@@ -109,6 +109,5 @@ private fun AuthorizationCard(
                 }
             )
         }
-
     }
 }

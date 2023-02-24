@@ -69,7 +69,7 @@ fun DocumentScreen() {
 }
 
 @Composable
-fun ImageCard(id: Int) {
+private fun ImageCard(id: Int) {
     Card(
         modifier = Modifier.padding(4.dp)
     ) {

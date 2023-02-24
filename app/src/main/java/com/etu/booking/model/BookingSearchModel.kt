@@ -8,21 +8,21 @@ import javax.validation.constraints.Min
 
 data class BookingSearchModel(
 
-    var location: LocationModel? = null,
+    val location: LocationModel? = null,
 
     @field:FutureOrPresent
-    var checkIn: LocalDate? = null,
+    val checkIn: LocalDate? = null,
 
     @field:FutureOrPresent
-    var checkOut: LocalDate? = null,
+    val checkOut: LocalDate? = null,
 
-    var minPricePerNight: Int? = null,
+    val minPricePerNight: Int? = null,
 
-    var maxPricePerNight: Int? = null,
+    val maxPricePerNight: Int? = null,
 
-    var maxDistanceToCenterInKm: Int? = null,
+    val maxDistanceToCenterInKm: Int? = null,
 
     @field:Min(1)
     @field:Max(10)
-    var guestsAmount: Int? = null,
-): Serializable
+    val guestsAmount: Int? = null,
+) : Serializable

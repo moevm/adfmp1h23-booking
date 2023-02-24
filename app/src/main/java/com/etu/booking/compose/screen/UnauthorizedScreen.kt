@@ -27,7 +27,6 @@ fun UnauthorizedScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-//        val context = LocalContext.current
         Text(
             text = stringResource(id = R.string.unauthorized_description),
             style = MaterialTheme.typography.body1

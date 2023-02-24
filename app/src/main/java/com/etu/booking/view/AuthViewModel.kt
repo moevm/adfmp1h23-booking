@@ -92,10 +92,4 @@ class AuthViewModel(
             )
         }
     }
-
-    fun updateAvatarResource(avatarResource: Int?) {
-        _authState.update {
-            it.copy(personModel = it.personModel.copy(avatarResource = avatarResource))
-        }
-    }
 }

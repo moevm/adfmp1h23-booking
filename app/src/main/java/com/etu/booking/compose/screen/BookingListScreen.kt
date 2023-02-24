@@ -106,7 +106,7 @@ private fun SearchSortButtons() {
 }
 
 @Composable
-fun RatingSort() {
+private fun RatingSort() {
     var sort by remember { mutableStateOf(0) }
 
     OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
@@ -119,7 +119,7 @@ fun RatingSort() {
 }
 
 @Composable
-fun PriceSort() {
+private fun PriceSort() {
     var sort by remember { mutableStateOf(0) }
 
     OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
@@ -132,7 +132,7 @@ fun PriceSort() {
 }
 
 @Composable
-fun DestinationSort() {
+private fun DestinationSort() {
     var sort by remember { mutableStateOf(0) }
 
     OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {

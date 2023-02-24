@@ -93,7 +93,7 @@ fun SearchScreen(
 }
 
 @Composable
-fun LocationInput(
+private fun LocationInput(
     bookingSearchModel: BookingSearchModel,
     onChange: (LocationModel) -> Unit,
 ) {
@@ -148,7 +148,7 @@ fun LocationInput(
 }
 
 @Composable
-fun DateSearch(
+private fun DateSearch(
     bookingSearchModel: BookingSearchModel,
     viewModel: BookingSearchViewModel,
 ) {
@@ -167,7 +167,7 @@ fun DateSearch(
 }
 
 @Composable
-fun CheckInDate(
+private fun CheckInDate(
     bookingSearchModel: BookingSearchModel,
     onChange: (LocalDate) -> Unit,
 ) {
@@ -190,7 +190,7 @@ fun CheckInDate(
 }
 
 @Composable
-fun CheckOutDate(
+private fun CheckOutDate(
     bookingSearchModel: BookingSearchModel,
     onChange: (LocalDate) -> Unit,
 ) {
@@ -215,7 +215,7 @@ fun CheckOutDate(
 }
 
 @Composable
-fun PriceSearch(
+private fun PriceSearch(
     bookingSearchModel: BookingSearchModel,
     viewModel: BookingSearchViewModel,
 ) {
@@ -234,7 +234,7 @@ fun PriceSearch(
 }
 
 @Composable
-fun MinPrice(
+private fun MinPrice(
     bookingSearchModel: BookingSearchModel,
     onChange: (Int) -> Unit,
 ) {
@@ -254,7 +254,7 @@ fun MinPrice(
 }
 
 @Composable
-fun MaxPrice(
+private fun MaxPrice(
     bookingSearchModel: BookingSearchModel,
     onChange: (Int) -> Unit,
 ) {
@@ -273,7 +273,7 @@ fun MaxPrice(
 }
 
 @Composable
-fun MaxDistance(
+private fun MaxDistance(
     bookingSearchModel: BookingSearchModel,
     onChange: (Int) -> Unit,
 ) {
@@ -295,7 +295,7 @@ fun MaxDistance(
 }
 
 @Composable
-fun GuestInput(
+private fun GuestInput(
     bookingSearchModel: BookingSearchModel,
     onChange: (Int) -> Unit,
 ) {
@@ -321,7 +321,7 @@ fun GuestInput(
 }
 
 @Composable
-fun SearchButton(
+private fun SearchButton(
     onClick: () -> Unit,
 ) {
     Button(
@@ -335,7 +335,7 @@ fun SearchButton(
 }
 
 @Composable
-fun Input(
+private fun Input(
     modifier: Modifier = Modifier,
     text: String,
     placeholder: String,

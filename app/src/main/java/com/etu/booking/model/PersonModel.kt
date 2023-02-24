@@ -21,7 +21,6 @@ data class PersonModel(
     val avatarResource: Int? = null,
 
     val passport: PassportModel,
-
 ) {
     data class PassportModel(
 
