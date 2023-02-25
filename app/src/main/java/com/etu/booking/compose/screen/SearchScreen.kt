@@ -14,13 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,7 +29,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -40,6 +36,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
+import com.etu.booking.compose.component.Input
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
@@ -332,39 +329,6 @@ private fun SearchButton(
     ) {
         Text(text = "Book", color = Color.Black)
     }
-}
-
-@Composable
-private fun Input(
-    modifier: Modifier = Modifier,
-    text: String,
-    placeholder: String,
-    leadingIcon: @Composable (() -> Unit)? = null,
-    onChange: (String) -> Unit = {},
-    imeAction: ImeAction = ImeAction.Next,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    keyBoardActions: KeyboardActions = KeyboardActions(),
-    isEnabled: Boolean = true,
-) {
-    OutlinedTextField(
-        modifier = modifier,
-        value = text,
-        onValueChange = onChange,
-        leadingIcon = leadingIcon,
-        textStyle = TextStyle(fontSize = 18.sp),
-        keyboardOptions = KeyboardOptions(imeAction = imeAction, keyboardType = keyboardType),
-        keyboardActions = keyBoardActions,
-        enabled = isEnabled,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Gray,
-            disabledBorderColor = Color.Gray,
-            disabledTextColor = Color.Black
-        ),
-        placeholder = {
-            Text(text = placeholder, style = TextStyle(fontSize = 18.sp, color = Color.LightGray))
-        }
-    )
 }
 
 private var dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
