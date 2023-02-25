@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
@@ -24,11 +24,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.etu.booking.R
+import com.etu.booking.compose.component.Input
 import com.etu.booking.model.AuthModel
 import com.etu.booking.view.AuthViewModel
 import java.time.LocalDate
@@ -93,18 +93,22 @@ private fun SignIn(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AuthInput(
+        Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.login,
+            text = authState.value.login,
             placeholder = "Login",
-            onValueChange = onLoginChange
+            onChange = onLoginChange,
+            isError = authState.value.errorModel.login,
+            errorMessage = stringResource(id = R.string.login_error_message)
         )
-        AuthInput(
+        Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.password,
+            text = authState.value.password,
             placeholder = "Password",
-            onValueChange = onPasswordChange,
+            onChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
+            isError = authState.value.errorModel.password,
+            errorMessage = stringResource(id = R.string.password_error_message)
         )
         AuthButton(text = "Sign In") {
             // TODO: sign in
@@ -124,7 +128,10 @@ private fun SignUp(
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
 ) {
-    Column(
+    val context = LocalContext.current
+    val dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
             .padding(
@@ -134,21 +141,23 @@ private fun SignUp(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        val context = LocalContext.current
-        val dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-        AuthInput(
+        item { Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.personModel.name,
+            text = authState.value.personModel.name,
             placeholder = "Name",
-            onValueChange = onNameChange,
-        )
-        AuthInput(
+            onChange = onNameChange,
+            isError = authState.value.errorModel.name,
+            errorMessage = stringResource(id = R.string.proper_name_error_message)
+        ) }
+        item { Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.personModel.surname,
+            text = authState.value.personModel.surname,
             placeholder = "Surname",
-            onValueChange = onSurnameChange,
-        )
-        AuthInput(
+            onChange = onSurnameChange,
+            isError = authState.value.errorModel.surname,
+            errorMessage = stringResource(id = R.string.proper_name_error_message)
+        ) }
+        item { Input(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
@@ -158,24 +167,30 @@ private fun SignUp(
                         onChange = onBirthdateChange,
                     )
                 },
-            value = dateFormat.format(authState.value.personModel.birthdate),
+            text = dateFormat.format(authState.value.personModel.birthdate),
             placeholder = "Birthdate",
-            onValueChange = { onBirthdateChange(LocalDate.parse(it, dateFormat)) },
+            onChange = { onBirthdateChange(LocalDate.parse(it, dateFormat)) },
             isEnabled = false,
-        )
-        AuthInput(
+            isError = authState.value.errorModel.birthdate,
+            errorMessage = stringResource(id = R.string.not_future_date_error_message)
+        ) }
+        item { Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.personModel.passport.nationality,
+            text = authState.value.personModel.passport.nationality,
             placeholder = "Nationality",
-            onValueChange = onNationalityChange,
-        )
-        AuthInput(
+            onChange = onNationalityChange,
+            isError = authState.value.errorModel.nationality,
+            errorMessage = stringResource(id = R.string.proper_name_error_message)
+        ) }
+        item { Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.personModel.passport.number,
+            text = authState.value.personModel.passport.number,
             placeholder = "Passport number",
-            onValueChange = onPassportNumberChange,
-        )
-        AuthInput(
+            onChange = onPassportNumberChange,
+            isError = authState.value.errorModel.passportNumber,
+            errorMessage = stringResource(id = R.string.passport_number_error_message)
+        ) }
+        item { Input(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
@@ -185,52 +200,37 @@ private fun SignUp(
                         onChange = onExpiresAtChange
                     )
                 },
-            value = dateFormat.format(authState.value.personModel.passport.expiresAt),
+            text = dateFormat.format(authState.value.personModel.passport.expiresAt),
             placeholder = "Expires at",
-            onValueChange = { onExpiresAtChange(LocalDate.parse(it, dateFormat)) },
+            onChange = { onExpiresAtChange(LocalDate.parse(it, dateFormat)) },
             isEnabled = false,
-        )
-        AuthInput(
+            isError = authState.value.errorModel.passportExpiresAt,
+            errorMessage = stringResource(id = R.string.not_past_date_error_message)
+        ) }
+        item { Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.login,
+            text = authState.value.login,
             placeholder = "Login",
-            onValueChange = onLoginChange,
-        )
-        AuthInput(
+            onChange = onLoginChange,
+            isError = authState.value.errorModel.login,
+            errorMessage = stringResource(id = R.string.login_error_message)
+        ) }
+        item { Input(
             modifier = Modifier.fillMaxWidth(),
-            value = authState.value.password,
+            text = authState.value.password,
             placeholder = "Password",
-            onValueChange = onPasswordChange,
+            onChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
-        )
-        AuthButton(text = "Add document photo") {
+            isError = authState.value.errorModel.password,
+            errorMessage = stringResource(id = R.string.password_error_message)
+        ) }
+        item { AuthButton(text = "Add document photo") {
             // TODO: get access to camera or gallery
-        }
-        AuthButton(text = "Sign Up") {
+        } }
+        item { AuthButton(text = "Sign Up") {
             // TODO: sign up
-        }
+        } }
     }
-}
-
-@Composable
-private fun AuthInput(
-    modifier: Modifier,
-    value: String,
-    placeholder: String,
-    onValueChange: (String) -> Unit,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    isEnabled: Boolean = true,
-) {
-    OutlinedTextField(
-        modifier = modifier,
-        value = value,
-        onValueChange = onValueChange,
-        visualTransformation = visualTransformation,
-        placeholder = {
-            Text(text = placeholder, style = TextStyle(fontSize = 18.sp, color = Color.LightGray))
-        },
-        enabled = isEnabled,
-    )
 }
 
 @Composable

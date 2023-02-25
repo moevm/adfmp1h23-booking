@@ -45,6 +45,27 @@
     <string name="authorization_button">Sign in</string>
     <!--UnauthorizedScreen-->
 
+    <!--AuthorizationScreen-->
+    <string name="login_error_message">
+        Use only letters, numbers, \".\" and \"_\" from 4 to 30 characters
+    </string>
+    <string name="password_error_message">
+        Use only letters, numbers and \"_\" from 6 to 30 characters
+    </string>
+    <string name="proper_name_error_message">
+        Use only letters starting with capital to 30 characters
+    </string>
+    <string name="passport_number_error_message">
+        Use only letters and numbers
+    </string>
+    <string name="not_past_date_error_message">
+        Use a date from the future
+    </string>
+    <string name="not_future_date_error_message">
+        Use a date from the past
+    </string>
+    <!--AuthorizationScreen-->
+
     <!--DocumentScreen-->
     <string name="warning_title">Warning</string>
     <string name="warning_description">
