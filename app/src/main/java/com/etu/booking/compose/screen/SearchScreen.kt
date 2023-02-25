@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -36,6 +37,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
+import com.etu.booking.R
 import com.etu.booking.compose.component.Input
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
@@ -114,7 +116,9 @@ private fun LocationInput(
                 onAny = {
                     focusManager.clearFocus()
                 }
-            )
+            ),
+            isError = bookingSearchModel.errorModel.location,
+            errorMessage = stringResource(id = R.string.location_error_message)
         )
         DropdownMenu(
             modifier = Modifier.fillMaxWidth(),
@@ -183,6 +187,8 @@ private fun CheckInDate(
         },
         imeAction = ImeAction.Next,
         isEnabled = false,
+        isError = bookingSearchModel.errorModel.checkIn,
+        errorMessage = stringResource(id = R.string.not_past_date_error_message)
     )
 }
 
@@ -207,7 +213,9 @@ private fun CheckOutDate(
             onChange(LocalDate.parse(it, dateFormat))
         },
         imeAction = ImeAction.Next,
-        isEnabled = false
+        isEnabled = false,
+        isError = bookingSearchModel.errorModel.checkOut,
+        errorMessage = stringResource(id = R.string.not_past_date_error_message)
     )
 }
 
@@ -233,7 +241,7 @@ private fun PriceSearch(
 @Composable
 private fun MinPrice(
     bookingSearchModel: BookingSearchModel,
-    onChange: (Int) -> Unit,
+    onChange: (Int?) -> Unit,
 ) {
 
     Input(
@@ -243,17 +251,23 @@ private fun MinPrice(
         text = if (bookingSearchModel.minPricePerNight != null) bookingSearchModel.minPricePerNight.toString() else "",
         placeholder = "Min price per night",
         onChange = {
-            onChange(it.toInt())
+            if (it.isEmpty()) {
+                onChange(null)
+            } else if (it.last().isDigit()) {
+                onChange(it.toInt())
+            }
         },
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Decimal,
+        isError = bookingSearchModel.errorModel.minPricePerNight,
+        errorMessage = stringResource(id = R.string.positive_error_message)
     )
 }
 
 @Composable
 private fun MaxPrice(
     bookingSearchModel: BookingSearchModel,
-    onChange: (Int) -> Unit,
+    onChange: (Int?) -> Unit,
 ) {
 
     Input(
@@ -262,17 +276,23 @@ private fun MaxPrice(
         text = if (bookingSearchModel.maxPricePerNight != null) bookingSearchModel.maxPricePerNight.toString() else "",
         placeholder = "Max price per night",
         onChange = {
-            onChange(it.toInt())
+            if (it.isEmpty()) {
+                onChange(null)
+            } else if (it.last().isDigit()) {
+                onChange(it.toInt())
+            }
         },
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Decimal,
+        isError = bookingSearchModel.errorModel.maxPricePerNight,
+        errorMessage = stringResource(id = R.string.positive_error_message)
     )
 }
 
 @Composable
 private fun MaxDistance(
     bookingSearchModel: BookingSearchModel,
-    onChange: (Int) -> Unit,
+    onChange: (Int?) -> Unit,
 ) {
     Input(
         modifier = Modifier
@@ -284,17 +304,23 @@ private fun MaxDistance(
             "",
         placeholder = "Max destination from center",
         onChange = {
-            onChange(it.toInt())
+            if (it.isEmpty()) {
+                onChange(null)
+            } else if (it.last().isDigit()) {
+                onChange(it.toInt())
+            }
         },
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Decimal,
+        isError = bookingSearchModel.errorModel.maxDistanceToCenterInKm,
+        errorMessage = stringResource(id = R.string.non_negative_error_message)
     )
 }
 
 @Composable
 private fun GuestInput(
     bookingSearchModel: BookingSearchModel,
-    onChange: (Int) -> Unit,
+    onChange: (Int?) -> Unit,
 ) {
     val focusManager = LocalFocusManager.current
 
@@ -305,7 +331,11 @@ private fun GuestInput(
         text = if (bookingSearchModel.guestsAmount != null) bookingSearchModel.guestsAmount.toString() else "",
         placeholder = "Guests",
         onChange = {
-            onChange(it.toInt())
+            if (it.isEmpty()) {
+                onChange(null)
+            } else if (it.last().isDigit()) {
+                onChange(it.toInt())
+            }
         },
         imeAction = ImeAction.Done,
         keyboardType = KeyboardType.Decimal,
@@ -313,7 +343,9 @@ private fun GuestInput(
             onDone = {
                 focusManager.clearFocus()
             }
-        )
+        ),
+        isError = bookingSearchModel.errorModel.guestsAmount,
+        errorMessage = stringResource(id = R.string.guests_amount_error_message)
     )
 }
 

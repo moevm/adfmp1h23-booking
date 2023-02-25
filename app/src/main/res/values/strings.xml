@@ -66,6 +66,21 @@
     </string>
     <!--AuthorizationScreen-->
 
+    <!--BookingSearchScreen-->
+    <string name="location_error_message">
+        Use \"country city\" input
+    </string>
+    <string name="positive_error_message">
+        Use positive value
+    </string>
+    <string name="non_negative_error_message">
+        Use non-negative value
+    </string>
+    <string name="guests_amount_error_message">
+        Use value from 1 to 10
+    </string>
+    <!--BookingSearchScreen-->
+
     <!--DocumentScreen-->
     <string name="warning_title">Warning</string>
     <string name="warning_description">
