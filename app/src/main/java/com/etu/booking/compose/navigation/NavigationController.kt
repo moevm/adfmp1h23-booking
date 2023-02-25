@@ -75,7 +75,10 @@ fun NavigationController(
             "${Screen.Hotel.route}/{hotelId}",
             arguments = listOf(navArgument("hotelId") { type = NavType.StringType }),
         ) { entry ->
-            HotelScreen(onBookNowClick = { Log.d("onClick", "Book Now") }, id = entry.arguments?.getString("hotelId")!!)
+            HotelScreen(
+                onBookNowClick = { Log.d("onClick", "Book Now") },
+                id = entry.arguments?.getString("hotelId")!!,
+            )
         }
         composable(Screen.Document.route) {
             DocumentScreen()
