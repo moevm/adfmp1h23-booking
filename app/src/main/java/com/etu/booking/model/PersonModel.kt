@@ -6,29 +6,28 @@ import javax.validation.constraints.Past
 
 data class PersonModel(
 
-    var login: String,
+    val login: String,
 
-    var password: String,
+    val password: String,
 
-    var name: String,
+    val name: String,
 
-    var surname: String,
+    val surname: String,
 
     @field:Past
-    var birthdate: LocalDate,
+    val birthdate: LocalDate,
 
     @DrawableRes
     val avatarResource: Int? = null,
 
     val passport: PassportModel,
-
 ) {
     data class PassportModel(
 
-        var nationality: String,
+        val nationality: String,
 
-        var number: String,
+        val number: String,
 
-        var expiresAt: LocalDate,
+        val expiresAt: LocalDate,
     )
 }

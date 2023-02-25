@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,25 +33,18 @@ import com.etu.booking.R
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.default.DefaultModels.BOOKING_STATUSES
 import com.etu.booking.model.HistoryHotelModel
-import com.etu.booking.view.AuthorizationViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun HistoryScreen(authorizationViewModel: AuthorizationViewModel) {
-    val authorizationState by authorizationViewModel.authorizationState.collectAsState()
-
+fun HistoryScreen() {
     Column(modifier = Modifier.fillMaxWidth()) {
         HistoryTopBar()
-        if (authorizationState.isAuthorized) {
-            HistorySortButtons()
-            LazyColumn {
-                items(DefaultModels.HISTORY_HOTELS_MODELS) { place -> // TODO: change to a repository call
-                    HistoryHotelCard(historyHotelModel = place)
-                }
+        HistorySortButtons()
+        LazyColumn {
+            items(DefaultModels.HISTORY_HOTELS_MODELS) { place -> // TODO: change to a repository call
+                HistoryHotelCard(historyHotelModel = place)
             }
-        } else {
-            UnauthorizedScreen()
         }
     }
 }
@@ -111,7 +103,7 @@ private fun CheckOutDateSort() {
 
 @Composable
 fun SortType(sort: Int) {
-    when(sort) {
+    when (sort) {
         1 -> Icon(
             imageVector = Icons.Filled.KeyboardArrowUp,
             contentDescription = Icons.Filled.KeyboardArrowUp.name,
@@ -148,8 +140,8 @@ private fun StatusSort() {
                         sort = it
                         expanded = false
                     }
-                ){
-                    Text(text = it, fontSize=18.sp)
+                ) {
+                    Text(text = it, fontSize = 18.sp)
                 }
             }
         }

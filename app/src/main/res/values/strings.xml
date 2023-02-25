@@ -6,6 +6,13 @@
     <string name="history_screen">History</string>
     <string name="profile_screen">Profile</string>
     <string name="more_screen">More</string>
+
+    <string name="booking_list_screen">More</string>
+    <string name="about_us_screen">About us</string>
+    <string name="unauthorized_screen">Unauthorized</string>
+    <string name="auth_screen">Auth</string>
+    <string name="document_screen">Document Screen</string>
+    <string name="hotel_screen">Hotel Screen</string>
     <!--Navigation-->
 
     <!--HistoryScreen-->

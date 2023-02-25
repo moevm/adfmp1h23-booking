@@ -1,6 +1,5 @@
 package com.etu.booking.compose.screen
 
-import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,24 +23,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.etu.booking.BookingActivity
 import com.etu.booking.default.DefaultModels.HOTEL_MODELS
 import com.etu.booking.model.HotelModel
 
 @Composable
-fun HotelScreen() {
+fun HotelScreen(
+    onBookNowClick: () -> Unit,
+) {
     val hotel = HOTEL_MODELS[0]
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Banner(hotelModel = hotel)
-        MainHotelInfo(hotelModel = hotel)
+        MainHotelInfo(hotelModel = hotel, onBookNowClick = onBookNowClick)
         HotelDescription(hotelModel = hotel)
         HotelBookingInfo(hotelModel = hotel)
         HotelFacilities(hotelModel = hotel)
@@ -49,7 +48,7 @@ fun HotelScreen() {
 }
 
 @Composable
-fun Banner(hotelModel: HotelModel) {
+private fun Banner(hotelModel: HotelModel) {
     Image(
         painter = painterResource(id = hotelModel.imageResource),
         contentDescription = hotelModel.name,
@@ -61,7 +60,10 @@ fun Banner(hotelModel: HotelModel) {
 }
 
 @Composable
-fun MainHotelInfo(hotelModel: HotelModel) {
+private fun MainHotelInfo(
+    hotelModel: HotelModel,
+    onBookNowClick: () -> Unit,
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,13 +75,13 @@ fun MainHotelInfo(hotelModel: HotelModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             HotelName(hotelModel = hotelModel)
-            Button()
+            HotelBookButton(onBookNowClick = onBookNowClick)
         }
     }
 }
 
 @Composable
-fun HotelDescription(hotelModel: HotelModel) {
+private fun HotelDescription(hotelModel: HotelModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,13 +90,16 @@ fun HotelDescription(hotelModel: HotelModel) {
     ) {
         Column {
             Text(text = "Description:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
-            Text(text = hotelModel.description, style = TextStyle(fontSize = 18.sp, color = Color.Black))
+            Text(
+                text = hotelModel.description,
+                style = TextStyle(fontSize = 18.sp, color = Color.Black)
+            )
         }
     }
 }
 
 @Composable
-fun HotelBookingInfo(hotelModel: HotelModel) {
+private fun HotelBookingInfo(hotelModel: HotelModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -102,11 +107,16 @@ fun HotelBookingInfo(hotelModel: HotelModel) {
         elevation = 1.dp,
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(end = 8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(end = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Text(text = "Price per night:", style = TextStyle(fontSize = 18.sp, color = Color.Black))
+                Text(
+                    text = "Price per night:",
+                    style = TextStyle(fontSize = 18.sp, color = Color.Black)
+                )
                 Text(text = "${hotelModel.pricePerNight} ${hotelModel.currency}")
             }
             Column {
@@ -124,7 +134,7 @@ fun HotelBookingInfo(hotelModel: HotelModel) {
 }
 
 @Composable
-fun HotelFacilities(hotelModel: HotelModel) {
+private fun HotelFacilities(hotelModel: HotelModel) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -147,7 +157,7 @@ fun HotelFacilities(hotelModel: HotelModel) {
 }
 
 @Composable
-fun HotelName(hotelModel: HotelModel) {
+private fun HotelName(hotelModel: HotelModel) {
     Column {
         Text(text = hotelModel.name, style = MaterialTheme.typography.h4)
         Text(text = hotelModel.address, style = TextStyle(fontSize = 18.sp, color = Color.Black))
@@ -155,13 +165,11 @@ fun HotelName(hotelModel: HotelModel) {
 }
 
 @Composable
-fun Button() {
-    val context = LocalContext.current
+private fun HotelBookButton(
+    onBookNowClick: () -> Unit,
+) {
     Button(
-        onClick = {
-            val intent = Intent(context, BookingActivity::class.java)
-            context.startActivity(intent)
-        },
+        onClick = onBookNowClick,
         border = BorderStroke(1.dp, Color.Black),
         colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
     ) {

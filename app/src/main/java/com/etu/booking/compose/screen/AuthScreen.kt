@@ -14,6 +14,8 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,12 +29,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.etu.booking.model.AuthModel
 import com.etu.booking.view.AuthViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun AuthScreen(viewModel: AuthViewModel) {
+    val authState = viewModel.authState.collectAsState()
+
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Sign In", "Sign Up")
 
@@ -51,16 +56,32 @@ fun AuthScreen(viewModel: AuthViewModel) {
             }
         }
         if (state == 0) {
-            SignIn(viewModel)
+            SignIn(
+                authState = authState,
+                onLoginChange = viewModel::updateLogin,
+                onPasswordChange = viewModel::updatePassword,
+            )
         } else {
-            SignUp(viewModel)
+            SignUp(
+                authState = authState,
+                onNameChange = viewModel::updateName,
+                onSurnameChange = viewModel::updateSurname,
+                onBirthdateChange = viewModel::updateBirthdate,
+                onNationalityChange = viewModel::updateNationality,
+                onPassportNumberChange = viewModel::updatePassportNumber,
+                onExpiresAtChange = viewModel::updatePassportExpiresAt,
+                onLoginChange = viewModel::updateLogin,
+                onPasswordChange = viewModel::updatePassword,
+            )
         }
     }
 }
 
 @Composable
-fun SignIn(
-    viewModel: AuthViewModel
+private fun SignIn(
+    authState: State<AuthModel>,
+    onLoginChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -74,19 +95,15 @@ fun SignIn(
     ) {
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.login,
+            value = authState.value.login,
             placeholder = "Login",
-            onValueChange = {
-                viewModel.login = it
-            },
+            onValueChange = onLoginChange
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.password,
+            value = authState.value.password,
             placeholder = "Password",
-            onValueChange = {
-                viewModel.password = it
-            },
+            onValueChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
         )
         AuthButton(text = "Sign In") {
@@ -96,8 +113,16 @@ fun SignIn(
 }
 
 @Composable
-fun SignUp(
-    viewModel: AuthViewModel
+private fun SignUp(
+    authState: State<AuthModel>,
+    onNameChange: (String) -> Unit,
+    onSurnameChange: (String) -> Unit,
+    onBirthdateChange: (LocalDate) -> Unit,
+    onNationalityChange: (String) -> Unit,
+    onPassportNumberChange: (String) -> Unit,
+    onExpiresAtChange: (LocalDate) -> Unit,
+    onLoginChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -113,81 +138,69 @@ fun SignUp(
         val dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.name,
+            value = authState.value.personModel.name,
             placeholder = "Name",
-            onValueChange = {
-                viewModel.name = it
-            },
+            onValueChange = onNameChange,
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.surname,
+            value = authState.value.personModel.surname,
             placeholder = "Surname",
-            onValueChange = {
-                viewModel.surname = it
-            },
+            onValueChange = onSurnameChange,
         )
         AuthInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    showDatePickerDialog(context, viewModel.birthdate) {
-                        date -> viewModel.birthdate = date
-                    }
+                    showDatePickerDialog(
+                        context = context,
+                        date = authState.value.personModel.birthdate,
+                        onChange = onBirthdateChange,
+                    )
                 },
-            value = dateFormat.format(viewModel.birthdate),
+            value = dateFormat.format(authState.value.personModel.birthdate),
             placeholder = "Birthdate",
-            onValueChange = {
-                viewModel.birthdate = LocalDate.parse(it, dateFormat)
-            },
+            onValueChange = { onBirthdateChange(LocalDate.parse(it, dateFormat)) },
             isEnabled = false,
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.passport.nationality,
+            value = authState.value.personModel.passport.nationality,
             placeholder = "Nationality",
-            onValueChange = {
-                viewModel.passport.nationality = it
-            },
+            onValueChange = onNationalityChange,
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.passport.number,
+            value = authState.value.personModel.passport.number,
             placeholder = "Passport number",
-            onValueChange = {
-                viewModel.passport.number = it
-            },
+            onValueChange = onPassportNumberChange,
         )
         AuthInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable {
-                    showDatePickerDialog(context, viewModel.passport.expiresAt) {
-                            date -> viewModel.birthdate = date
-                    }
+                    showDatePickerDialog(
+                        context = context,
+                        date = authState.value.personModel.passport.expiresAt,
+                        onChange = onExpiresAtChange
+                    )
                 },
-            value = dateFormat.format(viewModel.passport.expiresAt),
+            value = dateFormat.format(authState.value.personModel.passport.expiresAt),
             placeholder = "Expires at",
-            onValueChange = {
-                viewModel.passport.expiresAt = LocalDate.parse(it, dateFormat)
-            },
+            onValueChange = { onExpiresAtChange(LocalDate.parse(it, dateFormat)) },
             isEnabled = false,
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.login,
+            value = authState.value.login,
             placeholder = "Login",
-            onValueChange = {
-                viewModel.login = it
-            },
+            onValueChange = onLoginChange,
         )
         AuthInput(
             modifier = Modifier.fillMaxWidth(),
-            value = viewModel.password,
+            value = authState.value.password,
             placeholder = "Password",
-            onValueChange = {
-                viewModel.password = it
-            },
+            onValueChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
         )
         AuthButton(text = "Add document photo") {
@@ -200,13 +213,13 @@ fun SignUp(
 }
 
 @Composable
-fun AuthInput(
+private fun AuthInput(
     modifier: Modifier,
     value: String,
     placeholder: String,
     onValueChange: (String) -> Unit,
     visualTransformation: VisualTransformation = VisualTransformation.None,
-    isEnabled: Boolean = true
+    isEnabled: Boolean = true,
 ) {
     OutlinedTextField(
         modifier = modifier,
@@ -221,9 +234,9 @@ fun AuthInput(
 }
 
 @Composable
-fun AuthButton(
-    text: String, 
-    onClick: () -> Unit
+private fun AuthButton(
+    text: String,
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = Modifier.fillMaxWidth(),
