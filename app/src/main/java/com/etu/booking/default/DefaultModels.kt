@@ -108,6 +108,30 @@ object DefaultModels {
             facilities = listOf("Wi-Fi", "Breakfast"),
             description = "Beautiful hotel in historical place"
         ),
+        HotelModel(
+            id = UUID.fromString("56fbfafd-34d0-435e-9006-005771df79e7"),
+            imageResource = IMAGES[2],
+            name = HOTEL_NAMES[2],
+            address = "Belarus, Vitebsk, Chapaeva st. 34",
+            score = 7,
+            pricePerNight = 64,
+            currency = EURO_CURRENCY,
+            availableSeatsCount = 2,
+            facilities = listOf("Wi-Fi", "Breakfast"),
+            description = "Beautiful hotel in historical place"
+        ),
+        HotelModel(
+            id = UUID.fromString("174d4646-91b2-4960-be9f-4b98a4134f9c"),
+            imageResource = IMAGES[3],
+            name = HOTEL_NAMES[3],
+            address = "Belarus, Vitebsk, Chapaeva st. 34",
+            score = 8,
+            pricePerNight = 104,
+            currency = EURO_CURRENCY,
+            availableSeatsCount = 2,
+            facilities = listOf("Wi-Fi", "Breakfast"),
+            description = "Beautiful hotel in historical place"
+        ),
     )
 
     val CITIES = listOf(

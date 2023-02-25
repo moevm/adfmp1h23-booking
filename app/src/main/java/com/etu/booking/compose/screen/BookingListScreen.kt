@@ -20,6 +20,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
+import com.etu.booking.component.ProgressIndicator
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
@@ -43,13 +45,31 @@ fun BookingListScreen(
     bookingSearchViewModel: BookingSearchViewModel,
     onCardClick: (String) -> Unit,
 ) {
+    val isLoading = remember { mutableStateOf(true) }
+    val list = remember { mutableStateOf(listOf<HotelCardModel>()) }
+    when {
+        isLoading.value -> ProgressIndicator(isLoading) { list.value = DefaultModels.HOTEL_CARDS_MODELS } // TODO: change to a repository call
+        else -> BookingList(
+            bookingSearchViewModel = bookingSearchViewModel,
+            list = list,
+            onCardClick = onCardClick,
+        )
+    }
+}
+
+@Composable
+fun BookingList(
+    bookingSearchViewModel: BookingSearchViewModel,
+    list: MutableState<List<HotelCardModel>>,
+    onCardClick: (String) -> Unit,
+) {
     val bookingSearchModel = bookingSearchViewModel.booking.collectAsState()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         BookingSearchTopBar(bookingSearchModel.value)
         SearchSortButtons()
         LazyColumn {
-            items(DefaultModels.HOTEL_CARDS_MODELS) { place -> // TODO: change to a repository call
+            items(list.value) { place ->
                 HotelCard(
                     hotelCardModel = place,
                     onClick = onCardClick,
