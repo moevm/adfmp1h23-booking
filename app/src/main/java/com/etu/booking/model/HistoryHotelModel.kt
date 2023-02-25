@@ -1,5 +1,6 @@
 package com.etu.booking.model
 
+import com.etu.booking.enumerator.BookingStatus
 import java.time.LocalDate
 
 data class HistoryHotelModel(
@@ -14,4 +15,6 @@ data class HistoryHotelModel(
     val fullPrice: Int,
 
     val currency: String,
+
+    val status: BookingStatus,
 )
