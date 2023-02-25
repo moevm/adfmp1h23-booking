@@ -3,7 +3,6 @@ package com.etu.booking.compose.screen
 import android.app.DatePickerDialog
 import android.content.Context
 import android.icu.util.Calendar
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -14,8 +13,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -39,6 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.PopupProperties
 import com.etu.booking.R
 import com.etu.booking.compose.component.Input
+import com.etu.booking.compose.component.PushButton
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
@@ -87,7 +85,11 @@ fun SearchScreen(
             bookingSearchModel = bookingState,
             onChange = { viewModel.setGuestAmount(it) }
         )
-        SearchButton(onClick = onSearch)
+        PushButton(
+            modifier = Modifier.padding(bottom = 30.dp),
+            text = "Book",
+            onClick = onSearch
+        )
     }
 }
 
@@ -347,20 +349,6 @@ private fun GuestInput(
         isError = bookingSearchModel.errorModel.guestsAmount,
         errorMessage = stringResource(id = R.string.guests_amount_error_message)
     )
-}
-
-@Composable
-private fun SearchButton(
-    onClick: () -> Unit,
-) {
-    Button(
-        modifier = Modifier.padding(bottom = 30.dp),
-        onClick = onClick,
-        border = BorderStroke(1.dp, Color.Black),
-        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.Black)
-    ) {
-        Text(text = "Book", color = Color.Black)
-    }
 }
 
 private var dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
