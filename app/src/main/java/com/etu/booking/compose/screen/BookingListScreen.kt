@@ -41,7 +41,7 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun BookingListScreen(
     bookingSearchViewModel: BookingSearchViewModel,
-    onCardClick: () -> Unit,
+    onCardClick: (String) -> Unit,
 ) {
     val bookingSearchModel = bookingSearchViewModel.booking.collectAsState()
 
@@ -148,13 +148,13 @@ private fun DestinationSort() {
 @OptIn(ExperimentalMaterialApi::class)
 private fun HotelCard(
     hotelCardModel: HotelCardModel,
-    onClick: () -> Unit,
+    onClick: (String) -> Unit,
 ) {
     Surface(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(15.dp),
         elevation = 8.dp,
-        onClick = onClick,
+        onClick = { onClick(hotelCardModel.id.toString()) },
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             HotelCardImage(hotelCardModel)
