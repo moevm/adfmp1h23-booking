@@ -33,6 +33,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
 import com.etu.booking.component.ProgressIndicator
+import com.etu.booking.control.sort
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
@@ -67,7 +68,7 @@ fun BookingList(
 
     Column(modifier = Modifier.fillMaxWidth()) {
         BookingSearchTopBar(bookingSearchModel.value)
-        SearchSortButtons()
+        SearchSortButtons(list = list)
         LazyColumn {
             items(list.value) { place ->
                 HotelCard(
@@ -111,7 +112,7 @@ private fun getFormattedDateOrDefault(date: LocalDate?, defaultValue: String): S
 }
 
 @Composable
-private fun SearchSortButtons() {
+private fun SearchSortButtons(list: MutableState<List<HotelCardModel>>) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -119,17 +120,21 @@ private fun SearchSortButtons() {
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        PriceSort()
-        RatingSort()
-        DestinationSort()
+        PriceSort(list = list)
+        RatingSort(list = list)
+        DestinationSort(list = list)
     }
 }
 
 @Composable
-private fun RatingSort() {
+private fun RatingSort(list: MutableState<List<HotelCardModel>>) {
     var sort by remember { mutableStateOf(0) }
 
-    OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
+    OutlinedButton(onClick = {
+        sort = (sort + 1) % 3
+        list.value = sort(sort, list.value) { it.score }
+    }
+    ) {
         Text(
             text = "Rating",
             style = MaterialTheme.typography.body2
@@ -139,10 +144,15 @@ private fun RatingSort() {
 }
 
 @Composable
-private fun PriceSort() {
+private fun PriceSort(list: MutableState<List<HotelCardModel>>) {
     var sort by remember { mutableStateOf(0) }
 
-    OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
+    OutlinedButton(
+        onClick = {
+            sort = (sort + 1) % 3
+            list.value = sort(sort, list.value) { it.pricePerNight }
+        }
+    ) {
         Text(
             text = "Price",
             style = MaterialTheme.typography.body2
@@ -152,10 +162,15 @@ private fun PriceSort() {
 }
 
 @Composable
-private fun DestinationSort() {
+private fun DestinationSort(list: MutableState<List<HotelCardModel>>) {
     var sort by remember { mutableStateOf(0) }
 
-    OutlinedButton(onClick = { sort = (sort + 1) % 3 }) {
+    OutlinedButton(
+        onClick = {
+            sort = (sort + 1) % 3
+            list.value = sort(sort, list.value) { it.kmFromCenter }
+        }
+    ) {
         Text(
             text = "Distance",
             style = MaterialTheme.typography.body2

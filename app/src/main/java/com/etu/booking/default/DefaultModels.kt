@@ -1,9 +1,11 @@
 package com.etu.booking.default
 
 import com.etu.booking.R
+import com.etu.booking.enumerator.BookingStatus.BOOKED
+import com.etu.booking.enumerator.BookingStatus.STAYED
 import com.etu.booking.model.BookingSearchModel
-import com.etu.booking.model.HotelCardModel
 import com.etu.booking.model.HistoryHotelModel
+import com.etu.booking.model.HotelCardModel
 import com.etu.booking.model.HotelModel
 import com.etu.booking.model.LocationModel
 import com.etu.booking.model.PersonModel
@@ -22,7 +24,7 @@ object DefaultModels {
         "Prince's Shield Hotel",
     )
 
-    val BOOKING_STATUSES = listOf("All", "Booked", "Stayed")
+    val BOOKING_STATUSES = listOf("ALL", BOOKED.name, STAYED.name)
 
     val BOOKING_SEARCH_MODEL = BookingSearchModel(
         location = LocationModel(city = CITY, country = COUNTRY),
@@ -148,6 +150,7 @@ object DefaultModels {
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             fullPrice = 540,
             currency = EURO_CURRENCY,
+            status = BOOKED,
         ),
         HistoryHotelModel(
             name = HOTEL_NAMES[1],
@@ -156,6 +159,7 @@ object DefaultModels {
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             fullPrice = 632,
             currency = EURO_CURRENCY,
+            status = BOOKED,
         ),
         HistoryHotelModel(
             name = HOTEL_NAMES[2],
@@ -164,6 +168,7 @@ object DefaultModels {
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             fullPrice = 436,
             currency = EURO_CURRENCY,
+            status = STAYED,
         ),
         HistoryHotelModel(
             name = HOTEL_NAMES[3],
@@ -172,6 +177,7 @@ object DefaultModels {
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             fullPrice = 120,
             currency = EURO_CURRENCY,
+            status = STAYED,
         ),
     )
 
