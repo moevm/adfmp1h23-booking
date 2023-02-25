@@ -8,8 +8,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.etu.booking.compose.dependecyinjection.DIService
 import com.etu.booking.compose.screen.AboutUsScreen
 import com.etu.booking.compose.screen.AuthScreen
@@ -63,14 +65,17 @@ fun NavigationController(
         composable(Screen.BookingList.route) {
             BookingListScreen(
                 bookingSearchViewModel = DIService.bookingSearchViewModel,
-                onCardClick = { navController.navigate(Screen.Hotel.route) }
+                onCardClick = { hotelId -> navController.navigate("${Screen.Hotel.route}/$hotelId") }
             )
         }
         composable(Screen.Auth.route) {
             AuthScreen(viewModel = DIService.authViewModel)
         }
-        composable(Screen.Hotel.route) {
-            HotelScreen(onBookNowClick = { Log.d("onClick", "Book Now") })
+        composable(
+            "${Screen.Hotel.route}/{hotelId}",
+            arguments = listOf(navArgument("hotelId") { type = NavType.StringType }),
+        ) { entry ->
+            HotelScreen(onBookNowClick = { Log.d("onClick", "Book Now") }, id = entry.arguments?.getString("hotelId")!!)
         }
         composable(Screen.Document.route) {
             DocumentScreen()

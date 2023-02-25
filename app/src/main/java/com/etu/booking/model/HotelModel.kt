@@ -1,8 +1,11 @@
 package com.etu.booking.model
 
 import androidx.annotation.DrawableRes
+import java.util.UUID
 
 data class HotelModel(
+
+    val id: UUID,
 
     @DrawableRes
     val imageResource: Int,

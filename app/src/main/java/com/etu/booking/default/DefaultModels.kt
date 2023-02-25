@@ -8,6 +8,7 @@ import com.etu.booking.model.HotelModel
 import com.etu.booking.model.LocationModel
 import com.etu.booking.model.PersonModel
 import java.time.LocalDate
+import java.util.UUID
 
 object DefaultModels {
 
@@ -45,6 +46,7 @@ object DefaultModels {
 
     val HOTEL_CARDS_MODELS = listOf(
         HotelCardModel(
+            id = UUID.fromString("2e62b815-5c39-417c-b410-32aa54e90de6"),
             imageResource = IMAGES[0],
             name = HOTEL_NAMES[0],
             score = 8,
@@ -53,6 +55,7 @@ object DefaultModels {
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
+            id = UUID.fromString("600ecd98-11b6-49fd-adf4-01d8af2d76b3"),
             imageResource = IMAGES[1],
             name = HOTEL_NAMES[1],
             score = 9,
@@ -61,6 +64,7 @@ object DefaultModels {
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
+            id = UUID.fromString("56fbfafd-34d0-435e-9006-005771df79e7"),
             imageResource = IMAGES[2],
             name = HOTEL_NAMES[2],
             score = 7,
@@ -69,6 +73,7 @@ object DefaultModels {
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
+            id = UUID.fromString("174d4646-91b2-4960-be9f-4b98a4134f9c"),
             imageResource = IMAGES[3],
             name = HOTEL_NAMES[3],
             score = 8,
@@ -80,6 +85,7 @@ object DefaultModels {
 
     val HOTEL_MODELS = listOf(
         HotelModel(
+            id = UUID.fromString("2e62b815-5c39-417c-b410-32aa54e90de6"),
             imageResource = IMAGES[0],
             name = HOTEL_NAMES[0],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
@@ -91,6 +97,7 @@ object DefaultModels {
             description = "Beautiful hotel with great view"
         ),
         HotelModel(
+            id = UUID.fromString("600ecd98-11b6-49fd-adf4-01d8af2d76b3"),
             imageResource = IMAGES[1],
             name = HOTEL_NAMES[1],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
