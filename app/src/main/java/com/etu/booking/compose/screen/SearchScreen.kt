@@ -88,7 +88,8 @@ fun SearchScreen(
         PushButton(
             modifier = Modifier.padding(bottom = 30.dp),
             text = "Book",
-            onClick = onSearch
+            onClick = onSearch,
+            enabled = isBookEnable(bookingState)
         )
     }
 }
@@ -386,4 +387,18 @@ private fun getPickedDateAsString(year: Int, month: Int, day: Int): LocalDate {
     val calendar = Calendar.getInstance()
     calendar.set(year, month, day)
     return LocalDate.of(year, month + 1, day)
+}
+
+private fun isBookEnable(bookingSearchModel: BookingSearchModel): Boolean = bookingSearchModel.run {
+    location != null
+            && checkIn != null
+            && checkOut != null
+            && guestsAmount != null
+            && !errorModel.location
+            && !errorModel.checkIn
+            && !errorModel.checkOut
+            && !errorModel.minPricePerNight
+            && !errorModel.maxPricePerNight
+            && !errorModel.maxDistanceToCenterInKm
+            && !errorModel.guestsAmount
 }

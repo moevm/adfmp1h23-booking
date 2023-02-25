@@ -112,7 +112,8 @@ private fun SignIn(
             text = "Sign In",
             onClick = {
                 // TODO: sign in
-            }
+            },
+            enabled = isSignInEnable(authState.value)
         )
     }
 }
@@ -237,7 +238,32 @@ private fun SignUp(
             text = "Sign Up",
             onClick = {
                 // TODO: sign up
-            }
+            },
+            enabled = isSignUpEnable(authState.value)
         ) }
     }
+}
+
+private fun isSignInEnable(authModel: AuthModel): Boolean = authModel.run {
+    login != ""
+            && password != ""
+            && !errorModel.login
+            && !errorModel.password
+}
+
+private fun isSignUpEnable(authModel: AuthModel): Boolean = authModel.run {
+    login != ""
+            && password != ""
+            && personModel.name != ""
+            && personModel.surname != ""
+            && personModel.passport.nationality != ""
+            && personModel.passport.number != ""
+            && !errorModel.login
+            && !errorModel.password
+            && !errorModel.name
+            && !errorModel.surname
+            && !errorModel.birthdate
+            && !errorModel.nationality
+            && !errorModel.passportNumber
+            && !errorModel.passportExpiresAt
 }
