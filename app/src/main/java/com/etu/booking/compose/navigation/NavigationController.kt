@@ -17,7 +17,7 @@ import com.etu.booking.compose.screen.AboutUsScreen
 import com.etu.booking.compose.screen.AuthScreen
 import com.etu.booking.compose.screen.BookingListScreen
 import com.etu.booking.compose.screen.HistoryScreen
-import com.etu.booking.compose.screen.HotelBookScreen
+import com.etu.booking.compose.screen.HotelBookingScreen
 import com.etu.booking.compose.screen.HotelScreen
 import com.etu.booking.compose.screen.MoreScreen
 import com.etu.booking.compose.screen.ProfileScreen
@@ -80,7 +80,7 @@ fun NavigationController(
             HotelScreen(
                 hotelId = hotelId,
                 onBookNowClick = {
-                    navController.navigate(Screen.HotelBookScreen.route + "/$hotelId")
+                    navController.navigate(Screen.HotelBookingScreen.route + "/$hotelId")
                 },
             )
         }
@@ -88,11 +88,11 @@ fun NavigationController(
             DocumentScreen()
         }
         composable(
-            route = Screen.HotelBookScreen.route + "/{$HOTEL_ID}",
+            route = Screen.HotelBookingScreen.route + "/{$HOTEL_ID}",
             arguments = listOf(navArgument(HOTEL_ID) { type = NavType.StringType }),
         ) { entry ->
             ComposableOrUnauthorizedScreen(navController) {
-                HotelBookScreen(
+                HotelBookingScreen(
                     bookingSearchViewModel = DIService.bookingSearchViewModel,
                     hotelId = entry.arguments?.getString(HOTEL_ID)!!,
                     onSuccessClick = { navController.navigate(Screen.Search.route) },

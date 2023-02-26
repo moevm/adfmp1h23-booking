@@ -13,7 +13,7 @@
     <string name="auth_screen">Auth</string>
     <string name="document_screen">Document</string>
     <string name="hotel_screen">Hotel</string>
-    <string name="hotel_book_screen">Successfully Booked</string>
+    <string name="hotel_booking_screen">Hotel Book</string>
     <!--Navigation-->
 
     <!--HistoryScreen-->
@@ -32,6 +32,7 @@
     <!--BookingListScreen-->
 
     <!--HotelBookScreen-->
+    <string name="hotel_booking_title">Hotel Booking</string>
     <string name="successfully_booked">Your hotel has been successfully booked</string>
     <!--HotelBookScreen-->
 
@@ -92,7 +93,6 @@
         You take responsibility for your documents stored in your account.
         \nThe application is not responsible for the leakage of personal data
     </string>
-    <string name="warning_button">Warning</string>
     <!--DocumentScreen-->
 
     <!--AboutUsScreen-->
