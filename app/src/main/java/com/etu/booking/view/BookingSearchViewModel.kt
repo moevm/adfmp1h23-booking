@@ -26,7 +26,7 @@ class BookingSearchViewModel(
     val booking: StateFlow<BookingSearchModel> = _booking.asStateFlow()
     val isSuccessfullyBooked: StateFlow<Boolean> = _isSuccessfullyBooked.asStateFlow()
 
-    private val locationPattern = Regex("[A-Za-z-]{1,30}")
+    private val locationPattern = Regex("[A-Za-z- ]{0,30}")
 
     fun setLocation(location: LocationModel) {
         _booking.update { it.copy(

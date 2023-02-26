@@ -10,13 +10,22 @@ data class LocationModel(
 ): Serializable {
 
     companion object {
+
         fun create(location: String): LocationModel {
-            val values = location.split(" ")
+            val values = location.split(", ")
             return if (values.size > 1) {
                 LocationModel(values[1], values[0])
             } else {
-                LocationModel("", values[0])
+                LocationModel(" ", values[0])
             }
+        }
+
+        fun print(model: LocationModel?) = if (model == null) {
+            ""
+        } else if (model.city == " ") {
+            model.country
+        } else {
+            "${model.country}, ${model.city}"
         }
     }
 }

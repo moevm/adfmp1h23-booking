@@ -74,7 +74,7 @@
 
     <!--BookingSearchScreen-->
     <string name="location_error_message">
-        Use \"country city\" input
+        Use \"country, city\" input
     </string>
     <string name="positive_error_message">
         Use positive value
