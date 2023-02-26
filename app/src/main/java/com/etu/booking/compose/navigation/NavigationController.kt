@@ -1,7 +1,6 @@
 package com.etu.booking.compose.navigation
 
 import DocumentScreen
-import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -16,6 +15,7 @@ import com.etu.booking.compose.dependecyinjection.DIService
 import com.etu.booking.compose.screen.AboutUsScreen
 import com.etu.booking.compose.screen.AuthScreen
 import com.etu.booking.compose.screen.BookingListScreen
+import com.etu.booking.compose.screen.CameraScreen
 import com.etu.booking.compose.screen.HistoryScreen
 import com.etu.booking.compose.screen.HotelBookingScreen
 import com.etu.booking.compose.screen.HotelScreen
@@ -48,7 +48,7 @@ fun NavigationController(
         composable(Screen.Profile.route) {
             ComposableOrUnauthorizedScreen(navController) {
                 ProfileScreen(
-                    onAddDocumentClick = { Log.d("onClick", "Add document") },
+                    onAddDocumentClick = { navController.navigate(Screen.AddDocument.route) },
                     onShowDocumentsClick = { navController.navigate(Screen.Document.route) },
                 )
             }
@@ -90,6 +90,9 @@ fun NavigationController(
         }
         composable(Screen.Document.route) {
             DocumentScreen()
+        }
+        composable(Screen.AddDocument.route) {
+            CameraScreen( comeback = { navController.navigate(Screen.Profile.route) } )
         }
         composable(
             route = Screen.HotelBookingScreen.route + "/{$HOTEL_ID}",
