@@ -57,6 +57,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
                 authState = authState,
                 onLoginChange = viewModel::updateLogin,
                 onPasswordChange = viewModel::updatePassword,
+                onSignInClick = { }, // TODO: add action
             )
         } else {
             SignUp(
@@ -69,6 +70,7 @@ fun AuthScreen(viewModel: AuthViewModel) {
                 onExpiresAtChange = viewModel::updatePassportExpiresAt,
                 onLoginChange = viewModel::updateLogin,
                 onPasswordChange = viewModel::updatePassword,
+                onSignUpClick = { }, // TODO: add action
             )
         }
     }
@@ -79,6 +81,7 @@ private fun SignIn(
     authState: State<AuthModel>,
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onSignInClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -110,9 +113,7 @@ private fun SignIn(
         PushButton(
             modifier = Modifier.fillMaxWidth(),
             text = "Sign In",
-            onClick = {
-                // TODO: sign in
-            },
+            onClick = onSignInClick,
             enabled = isSignInEnable(authState.value)
         )
     }
@@ -129,6 +130,7 @@ private fun SignUp(
     onExpiresAtChange: (LocalDate) -> Unit,
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onSignUpClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -236,9 +238,7 @@ private fun SignUp(
         item { PushButton(
             modifier = Modifier.fillMaxWidth(),
             text = "Sign Up",
-            onClick = {
-                // TODO: sign up
-            },
+            onClick = onSignUpClick,
             enabled = isSignUpEnable(authState.value)
         ) }
     }

@@ -1,23 +1,31 @@
 package com.etu.booking.view
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.etu.booking.messaging.SnackbarManager
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import kotlin.random.Random
 
 class BookingSearchViewModel(
     private val snackbarManager: SnackbarManager,
 ) : ViewModel() {
 
-    private var _booking = MutableStateFlow(BookingSearchModel())
+    private val _isLoading = MutableStateFlow(false)
+    private val _booking = MutableStateFlow(BookingSearchModel())
+    private val _isSuccessfullyBooked = MutableStateFlow(false)
 
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
     val booking: StateFlow<BookingSearchModel> = _booking.asStateFlow()
-    
+    val isSuccessfullyBooked: StateFlow<Boolean> = _isSuccessfullyBooked.asStateFlow()
+
     private val locationPattern = Regex("[A-Za-z-]{1,30}")
 
     fun setLocation(location: LocationModel) {
@@ -85,5 +93,16 @@ class BookingSearchViewModel(
                 guestsAmount = !(guestsAmount == null || (guestsAmount in 1..10))
             )
         ) }
+    }
+
+    fun book(id: String) = launchWithLoading {
+        _isSuccessfullyBooked.update { Random.nextBoolean() } // TODO: change to a repository call
+    }
+
+    private fun launchWithLoading(block: suspend () -> Unit) = viewModelScope.launch {
+        _isLoading.update { true }
+        delay(1000) // TODO: Only for request delay emulation. It will be removed
+        block()
+        _isLoading.update { false }
     }
 }

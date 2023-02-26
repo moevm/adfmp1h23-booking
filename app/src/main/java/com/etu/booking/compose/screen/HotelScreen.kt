@@ -29,20 +29,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etu.booking.default.DefaultModels.HOTEL_MODELS
 import com.etu.booking.model.HotelModel
-import java.util.UUID
+import java.util.*
 
 @Composable
 fun HotelScreen(
-    id: String,
+    hotelId: String,
     onBookNowClick: () -> Unit,
 ) {
-    val hotel = HOTEL_MODELS.first { it.id == UUID.fromString(id) }
+    val hotel = HOTEL_MODELS.first { it.id == UUID.fromString(hotelId) }
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         Banner(hotelModel = hotel)
-        MainHotelInfo(hotelModel = hotel, onBookNowClick = onBookNowClick)
+        MainHotelInfo(
+            hotelModel = hotel,
+            onBookNowClick = onBookNowClick,
+        )
         HotelDescription(hotelModel = hotel)
         HotelBookingInfo(hotelModel = hotel)
         HotelFacilities(hotelModel = hotel)

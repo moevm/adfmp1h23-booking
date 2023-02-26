@@ -32,7 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
-import com.etu.booking.component.ProgressIndicator
+import com.etu.booking.compose.component.ProgressIndicator
 import com.etu.booking.control.sort
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
@@ -46,10 +46,11 @@ fun BookingListScreen(
     bookingSearchViewModel: BookingSearchViewModel,
     onCardClick: (String) -> Unit,
 ) {
-    val isLoading = remember { mutableStateOf(true) }
-    val list = remember { mutableStateOf(listOf<HotelCardModel>()) }
+    val isLoading by bookingSearchViewModel.isLoading.collectAsState()
+    val list = remember { mutableStateOf(DefaultModels.HOTEL_CARDS_MODELS) } // TODO: change to a repository call
+
     when {
-        isLoading.value -> ProgressIndicator(isLoading) { list.value = DefaultModels.HOTEL_CARDS_MODELS } // TODO: change to a repository call
+        isLoading -> ProgressIndicator()
         else -> BookingList(
             bookingSearchViewModel = bookingSearchViewModel,
             list = list,

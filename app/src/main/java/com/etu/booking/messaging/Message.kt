@@ -4,5 +4,7 @@ import androidx.annotation.StringRes
 
 data class Message(
     val id: Long,
-    @StringRes val messageId: Int,
+
+    @StringRes
+    val messageId: Int,
 )

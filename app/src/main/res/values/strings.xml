@@ -11,8 +11,9 @@
     <string name="about_us_screen">About us</string>
     <string name="unauthorized_screen">Unauthorized</string>
     <string name="auth_screen">Auth</string>
-    <string name="document_screen">Document Screen</string>
-    <string name="hotel_screen">Hotel Screen</string>
+    <string name="document_screen">Document</string>
+    <string name="hotel_screen">Hotel</string>
+    <string name="hotel_book_screen">Successfully Booked</string>
     <!--Navigation-->
 
     <!--HistoryScreen-->
@@ -29,6 +30,10 @@
     <string name="from_center">From center</string>
     <string name="guests">" guests"</string>
     <!--BookingListScreen-->
+
+    <!--HotelBookScreen-->
+    <string name="successfully_booked">Your hotel has been successfully booked</string>
+    <!--HotelBookScreen-->
 
     <!--ProfileScreen-->
     <string name="profile_screen_title">Profile</string>
@@ -108,7 +113,9 @@
     <string name="colon_with_space_after">": "</string>
     <string name="comma_with_space_after">", "</string>
     <string name="dash_with_spaces_around">" - "</string>
+    <string name="ok">OK</string>
     <string name="km">km</string>
     <string name="unknown">Unknown</string>
+    <string name="failed_action">Something went wrong. Try again later</string>
     <!--Common-->
 </resources>

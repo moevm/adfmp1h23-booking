@@ -31,7 +31,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.etu.booking.R
-import com.etu.booking.component.ProgressIndicator
 import com.etu.booking.control.sort
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.default.DefaultModels.BOOKING_STATUSES
@@ -43,17 +42,13 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun HistoryScreen() {
     Column(modifier = Modifier.fillMaxWidth()) {
-        val isLoading = remember { mutableStateOf(true) }
-        val list = remember { mutableStateOf(listOf<HistoryHotelModel>()) }
+        val list = remember { mutableStateOf(DefaultModels.HISTORY_HOTELS_MODELS) }
 
         HistoryTopBar()
         HistorySortButtons(list = list)
-        when {
-            isLoading.value -> ProgressIndicator(isLoading) { list.value = DefaultModels.HISTORY_HOTELS_MODELS } // TODO: change to a repository call
-            else -> HistoryCardList(
-                list = list,
-            )
-        }
+        HistoryCardList(
+            list = list,
+        )
     }
 }
 
