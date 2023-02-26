@@ -1,6 +1,5 @@
 package com.etu.booking.model
 
-import java.io.Serializable
 import java.time.LocalDate
 import javax.validation.constraints.FutureOrPresent
 import javax.validation.constraints.Max
@@ -26,6 +25,8 @@ data class BookingSearchModel(
     @field:Max(10)
     val guestsAmount: Int? = null,
 
-    val errorModel: BookingSearchErrorModel = BookingSearchErrorModel()
+    val errorModel: BookingSearchErrorModel = BookingSearchErrorModel(),
 
-) : Serializable
+    private val locationPattern: Regex = Regex("([A-Za-z- ]{0,30}), ([A-Za-z- ]{0,30})"),
+
+)

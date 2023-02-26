@@ -107,7 +107,7 @@ private fun LocationInput(
             modifier = Modifier
                 .padding(horizontal = 8.dp, vertical = 2.dp)
                 .fillMaxWidth(),
-            text = bookingSearchModel.location?.let { "${it.country} ${it.city}" } ?: "",
+            text = LocationModel.print(bookingSearchModel.location),
             placeholder = "Location",
             onChange = {
                 onChange(LocationModel.create(it))
@@ -143,7 +143,7 @@ private fun LocationInput(
                             }
                             .fillMaxWidth()
                             .padding(10.dp),
-                        text = "${city.city} ${city.country}"
+                        text = "${city.country}, ${city.city}"
                     )
                 }
             }
