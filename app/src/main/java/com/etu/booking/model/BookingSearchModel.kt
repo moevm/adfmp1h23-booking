@@ -25,4 +25,7 @@ data class BookingSearchModel(
     @field:Min(1)
     @field:Max(10)
     val guestsAmount: Int? = null,
+
+    val errorModel: BookingSearchErrorModel = BookingSearchErrorModel()
+
 ) : Serializable

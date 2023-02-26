@@ -6,6 +6,8 @@ data class AuthModel (
 
     val password: String,
 
-    val personModel: PersonModel
+    val personModel: PersonModel,
+
+    val errorModel: AuthErrorModel
 
 )

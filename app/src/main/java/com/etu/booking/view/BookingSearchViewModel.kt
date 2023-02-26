@@ -17,32 +17,73 @@ class BookingSearchViewModel(
     private var _booking = MutableStateFlow(BookingSearchModel())
 
     val booking: StateFlow<BookingSearchModel> = _booking.asStateFlow()
+    
+    private val locationPattern = Regex("[A-Za-z-]{1,30}")
 
     fun setLocation(location: LocationModel) {
-        _booking.update { it.copy(location = location) }
+        _booking.update { it.copy(
+            location = location,
+            errorModel = it.errorModel.copy(
+                location = !(locationPattern.matches(location.country)
+                        && locationPattern.matches(location.city))
+            )
+        ) }
     }
 
     fun setCheckIn(checkIn: LocalDate) {
-        _booking.update { it.copy(checkIn = checkIn) }
+        val now = LocalDate.now()
+        _booking.update { it.copy(
+            checkIn = checkIn,
+            errorModel = it.errorModel.copy(
+                checkIn = now > checkIn
+            )
+        ) }
     }
 
     fun setCheckOut(checkOut: LocalDate) {
-        _booking.update { it.copy(checkOut = checkOut) }
+        val now = LocalDate.now()
+        _booking.update { it.copy(
+            checkOut = checkOut,
+            errorModel = it.errorModel.copy(
+                checkOut = now > checkOut
+            )
+        ) }
     }
 
-    fun setMinPriceRepNight(minPriceRepNight: Int) {
-        _booking.update { it.copy(minPricePerNight = minPriceRepNight) }
+    fun setMinPriceRepNight(minPricePerNight: Int?) {
+        _booking.update { it.copy(
+            minPricePerNight = minPricePerNight,
+            errorModel = it.errorModel.copy(
+                minPricePerNight = !(minPricePerNight == null || minPricePerNight > 0)
+            )
+        ) }
     }
 
-    fun setMaxPriceRepNight(maxPriceRepNight: Int) {
-        _booking.update { it.copy(maxPricePerNight = maxPriceRepNight) }
+    fun setMaxPriceRepNight(maxPricePerNight: Int?) {
+        _booking.update { it.copy(
+            maxPricePerNight = maxPricePerNight,
+            errorModel = it.errorModel.copy(
+                maxPricePerNight = !(maxPricePerNight == null || maxPricePerNight > 0)
+            )
+        ) }
     }
 
-    fun setMaxDistanceToCenterInKm(maxDistanceToCenterInKm: Int) {
-        _booking.update { it.copy(maxDistanceToCenterInKm = maxDistanceToCenterInKm) }
+    fun setMaxDistanceToCenterInKm(maxDistanceToCenterInKm: Int?) {
+        _booking.update { it.copy(
+            maxDistanceToCenterInKm = maxDistanceToCenterInKm,
+            errorModel = it.errorModel.copy(
+                maxDistanceToCenterInKm =
+                    !(maxDistanceToCenterInKm == null || maxDistanceToCenterInKm >= 0)
+            )
+        ) }
     }
 
-    fun setGuestAmount(guestsAmount: Int) {
-        _booking.update { it.copy(guestsAmount = guestsAmount) }
+    fun setGuestAmount(guestsAmount: Int?) {
+        _booking.update { it.copy(
+            guestsAmount = guestsAmount,
+            errorModel = it.errorModel.copy(
+                guestsAmount = !(guestsAmount == null || (guestsAmount in 1..10))
+            )
+        ) }
     }
 }
