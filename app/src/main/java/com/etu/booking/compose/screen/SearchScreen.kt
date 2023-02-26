@@ -40,7 +40,7 @@ import com.etu.booking.compose.component.PushButton
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
-import com.etu.booking.view.BookingSearchViewModel
+import com.etu.booking.viewmodel.BookingSearchViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

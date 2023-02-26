@@ -13,69 +13,87 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
+import com.etu.booking.compose.component.NothingToDisplay
 import com.etu.booking.compose.component.ProgressIndicator
-import com.etu.booking.control.sort
-import com.etu.booking.default.DefaultModels
+import com.etu.booking.compose.component.SortingButton
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
-import com.etu.booking.view.BookingSearchViewModel
+import com.etu.booking.model.filter.BookingSearchFilter
+import com.etu.booking.viewmodel.BookingSearchViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 @Composable
 fun BookingListScreen(
     bookingSearchViewModel: BookingSearchViewModel,
-    onCardClick: (String) -> Unit,
+    onCardClick: (UUID) -> Unit,
 ) {
     val isLoading by bookingSearchViewModel.isLoading.collectAsState()
-    val list = remember { mutableStateOf(DefaultModels.HOTEL_CARDS_MODELS) } // TODO: change to a repository call
+    val hotels by bookingSearchViewModel.hotels.collectAsState()
+    val bookingSearchModel by bookingSearchViewModel.booking.collectAsState()
+    val filter by bookingSearchViewModel.filter.collectAsState()
 
-    when {
-        isLoading -> ProgressIndicator()
-        else -> BookingList(
-            bookingSearchViewModel = bookingSearchViewModel,
-            list = list,
-            onCardClick = onCardClick,
-        )
+    LaunchedEffect(Unit) {
+        bookingSearchViewModel.updateHotels()
     }
+
+    BookingListScreen(
+        bookingSearchModel = bookingSearchModel,
+        isLoading = isLoading,
+        hotels = hotels,
+        filter = filter,
+        onCardClick = onCardClick,
+        onPriceSortingClick = { bookingSearchViewModel.nextPriceSorting() },
+        onRatingSortingClick = { bookingSearchViewModel.nextRatingSorting() },
+        onDistanceSortingClick = { bookingSearchViewModel.nextDistanceSorting() },
+    )
 }
 
 @Composable
-fun BookingList(
-    bookingSearchViewModel: BookingSearchViewModel,
-    list: MutableState<List<HotelCardModel>>,
-    onCardClick: (String) -> Unit,
+private fun BookingListScreen(
+    bookingSearchModel: BookingSearchModel,
+    isLoading: Boolean,
+    hotels: List<HotelCardModel>,
+    filter: BookingSearchFilter,
+    onCardClick: (UUID) -> Unit,
+    onPriceSortingClick: () -> Unit,
+    onRatingSortingClick: () -> Unit,
+    onDistanceSortingClick: () -> Unit,
 ) {
-    val bookingSearchModel = bookingSearchViewModel.booking.collectAsState()
-
     Column(modifier = Modifier.fillMaxWidth()) {
-        BookingSearchTopBar(bookingSearchModel.value)
-        SearchSortButtons(list = list)
-        LazyColumn {
-            items(list.value) { place ->
-                HotelCard(
-                    hotelCardModel = place,
-                    onClick = onCardClick,
-                )
+        BookingSearchTopBar(bookingSearchModel)
+        SearchSortButtons(
+            filter = filter,
+            onPriceSortingClick = onPriceSortingClick,
+            onRatingSortingClick = onRatingSortingClick,
+            onDistanceSortingClick = onDistanceSortingClick,
+        )
+        ProgressIndicator(enable = isLoading) {
+            NothingToDisplay(enable = hotels.isEmpty()) {
+                LazyColumn {
+                    items(hotels) { place ->
+                        HotelCard(
+                            hotelCardModel = place,
+                            onClick = onCardClick,
+                        )
+                    }
+                }
             }
         }
     }
@@ -113,70 +131,33 @@ private fun getFormattedDateOrDefault(date: LocalDate?, defaultValue: String): S
 }
 
 @Composable
-private fun SearchSortButtons(list: MutableState<List<HotelCardModel>>) {
+private fun SearchSortButtons(
+    filter: BookingSearchFilter,
+    onPriceSortingClick: () -> Unit,
+    onRatingSortingClick: () -> Unit,
+    onDistanceSortingClick: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
-        PriceSort(list = list)
-        RatingSort(list = list)
-        DestinationSort(list = list)
-    }
-}
-
-@Composable
-private fun RatingSort(list: MutableState<List<HotelCardModel>>) {
-    var sort by remember { mutableStateOf(0) }
-
-    OutlinedButton(onClick = {
-        sort = (sort + 1) % 3
-        list.value = sort(sort, list.value) { it.score }
-    }
-    ) {
-        Text(
-            text = "Rating",
-            style = MaterialTheme.typography.body2
+        SortingButton(
+            text = stringResource(id = R.string.sort_price),
+            sortingType = filter.price,
+            onClick = onPriceSortingClick
         )
-        SortType(sort = sort)
-    }
-}
-
-@Composable
-private fun PriceSort(list: MutableState<List<HotelCardModel>>) {
-    var sort by remember { mutableStateOf(0) }
-
-    OutlinedButton(
-        onClick = {
-            sort = (sort + 1) % 3
-            list.value = sort(sort, list.value) { it.pricePerNight }
-        }
-    ) {
-        Text(
-            text = "Price",
-            style = MaterialTheme.typography.body2
+        SortingButton(
+            text = stringResource(id = R.string.sort_rating),
+            sortingType = filter.rating,
+            onClick = onRatingSortingClick
         )
-        SortType(sort = sort)
-    }
-}
-
-@Composable
-private fun DestinationSort(list: MutableState<List<HotelCardModel>>) {
-    var sort by remember { mutableStateOf(0) }
-
-    OutlinedButton(
-        onClick = {
-            sort = (sort + 1) % 3
-            list.value = sort(sort, list.value) { it.kmFromCenter }
-        }
-    ) {
-        Text(
-            text = "Distance",
-            style = MaterialTheme.typography.body2
+        SortingButton(
+            text = stringResource(id = R.string.sort_distance),
+            sortingType = filter.distance,
+            onClick = onDistanceSortingClick
         )
-        SortType(sort = sort)
     }
 }
 
@@ -184,13 +165,13 @@ private fun DestinationSort(list: MutableState<List<HotelCardModel>>) {
 @OptIn(ExperimentalMaterialApi::class)
 private fun HotelCard(
     hotelCardModel: HotelCardModel,
-    onClick: (String) -> Unit,
+    onClick: (UUID) -> Unit,
 ) {
     Surface(
         modifier = Modifier.padding(8.dp),
         shape = RoundedCornerShape(15.dp),
         elevation = 8.dp,
-        onClick = { onClick(hotelCardModel.id.toString()) },
+        onClick = { onClick(hotelCardModel.id) },
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             HotelCardImage(hotelCardModel)

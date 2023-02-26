@@ -19,6 +19,9 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.AccountBox
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,27 +32,42 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
+import com.etu.booking.compose.component.NothingToDisplay
+import com.etu.booking.compose.component.ProgressIndicator
 import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.PersonModel
+import com.etu.booking.viewmodel.ProfileViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun ProfileScreen(
+    profileViewModel: ProfileViewModel,
     onAddDocumentClick: () -> Unit,
     onShowDocumentsClick: () -> Unit,
 ) {
+    val isLoading by profileViewModel.isLoading.collectAsState()
+    val person by profileViewModel.person.collectAsState()
+
+    LaunchedEffect(Unit) {
+        profileViewModel.updateProfile()
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         ProfileTopBar()
-        PersonInfo(DefaultModels.PERSON_MODEL)
-        PassportInfo(DefaultModels.PERSON_MODEL)
-        ProfileButtons(
-            onAddDocumentClick = onAddDocumentClick,
-            onShowDocumentsClick = onShowDocumentsClick,
-        )
+        ProgressIndicator(enable = isLoading) {
+            NothingToDisplay(enable = (person == null)) {
+                PersonInfo(person!!)
+                PassportInfo(person!!)
+                ProfileButtons(
+                    onAddDocumentClick = onAddDocumentClick,
+                    onShowDocumentsClick = onShowDocumentsClick,
+                )
+            }
+        }
     }
 }
 
