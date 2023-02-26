@@ -17,6 +17,7 @@ import com.etu.booking.compose.screen.AboutUsScreen
 import com.etu.booking.compose.screen.AuthScreen
 import com.etu.booking.compose.screen.BookingListScreen
 import com.etu.booking.compose.screen.HistoryScreen
+import com.etu.booking.compose.screen.HotelBookScreen
 import com.etu.booking.compose.screen.HotelScreen
 import com.etu.booking.compose.screen.MoreScreen
 import com.etu.booking.compose.screen.ProfileScreen
@@ -65,23 +66,39 @@ fun NavigationController(
         composable(Screen.BookingList.route) {
             BookingListScreen(
                 bookingSearchViewModel = DIService.bookingSearchViewModel,
-                onCardClick = { hotelId -> navController.navigate("${Screen.Hotel.route}/$hotelId") }
+                onCardClick = { hotelId -> navController.navigate(Screen.Hotel.route + "/$hotelId") }
             )
         }
         composable(Screen.Auth.route) {
             AuthScreen(viewModel = DIService.authViewModel)
         }
         composable(
-            "${Screen.Hotel.route}/{hotelId}",
-            arguments = listOf(navArgument("hotelId") { type = NavType.StringType }),
+            route = Screen.Hotel.route + "/{$HOTEL_ID}",
+            arguments = listOf(navArgument(HOTEL_ID) { type = NavType.StringType }),
         ) { entry ->
+            val hotelId = entry.arguments?.getString(HOTEL_ID)!!
             HotelScreen(
-                onBookNowClick = { Log.d("onClick", "Book Now") },
-                id = entry.arguments?.getString("hotelId")!!,
+                hotelId = hotelId,
+                onBookNowClick = {
+                    navController.navigate(Screen.HotelBookScreen.route + "/$hotelId")
+                },
             )
         }
         composable(Screen.Document.route) {
             DocumentScreen()
+        }
+        composable(
+            route = Screen.HotelBookScreen.route + "/{$HOTEL_ID}",
+            arguments = listOf(navArgument(HOTEL_ID) { type = NavType.StringType }),
+        ) { entry ->
+            ComposableOrUnauthorizedScreen(navController) {
+                HotelBookScreen(
+                    bookingSearchViewModel = DIService.bookingSearchViewModel,
+                    hotelId = entry.arguments?.getString(HOTEL_ID)!!,
+                    onSuccessClick = { navController.navigate(Screen.Search.route) },
+                    onFailedClick = { navController.navigate(Screen.Search.route) },
+                )
+            }
         }
     }
 }
@@ -107,3 +124,5 @@ private fun UnauthorizedScreenWrapper(navController: NavHostController) {
         onStartSignIn = { navController.navigate(Screen.Auth.route) }
     )
 }
+
+private const val HOTEL_ID = "hotelId"

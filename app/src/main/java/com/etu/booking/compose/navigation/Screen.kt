@@ -14,4 +14,5 @@ sealed class Screen(val route: String, @StringRes val resourceId: Int) {
     object Auth : Screen("auth", R.string.auth_screen)
     object Document : Screen("document", R.string.document_screen)
     object Hotel : Screen("hotel", R.string.hotel_screen)
+    object HotelBookScreen : Screen("hotel-book", R.string.hotel_book_screen)
 }
