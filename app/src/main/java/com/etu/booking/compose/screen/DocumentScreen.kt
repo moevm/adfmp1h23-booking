@@ -11,8 +11,6 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +23,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
+import com.etu.booking.compose.component.PushButton
 import com.etu.booking.default.DefaultModels.PASSPORT_IMAGES
 
 @Composable
@@ -43,15 +42,11 @@ fun DocumentScreen() {
                     modifier = Modifier.padding(10.dp),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    OutlinedButton(
+                    PushButton(
                         modifier = Modifier.fillMaxWidth(),
+                        text = stringResource(id = R.string.ok),
                         onClick = { open = false }
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.warning_button),
-                            style = MaterialTheme.typography.body1
-                        )
-                    }
+                    )
                 }
             }
         )
