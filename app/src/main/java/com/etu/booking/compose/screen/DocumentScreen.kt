@@ -1,4 +1,4 @@
-import androidx.compose.foundation.Image
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -13,28 +13,27 @@ import androidx.compose.material.AlertDialog
 import androidx.compose.material.Card
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.etu.booking.R
 import com.etu.booking.compose.component.PushButton
-import com.etu.booking.default.DefaultModels.PASSPORT_IMAGES
+import com.etu.booking.control.getOutputDirectory
+import com.etu.booking.view.DocumentViewModel
 
 @Composable
-fun DocumentScreen() {
+fun DocumentScreen(documentViewModel: DocumentViewModel) {
+    val context = LocalContext.current
     val state = rememberLazyGridState()
-    var open by remember { mutableStateOf(true) }
-    if (open) {
+    val needToShowPermission by documentViewModel.needToShowPermission.collectAsState()
+
+    if (needToShowPermission) {
         AlertDialog(
-            onDismissRequest = {
-                open = false
-            },
+            onDismissRequest = { documentViewModel.seePermission() },
             title = { Text(text = stringResource(id = R.string.warning_title)) },
             text = { Text(text = stringResource(id = R.string.warning_description)) },
             buttons = {
@@ -45,7 +44,7 @@ fun DocumentScreen() {
                     PushButton(
                         modifier = Modifier.fillMaxWidth(),
                         text = stringResource(id = R.string.ok),
-                        onClick = { open = false }
+                        onClick = { documentViewModel.seePermission() }
                     )
                 }
             }
@@ -56,26 +55,28 @@ fun DocumentScreen() {
         modifier = Modifier.fillMaxSize(),
         state = state,
         content = {
-            items(PASSPORT_IMAGES) {
-                ImageCard(id = it)
+            items(getAllPhotos(context)) {
+                ImageCard(file = it)
             }
         }
     )
 }
 
+fun getAllPhotos(context: Context): List<String> = context
+    .getOutputDirectory().listFiles()?.map { it.path } ?: emptyList()
+
 @Composable
-private fun ImageCard(id: Int) {
+private fun ImageCard(file: String) {
     Card(
         modifier = Modifier.padding(4.dp)
     ) {
         Column(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Image(
-                painter = painterResource(id = id),
-                contentDescription = null,
+            AsyncImage(
+                model = file,
+                contentDescription = "",
                 modifier = Modifier.padding(10.dp),
-                contentScale = ContentScale.Crop
             )
             Text(text = "Name: Passport")
             Text(text = "Uploaded: 01.01.2023")

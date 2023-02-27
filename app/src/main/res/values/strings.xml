@@ -95,6 +95,17 @@
     </string>
     <!--DocumentScreen-->
 
+    <!--AddDocumentScreen-->
+    <string name="take_shot">Take shot</string>
+    <string name="browse">Browse</string>
+    <string name="success">Document added successfully</string>
+    <string name="rationale">
+        We need your permission to give you possibility to photo your documents.
+        \nYou take responsibility for your documents stored in your account.
+        \nThe application is not responsible for the leakage of personal data
+    </string>
+    <!--AddDocumentScreen-->
+
     <!--AboutUsScreen-->
     <string name="about_us_screen_title">About us</string>
     <string name="about_us_description">

@@ -2,7 +2,6 @@ package com.etu.booking.model
 
 import androidx.annotation.DrawableRes
 import java.time.LocalDate
-import javax.validation.constraints.Past
 
 data class PersonModel(
 
@@ -14,7 +13,6 @@ data class PersonModel(
 
     val surname: String,
 
-    @field:Past
     val birthdate: LocalDate,
 
     @DrawableRes
