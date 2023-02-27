@@ -73,7 +73,8 @@ fun NavigationController(
             AuthScreen(
                 viewModel = DIService.authViewModel,
                 onSignInClick = { }, // TODO: add action
-                onSignUpClick = { }  // TODO: add action
+                onSignUpClick = { },  // TODO: add action
+                onAddDocumentClick = { navController.navigate(Screen.SignUpAddDocument.route) },
             )
         }
         composable(
@@ -89,10 +90,13 @@ fun NavigationController(
             )
         }
         composable(Screen.Document.route) {
-            DocumentScreen()
+            DocumentScreen(documentViewModel = DIService.documentViewModel)
         }
         composable(Screen.AddDocument.route) {
-            CameraScreen( comeback = { navController.navigate(Screen.Profile.route) } )
+            CameraScreen(comeback = { navController.navigate(Screen.Profile.route) })
+        }
+        composable(Screen.SignUpAddDocument.route) {
+            CameraScreen(comeback = { navController.navigate(Screen.Auth.route) })
         }
         composable(
             route = Screen.HotelBookingScreen.route + "/{$HOTEL_ID}",

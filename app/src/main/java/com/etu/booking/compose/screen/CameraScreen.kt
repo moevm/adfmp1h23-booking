@@ -2,10 +2,8 @@ package com.etu.booking.compose.screen
 
 import android.Manifest
 import android.content.Context
-import android.media.MediaScannerConnection
 import android.net.Uri
 import android.util.Log
-import android.webkit.MimeTypeMap
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
@@ -31,9 +29,11 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.sharp.Star
+import androidx.compose.material.icons.sharp.Menu
+import androidx.compose.material.icons.twotone.AddCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,16 +47,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
-import androidx.core.net.toFile
 import com.etu.booking.R
 import com.etu.booking.compose.component.FailedAction
+import com.etu.booking.control.CameraUIAction
+import com.etu.booking.control.FILENAME
+import com.etu.booking.control.PHOTO_EXTENSION
+import com.etu.booking.control.createFile
+import com.etu.booking.control.getOutputDirectory
+import com.etu.booking.control.takePicture
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
 import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.Executors
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -65,20 +69,43 @@ import kotlin.coroutines.suspendCoroutine
 fun CameraScreen(
     comeback: () -> Unit
 ) {
+    val context = LocalContext.current
+    val success = remember { mutableStateOf(false) }
+
     Permission(
         permission = Manifest.permission.CAMERA,
-        rationale = "We need your permission to give you possibility to photo your documents.\n" +
-                stringResource(id = R.string.warning_description),
+        rationaleId = R.string.rationale,
         comeback = comeback,
     ) {
-        CameraView(onImageCaptured = { uri, fromGallery ->
-            Log.d("yab", "Image Uri Captured from Camera View")
-        }, onError = { Log.d("granted", "fuck")} )
+        CameraView(
+            success = success,
+            onImageCaptured = { uri, fromGallery ->
+                // TODO send picture to back
+                if (fromGallery) {
+                    val outputDirectory = context.getOutputDirectory()
+                    val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
+                    val inputStream = context.contentResolver.openInputStream(uri)
+                    Files.copy(
+                        inputStream,
+                        photoFile.toPath(),
+                        StandardCopyOption.REPLACE_EXISTING
+                    )
+                }
+                success.value = true
+            },
+            onError = { Log.d("granted", "fuck") },
+            comeback = comeback,
+        )
     }
 }
 
 @Composable
-fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureException) -> Unit) {
+fun CameraView(
+    success: MutableState<Boolean>,
+    onImageCaptured: (Uri, Boolean) -> Unit,
+    onError: (ImageCaptureException) -> Unit,
+    comeback: () -> Unit,
+) {
 
     val context = LocalContext.current
     val lensFacing by remember { mutableStateOf(CameraSelector.LENS_FACING_BACK) }
@@ -92,8 +119,10 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
     }
 
     CameraPreviewView(
+        success,
         imageCapture,
-        lensFacing
+        lensFacing,
+        comeback,
     ) { cameraUIAction ->
         when (cameraUIAction) {
             is CameraUIAction.OnCameraClick -> {
@@ -110,8 +139,10 @@ fun CameraView(onImageCaptured: (Uri, Boolean) -> Unit, onError: (ImageCaptureEx
 
 @Composable
 private fun CameraPreviewView(
+    success: MutableState<Boolean>,
     imageCapture: ImageCapture,
     lensFacing: Int = CameraSelector.LENS_FACING_BACK,
+    comeback: () -> Unit,
     cameraUIAction: (CameraUIAction) -> Unit
 ) {
 
@@ -137,8 +168,14 @@ private fun CameraPreviewView(
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
-        AndroidView({ previewView }, modifier = Modifier.fillMaxSize()) {
-
+        AndroidView({ previewView }, modifier = Modifier.fillMaxSize()) {}
+        if (success.value) {
+            Alert(
+                title = "Success",
+                textId = R.string.success,
+                comeback = comeback,
+                onRequestPermission = comeback,
+            )
         }
         Column(
             modifier = Modifier.align(Alignment.BottomCenter),
@@ -150,48 +187,12 @@ private fun CameraPreviewView(
     }
 }
 
-private const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
-private const val PHOTO_EXTENSION = ".jpg"
-
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
     ProcessCameraProvider.getInstance(this).also { cameraProvider ->
         cameraProvider.addListener({
             continuation.resume(cameraProvider.get())
         }, ContextCompat.getMainExecutor(this))
     }
-}
-
-fun ImageCapture.takePicture(
-    context: Context,
-    lensFacing: Int,
-    onImageCaptured: (Uri, Boolean) -> Unit,
-    onError: (ImageCaptureException) -> Unit
-) {
-    val outputDirectory = context.getOutputDirectory()
-    val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
-    val outputFileOptions = getOutputFileOptions(lensFacing, photoFile)
-
-    this.takePicture(
-        outputFileOptions,
-        Executors.newSingleThreadExecutor(),
-        object : ImageCapture.OnImageSavedCallback {
-            override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                val savedUri = output.savedUri ?: Uri.fromFile(photoFile)
-                val mimeType = MimeTypeMap.getSingleton()
-                    .getMimeTypeFromExtension(savedUri.toFile().extension)
-                MediaScannerConnection.scanFile(
-                    context,
-                    arrayOf(savedUri.toFile().absolutePath),
-                    arrayOf(mimeType)
-                ) { _, uri ->
-
-                }
-                onImageCaptured(savedUri, false)
-            }
-            override fun onError(exception: ImageCaptureException) {
-                onError(exception)
-            }
-        })
 }
 
 
@@ -203,26 +204,10 @@ fun getOutputFileOptions(
     val metadata = ImageCapture.Metadata().apply {
         isReversedHorizontal = lensFacing == CameraSelector.LENS_FACING_FRONT
     }
-    val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+
+    return ImageCapture.OutputFileOptions.Builder(photoFile)
         .setMetadata(metadata)
         .build()
-
-    return outputOptions
-}
-
-fun createFile(baseFolder: File, format: String, extension: String) =
-    File(
-        baseFolder, SimpleDateFormat(format, Locale.US)
-            .format(System.currentTimeMillis()) + extension
-    )
-
-
-fun Context.getOutputDirectory(): File {
-    val mediaDir = this.externalMediaDirs.firstOrNull()?.let {
-        File(it, this.resources.getString(R.string.app_name)).apply { mkdirs() }
-    }
-    return if (mediaDir != null && mediaDir.exists())
-        mediaDir else this.filesDir
 }
 
 @Composable
@@ -233,29 +218,38 @@ fun CameraControls(cameraUIAction: (CameraUIAction) -> Unit) {
             .fillMaxWidth()
             .background(Color.Black)
             .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        CameraControl(
-            Icons.Sharp.Star,
-            R.string.app_name,
-            modifier= Modifier
-                .size(64.dp)
-                .padding(1.dp)
-                .border(1.dp, Color.White, CircleShape),
-            onClick = { cameraUIAction(CameraUIAction.OnCameraClick) }
-        )
-
-        CameraControl(
-            Icons.Sharp.Star,
-            R.string.address,
-            modifier= Modifier.size(64.dp),
-            onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
-        )
-
+        Column(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            horizontalAlignment = Alignment.End
+        ) {
+            CameraControl(
+                imageVector = Icons.TwoTone.AddCircle,
+                contentDescId = R.string.take_shot,
+                modifier = Modifier
+                    .size(64.dp)
+                    .padding(1.dp)
+                    .border(1.dp, Color.White, CircleShape),
+                onClick = { cameraUIAction(CameraUIAction.OnCameraClick) }
+            )
+        }
+        Column(
+            modifier = Modifier.fillMaxWidth(0.5f),
+            horizontalAlignment = Alignment.End
+        ) {
+            CameraControl(
+                Icons.Sharp.Menu,
+                R.string.browse,
+                modifier = Modifier
+                    .size(64.dp)
+                    .padding(start = 20.dp),
+                onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
+            )
+        }
     }
 }
-
 
 @Composable
 fun CameraControl(
@@ -278,16 +272,11 @@ fun CameraControl(
 
 }
 
-sealed class CameraUIAction {
-    object OnCameraClick : CameraUIAction()
-    object OnGalleryViewClick : CameraUIAction()
-}
-
 @ExperimentalPermissionsApi
 @Composable
 fun Permission(
     permission: String = Manifest.permission.CAMERA,
-    rationale: String = "This permission is important for this app. Please grant the permission.",
+    rationaleId: Int,
     comeback: () -> Unit,
     content: @Composable () -> Unit = { }
 ) {
@@ -295,8 +284,9 @@ fun Permission(
     PermissionRequired(
         permissionState = permissionState,
         permissionNotGrantedContent = {
-            Rationale(
-                text = rationale,
+            Alert(
+                title = "Permission request",
+                textId = rationaleId,
                 onRequestPermission = {
                     permissionState.launchPermissionRequest()
                 },
@@ -311,18 +301,19 @@ fun Permission(
 }
 
 @Composable
-private fun Rationale(
-    text: String,
+fun Alert(
+    title: String,
+    textId: Int,
     comeback: () -> Unit,
     onRequestPermission: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = comeback,
         title = {
-            Text(text = "Permission request")
+            Text(text = title)
         },
         text = {
-            Text(text)
+            Text(stringResource(id = textId))
         },
         confirmButton = {
             Button(onClick = onRequestPermission) {

@@ -38,7 +38,8 @@ import java.time.format.DateTimeFormatter
 fun AuthScreen(
     viewModel: AuthViewModel,
     onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    onAddDocumentClick: () -> Unit,
 ) {
     val authState = viewModel.authState.collectAsState()
 
@@ -83,6 +84,7 @@ fun AuthScreen(
                 onExpiresAtChange = viewModel::updatePassportExpiresAt,
                 onLoginChange = viewModel::updateLogin,
                 onPasswordChange = viewModel::updatePassword,
+                onAddDocumentClick = onAddDocumentClick,
                 onSignUpClick = {
                     if (isSignUpEnable(authState.value)) {
                         onSignUpClick()
@@ -157,6 +159,7 @@ private fun SignUp(
     onExpiresAtChange: (LocalDate) -> Unit,
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
+    onAddDocumentClick: () -> Unit,
     onSignUpClick: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -273,9 +276,7 @@ private fun SignUp(
         item { PushButton(
             modifier = Modifier.fillMaxWidth(),
             text = "Add document photo",
-            onClick = {
-                // TODO: get access to camera or gallery
-            }
+            onClick = onAddDocumentClick
         ) }
         item { PushButton(
             modifier = Modifier.fillMaxWidth(),
