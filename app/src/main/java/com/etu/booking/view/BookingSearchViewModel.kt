@@ -33,7 +33,9 @@ class BookingSearchViewModel(
             location = location,
             errorModel = it.errorModel.copy(
                 location = !(locationPattern.matches(location.country)
-                        && locationPattern.matches(location.city))
+                        && locationPattern.matches(location.city)
+                        && location.country.trim() != ""
+                        && location.city.trim() != "")
             )
         ) }
     }
