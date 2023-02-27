@@ -53,6 +53,14 @@ fun SearchScreen(
 
     val bookingState by viewModel.booking.collectAsState()
 
+    val onClick = {
+        if (isBookEnable(bookingState)) {
+            onSearch()
+        } else {
+            viewModel.highlightInputs()
+        }
+    }
+
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -88,8 +96,7 @@ fun SearchScreen(
         PushButton(
             modifier = Modifier.padding(bottom = 30.dp),
             text = "Book",
-            onClick = onSearch,
-            enabled = isBookEnable(bookingState)
+            onClick = onClick
         )
     }
 }

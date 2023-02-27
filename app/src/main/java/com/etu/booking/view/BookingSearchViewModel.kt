@@ -101,6 +101,24 @@ class BookingSearchViewModel(
         _isSuccessfullyBooked.update { Random.nextBoolean() } // TODO: change to a repository call
     }
 
+    fun highlightInputs() {
+        _booking.update {
+            val locationValue = LocationModel.print(_booking.value.location)
+            val checkInValue = _booking.value.checkIn
+            val checkOutValue = _booking.value.checkOut
+            val guestsAmountValue = _booking.value.guestsAmount
+
+            it.copy(
+                errorModel = it.errorModel.copy(
+                    location = if (locationValue.isEmpty()) true else it.errorModel.location,
+                    checkIn = if (checkInValue == null) true else it.errorModel.checkIn,
+                    checkOut = if (checkOutValue == null) true else it.errorModel.checkOut,
+                    guestsAmount = if (guestsAmountValue == null) true else it.errorModel.guestsAmount
+                )
+            )
+        }
+    }
+
     private fun launchWithLoading(block: suspend () -> Unit) = viewModelScope.launch {
         _isLoading.update { true }
         delay(1000) // TODO: Only for request delay emulation. It will be removed

@@ -70,7 +70,11 @@ fun NavigationController(
             )
         }
         composable(Screen.Auth.route) {
-            AuthScreen(viewModel = DIService.authViewModel)
+            AuthScreen(
+                viewModel = DIService.authViewModel,
+                onSignInClick = { }, // TODO: add action
+                onSignUpClick = { }  // TODO: add action
+            )
         }
         composable(
             route = Screen.Hotel.route + "/{$HOTEL_ID}",

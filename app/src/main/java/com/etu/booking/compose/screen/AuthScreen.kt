@@ -32,7 +32,11 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun AuthScreen(viewModel: AuthViewModel) {
+fun AuthScreen(
+    viewModel: AuthViewModel,
+    onSignInClick: () -> Unit,
+    onSignUpClick: () -> Unit
+) {
     val authState = viewModel.authState.collectAsState()
 
     var state by remember { mutableStateOf(0) }
@@ -57,7 +61,13 @@ fun AuthScreen(viewModel: AuthViewModel) {
                 authState = authState,
                 onLoginChange = viewModel::updateLogin,
                 onPasswordChange = viewModel::updatePassword,
-                onSignInClick = { }, // TODO: add action
+                onSignInClick = {
+                    if (isSignInEnable(authState.value)) {
+                        onSignInClick()
+                    } else {
+                        viewModel.highlightInputs()
+                    }
+                },
             )
         } else {
             SignUp(
@@ -70,7 +80,13 @@ fun AuthScreen(viewModel: AuthViewModel) {
                 onExpiresAtChange = viewModel::updatePassportExpiresAt,
                 onLoginChange = viewModel::updateLogin,
                 onPasswordChange = viewModel::updatePassword,
-                onSignUpClick = { }, // TODO: add action
+                onSignUpClick = {
+                    if (isSignUpEnable(authState.value)) {
+                        onSignUpClick()
+                    } else {
+                        viewModel.highlightInputs()
+                    }
+                },
             )
         }
     }
@@ -113,8 +129,7 @@ private fun SignIn(
         PushButton(
             modifier = Modifier.fillMaxWidth(),
             text = "Sign In",
-            onClick = onSignInClick,
-            enabled = isSignInEnable(authState.value)
+            onClick = onSignInClick
         )
     }
 }
@@ -238,8 +253,7 @@ private fun SignUp(
         item { PushButton(
             modifier = Modifier.fillMaxWidth(),
             text = "Sign Up",
-            onClick = onSignUpClick,
-            enabled = isSignUpEnable(authState.value)
+            onClick = onSignUpClick
         ) }
     }
 }

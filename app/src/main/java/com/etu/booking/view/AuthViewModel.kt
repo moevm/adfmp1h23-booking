@@ -142,4 +142,26 @@ class AuthViewModel(
             )
         }
     }
+
+    fun highlightInputs() {
+        _authState.update {
+            val loginValue = _authState.value.login
+            val passwordValue = _authState.value.password
+            val nameValue = _authState.value.personModel.name
+            val surnameValue = _authState.value.personModel.surname
+            val nationalityValue = _authState.value.personModel.passport.nationality
+            val passportNumberValue = _authState.value.personModel.passport.number
+
+            it.copy(
+                errorModel = it.errorModel.copy(
+                    login = if (loginValue.isEmpty()) true else it.errorModel.login,
+                    password = if (passwordValue.isEmpty()) true else it.errorModel.password,
+                    name = if (nameValue.isEmpty()) true else it.errorModel.name,
+                    surname = if (surnameValue.isEmpty()) true else it.errorModel.surname,
+                    nationality = if (nationalityValue.isEmpty()) true else it.errorModel.nationality,
+                    passportNumber = if (passportNumberValue.isEmpty()) true else it.errorModel.passportNumber,
+                )
+            )
+        }
+    }
 }
