@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
@@ -20,7 +21,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
@@ -99,6 +102,8 @@ private fun SignIn(
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
 ) {
+    val focusManager = LocalFocusManager.current
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -114,6 +119,7 @@ private fun SignIn(
             text = authState.value.login,
             placeholder = "Login",
             onChange = onLoginChange,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.login,
             errorMessage = stringResource(id = R.string.login_error_message)
         )
@@ -123,6 +129,12 @@ private fun SignIn(
             placeholder = "Password",
             onChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
+            imeAction = ImeAction.Done,
+            keyBoardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             isError = authState.value.errorModel.password,
             errorMessage = stringResource(id = R.string.password_error_message)
         )
@@ -150,6 +162,8 @@ private fun SignUp(
     val context = LocalContext.current
     val dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
+    val focusManager = LocalFocusManager.current
+
     LazyColumn(
         modifier = Modifier
             .fillMaxHeight()
@@ -165,6 +179,7 @@ private fun SignUp(
             text = authState.value.personModel.name,
             placeholder = "Name",
             onChange = onNameChange,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.name,
             errorMessage = stringResource(id = R.string.proper_name_error_message)
         ) }
@@ -173,6 +188,7 @@ private fun SignUp(
             text = authState.value.personModel.surname,
             placeholder = "Surname",
             onChange = onSurnameChange,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.surname,
             errorMessage = stringResource(id = R.string.proper_name_error_message)
         ) }
@@ -190,6 +206,7 @@ private fun SignUp(
             placeholder = "Birthdate",
             onChange = { onBirthdateChange(LocalDate.parse(it, dateFormat)) },
             isEnabled = false,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.birthdate,
             errorMessage = stringResource(id = R.string.not_future_date_error_message)
         ) }
@@ -198,6 +215,7 @@ private fun SignUp(
             text = authState.value.personModel.passport.nationality,
             placeholder = "Nationality",
             onChange = onNationalityChange,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.nationality,
             errorMessage = stringResource(id = R.string.proper_name_error_message)
         ) }
@@ -206,6 +224,7 @@ private fun SignUp(
             text = authState.value.personModel.passport.number,
             placeholder = "Passport number",
             onChange = onPassportNumberChange,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.passportNumber,
             errorMessage = stringResource(id = R.string.passport_number_error_message)
         ) }
@@ -223,6 +242,7 @@ private fun SignUp(
             placeholder = "Expires at",
             onChange = { onExpiresAtChange(LocalDate.parse(it, dateFormat)) },
             isEnabled = false,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.passportExpiresAt,
             errorMessage = stringResource(id = R.string.not_past_date_error_message)
         ) }
@@ -231,6 +251,7 @@ private fun SignUp(
             text = authState.value.login,
             placeholder = "Login",
             onChange = onLoginChange,
+            imeAction = ImeAction.Next,
             isError = authState.value.errorModel.login,
             errorMessage = stringResource(id = R.string.login_error_message)
         ) }
@@ -240,6 +261,12 @@ private fun SignUp(
             placeholder = "Password",
             onChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
+            imeAction = ImeAction.Done,
+            keyBoardActions = KeyboardActions(
+                onDone = {
+                    focusManager.clearFocus()
+                }
+            ),
             isError = authState.value.errorModel.password,
             errorMessage = stringResource(id = R.string.password_error_message)
         ) }
