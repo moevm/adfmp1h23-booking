@@ -12,7 +12,6 @@ import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,18 +31,20 @@ import com.etu.booking.compose.component.PushButton
 import com.etu.booking.model.AuthModel
 import com.etu.booking.viewmodel.AuthViewModel
 import com.etu.booking.viewmodel.AuthorizationViewModel
+import com.etu.booking.viewmodel.ProfileViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun AuthScreen(
     authViewModel: AuthViewModel,
+    profileViewModel: ProfileViewModel,
     authorizationViewModel: AuthorizationViewModel,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onAddDocumentClick: () -> Unit,
 ) {
-    val authState = authViewModel.authState.collectAsState()
+    val authState by authViewModel.authState.collectAsState()
 
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Sign In", "Sign Up")
@@ -68,8 +69,9 @@ fun AuthScreen(
                 onLoginChange = authViewModel::updateLogin,
                 onPasswordChange = authViewModel::updatePassword,
                 onSignInClick = {
-                    if (isSignInEnable(authState.value)) {
+                    if (isSignInEnable(authState)) {
                         authorizationViewModel.logIn()
+                        profileViewModel.updateProfileFromAuthState(authState)
                         onSignInClick()
                     } else {
                         authViewModel.highlightInputs()
@@ -89,8 +91,9 @@ fun AuthScreen(
                 onPasswordChange = authViewModel::updatePassword,
                 onAddDocumentClick = onAddDocumentClick,
                 onSignUpClick = {
-                    if (isSignUpEnable(authState.value)) {
+                    if (isSignUpEnable(authState)) {
                         authorizationViewModel.logIn()
+                        profileViewModel.updateProfileFromAuthState(authState)
                         onSignUpClick()
                     } else {
                         authViewModel.highlightInputs()
@@ -103,7 +106,7 @@ fun AuthScreen(
 
 @Composable
 private fun SignIn(
-    authState: State<AuthModel>,
+    authState: AuthModel,
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
@@ -122,16 +125,16 @@ private fun SignIn(
     ) {
         Input(
             modifier = Modifier.fillMaxWidth(),
-            text = authState.value.login,
+            text = authState.login,
             placeholder = "Login",
             onChange = onLoginChange,
             imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.login,
+            isError = authState.errorModel.login,
             errorMessage = stringResource(id = R.string.login_error_message)
         )
         Input(
             modifier = Modifier.fillMaxWidth(),
-            text = authState.value.password,
+            text = authState.password,
             placeholder = "Password",
             onChange = onPasswordChange,
             visualTransformation = PasswordVisualTransformation(),
@@ -141,7 +144,7 @@ private fun SignIn(
                     focusManager.clearFocus()
                 }
             ),
-            isError = authState.value.errorModel.password,
+            isError = authState.errorModel.password,
             errorMessage = stringResource(id = R.string.password_error_message)
         )
         PushButton(
@@ -154,7 +157,7 @@ private fun SignIn(
 
 @Composable
 private fun SignUp(
-    authState: State<AuthModel>,
+    authState: AuthModel,
     onNameChange: (String) -> Unit,
     onSurnameChange: (String) -> Unit,
     onBirthdateChange: (LocalDate) -> Unit,
@@ -181,112 +184,132 @@ private fun SignUp(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        item { Input(
-            modifier = Modifier.fillMaxWidth(),
-            text = authState.value.personModel.name,
-            placeholder = "Name",
-            onChange = onNameChange,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.name,
-            errorMessage = stringResource(id = R.string.proper_name_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier.fillMaxWidth(),
-            text = authState.value.personModel.surname,
-            placeholder = "Surname",
-            onChange = onSurnameChange,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.surname,
-            errorMessage = stringResource(id = R.string.proper_name_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    showDatePickerDialog(
-                        context = context,
-                        date = authState.value.personModel.birthdate,
-                        onChange = onBirthdateChange,
-                    )
-                },
-            text = dateFormat.format(authState.value.personModel.birthdate),
-            placeholder = "Birthdate",
-            onChange = { onBirthdateChange(LocalDate.parse(it, dateFormat)) },
-            isEnabled = false,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.birthdate,
-            errorMessage = stringResource(id = R.string.not_future_date_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier.fillMaxWidth(),
-            text = authState.value.personModel.passport.nationality,
-            placeholder = "Nationality",
-            onChange = onNationalityChange,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.nationality,
-            errorMessage = stringResource(id = R.string.proper_name_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier.fillMaxWidth(),
-            text = authState.value.personModel.passport.number,
-            placeholder = "Passport number",
-            onChange = onPassportNumberChange,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.passportNumber,
-            errorMessage = stringResource(id = R.string.passport_number_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    showDatePickerDialog(
-                        context = context,
-                        date = authState.value.personModel.passport.expiresAt,
-                        onChange = onExpiresAtChange
-                    )
-                },
-            text = dateFormat.format(authState.value.personModel.passport.expiresAt),
-            placeholder = "Expires at",
-            onChange = { onExpiresAtChange(LocalDate.parse(it, dateFormat)) },
-            isEnabled = false,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.passportExpiresAt,
-            errorMessage = stringResource(id = R.string.not_past_date_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier.fillMaxWidth(),
-            text = authState.value.login,
-            placeholder = "Login",
-            onChange = onLoginChange,
-            imeAction = ImeAction.Next,
-            isError = authState.value.errorModel.login,
-            errorMessage = stringResource(id = R.string.login_error_message)
-        ) }
-        item { Input(
-            modifier = Modifier.fillMaxWidth(),
-            text = authState.value.password,
-            placeholder = "Password",
-            onChange = onPasswordChange,
-            visualTransformation = PasswordVisualTransformation(),
-            imeAction = ImeAction.Done,
-            keyBoardActions = KeyboardActions(
-                onDone = {
-                    focusManager.clearFocus()
-                }
-            ),
-            isError = authState.value.errorModel.password,
-            errorMessage = stringResource(id = R.string.password_error_message)
-        ) }
-        item { PushButton(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Add document photo",
-            onClick = onAddDocumentClick
-        ) }
-        item { PushButton(
-            modifier = Modifier.fillMaxWidth(),
-            text = "Sign Up",
-            onClick = onSignUpClick
-        ) }
+        item {
+            Input(
+                modifier = Modifier.fillMaxWidth(),
+                text = authState.personModel.name,
+                placeholder = "Name",
+                onChange = onNameChange,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.name,
+                errorMessage = stringResource(id = R.string.proper_name_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier.fillMaxWidth(),
+                text = authState.personModel.surname,
+                placeholder = "Surname",
+                onChange = onSurnameChange,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.surname,
+                errorMessage = stringResource(id = R.string.proper_name_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        showDatePickerDialog(
+                            context = context,
+                            date = authState.personModel.birthdate,
+                            onChange = onBirthdateChange,
+                        )
+                    },
+                text = dateFormat.format(authState.personModel.birthdate),
+                placeholder = "Birthdate",
+                onChange = { onBirthdateChange(LocalDate.parse(it, dateFormat)) },
+                isEnabled = false,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.birthdate,
+                errorMessage = stringResource(id = R.string.not_future_date_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier.fillMaxWidth(),
+                text = authState.personModel.passport.nationality,
+                placeholder = "Nationality",
+                onChange = onNationalityChange,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.nationality,
+                errorMessage = stringResource(id = R.string.proper_name_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier.fillMaxWidth(),
+                text = authState.personModel.passport.number,
+                placeholder = "Passport number",
+                onChange = onPassportNumberChange,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.passportNumber,
+                errorMessage = stringResource(id = R.string.passport_number_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        showDatePickerDialog(
+                            context = context,
+                            date = authState.personModel.passport.expiresAt,
+                            onChange = onExpiresAtChange
+                        )
+                    },
+                text = dateFormat.format(authState.personModel.passport.expiresAt),
+                placeholder = "Expires at",
+                onChange = { onExpiresAtChange(LocalDate.parse(it, dateFormat)) },
+                isEnabled = false,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.passportExpiresAt,
+                errorMessage = stringResource(id = R.string.not_past_date_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier.fillMaxWidth(),
+                text = authState.login,
+                placeholder = "Login",
+                onChange = onLoginChange,
+                imeAction = ImeAction.Next,
+                isError = authState.errorModel.login,
+                errorMessage = stringResource(id = R.string.login_error_message)
+            )
+        }
+        item {
+            Input(
+                modifier = Modifier.fillMaxWidth(),
+                text = authState.password,
+                placeholder = "Password",
+                onChange = onPasswordChange,
+                visualTransformation = PasswordVisualTransformation(),
+                imeAction = ImeAction.Done,
+                keyBoardActions = KeyboardActions(
+                    onDone = {
+                        focusManager.clearFocus()
+                    }
+                ),
+                isError = authState.errorModel.password,
+                errorMessage = stringResource(id = R.string.password_error_message)
+            )
+        }
+        item {
+            PushButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Add document photo",
+                onClick = onAddDocumentClick
+            )
+        }
+        item {
+            PushButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = "Sign Up",
+                onClick = onSignUpClick
+            )
+        }
     }
 }
 
