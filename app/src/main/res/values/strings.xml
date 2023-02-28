@@ -44,6 +44,8 @@
     <string name="more_screen_title">More options</string>
     <string name="about_us_button">About us</string>
     <string name="authorization_toggle">Authorization Toggle</string>
+    <string name="authorization_toggle_on">Now you are logged in</string>
+    <string name="authorization_toggle_off">Now you are not logged in</string>
     <!--MoreScreen-->
 
     <!--UnauthorizedScreen-->
@@ -119,6 +121,14 @@
     </string>
     <!--AboutUsScreen-->
 
+    <!--Sorting-->
+    <string name="sort_rating">Rating</string>
+    <string name="sort_price">Price</string>
+    <string name="sort_distance">Distance</string>
+    <string name="sort_check_in">Check-in</string>
+    <string name="sort_check_out">Check-out</string>
+    <!--Sorting-->
+
     <!--Common-->
     <string name="space">" "</string>
     <string name="colon_with_space_after">": "</string>
@@ -128,5 +138,6 @@
     <string name="km">km</string>
     <string name="unknown">Unknown</string>
     <string name="failed_action">Something went wrong. Try again later</string>
+    <string name="empty_space">There’s nothing here yet</string>
     <!--Common-->
 </resources>

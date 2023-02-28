@@ -1,7 +1,6 @@
-package com.etu.booking.view
+package com.etu.booking.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.etu.booking.messaging.SnackbarManager
 import com.etu.booking.model.AuthErrorModel
 import com.etu.booking.model.AuthModel
 import com.etu.booking.model.PersonModel
@@ -12,9 +11,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 
-class AuthViewModel(
-    private val snackbarManager: SnackbarManager,
-) : ViewModel() {
+class AuthViewModel : ViewModel() {
 
     private val _authState = MutableStateFlow(
         AuthModel(

@@ -16,12 +16,13 @@ import com.etu.booking.R
 import com.etu.booking.compose.component.FailedAction
 import com.etu.booking.compose.component.ProgressIndicator
 import com.etu.booking.compose.component.SuccessAction
-import com.etu.booking.view.BookingSearchViewModel
+import com.etu.booking.viewmodel.BookingSearchViewModel
+import java.util.*
 
 @Composable
 fun HotelBookingScreen(
     bookingSearchViewModel: BookingSearchViewModel,
-    hotelId: String,
+    hotelId: UUID,
     onSuccessClick: () -> Unit,
     onFailedClick: () -> Unit,
 ) {
@@ -32,17 +33,13 @@ fun HotelBookingScreen(
         bookingSearchViewModel.book(hotelId)
     }
 
-    when (isLoading) {
-        true -> ProgressIndicator()
-        false -> {
-            HotelBookingTopBar()
-            BookingResult(
-                isSuccessfullyBooked = isSuccessfullyBooked,
-                onSuccessClick = onSuccessClick,
-                onFailedClick = onFailedClick,
-            )
-        }
-
+    ProgressIndicator(enable = isLoading) {
+        HotelBookingTopBar()
+        BookingResult(
+            isSuccessfullyBooked = isSuccessfullyBooked,
+            onSuccessClick = onSuccessClick,
+            onFailedClick = onFailedClick,
+        )
     }
 }
 

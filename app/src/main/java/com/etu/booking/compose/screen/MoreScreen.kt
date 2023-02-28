@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
 import com.etu.booking.model.AuthorizationModel
-import com.etu.booking.view.AuthorizationViewModel
+import com.etu.booking.viewmodel.AuthorizationViewModel
 
 @Composable
 fun MoreScreen(

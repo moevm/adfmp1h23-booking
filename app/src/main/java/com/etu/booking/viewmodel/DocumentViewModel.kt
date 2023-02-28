@@ -1,14 +1,11 @@
-package com.etu.booking.view
+package com.etu.booking.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.etu.booking.messaging.SnackbarManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class DocumentViewModel(
-    private val snackbarManager: SnackbarManager,
-) : ViewModel() {
+class DocumentViewModel : ViewModel() {
     private val _needToShowPermission = MutableStateFlow(true)
 
     val needToShowPermission: StateFlow<Boolean> = _needToShowPermission.asStateFlow()

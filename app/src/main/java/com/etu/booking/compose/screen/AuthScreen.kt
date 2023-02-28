@@ -30,7 +30,7 @@ import com.etu.booking.R
 import com.etu.booking.compose.component.Input
 import com.etu.booking.compose.component.PushButton
 import com.etu.booking.model.AuthModel
-import com.etu.booking.view.AuthViewModel
+import com.etu.booking.viewmodel.AuthViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 

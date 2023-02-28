@@ -10,7 +10,7 @@ import com.etu.booking.model.HotelModel
 import com.etu.booking.model.LocationModel
 import com.etu.booking.model.PersonModel
 import java.time.LocalDate
-import java.util.UUID
+import java.util.*
 
 object DefaultModels {
 
@@ -23,8 +23,6 @@ object DefaultModels {
         "Parallel Vista Hotel",
         "Prince's Shield Hotel",
     )
-
-    val BOOKING_STATUSES = listOf("ALL", BOOKED.name, STAYED.name)
 
     val BOOKING_SEARCH_MODEL = BookingSearchModel(
         location = LocationModel(city = CITY, country = COUNTRY),
@@ -163,7 +161,7 @@ object DefaultModels {
         ),
         HistoryHotelModel(
             name = HOTEL_NAMES[2],
-            checkIn = LocalDate.of(2021, 12, 25),
+            checkIn = LocalDate.of(2021, 5, 3),
             checkOut = LocalDate.of(2022, 1, 13),
             address = "Belarus, Vitebsk, Chapaeva st. 34",
             fullPrice = 436,

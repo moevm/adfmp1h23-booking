@@ -20,6 +20,9 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -27,16 +30,37 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.etu.booking.default.DefaultModels.HOTEL_MODELS
+import com.etu.booking.compose.component.NothingToDisplay
+import com.etu.booking.compose.component.ProgressIndicator
 import com.etu.booking.model.HotelModel
+import com.etu.booking.viewmodel.HotelViewModel
 import java.util.*
 
 @Composable
 fun HotelScreen(
-    hotelId: String,
+    hotelViewModel: HotelViewModel,
+    hotelId: UUID,
     onBookNowClick: () -> Unit,
 ) {
-    val hotel = HOTEL_MODELS.first { it.id == UUID.fromString(hotelId) }
+    val isLoading by hotelViewModel.isLoading.collectAsState()
+    val hotel by hotelViewModel.hotel.collectAsState()
+
+    LaunchedEffect(Unit) {
+        hotelViewModel.updateHotel(hotelId)
+    }
+
+    ProgressIndicator(enable = isLoading) {
+        NothingToDisplay(enable = (hotel == null)) {
+            HotelScreen(hotel!!, onBookNowClick)
+        }
+    }
+}
+
+@Composable
+private fun HotelScreen(
+    hotel: HotelModel,
+    onBookNowClick: () -> Unit,
+) {
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -51,6 +75,7 @@ fun HotelScreen(
         HotelFacilities(hotelModel = hotel)
     }
 }
+
 
 @Composable
 private fun Banner(hotelModel: HotelModel) {

@@ -22,8 +22,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.etu.booking.R
 import com.etu.booking.compose.component.PushButton
-import com.etu.booking.control.getOutputDirectory
-import com.etu.booking.view.DocumentViewModel
+import com.etu.booking.utils.getOutputDirectory
+import com.etu.booking.viewmodel.DocumentViewModel
 
 @Composable
 fun DocumentScreen(documentViewModel: DocumentViewModel) {

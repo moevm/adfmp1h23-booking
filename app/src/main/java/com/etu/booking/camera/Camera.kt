@@ -1,4 +1,4 @@
-package com.etu.booking.control
+package com.etu.booking.camera
 
 import android.content.Context
 import android.media.MediaScannerConnection
@@ -8,6 +8,8 @@ import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.core.net.toFile
 import com.etu.booking.compose.screen.getOutputFileOptions
+import com.etu.booking.utils.createFile
+import com.etu.booking.utils.getOutputDirectory
 import java.util.concurrent.Executors
 
 const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"

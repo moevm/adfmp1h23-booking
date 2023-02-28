@@ -1,7 +1,7 @@
-package com.etu.booking.view
+package com.etu.booking.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
+import com.etu.booking.R
 import com.etu.booking.messaging.SnackbarManager
 import com.etu.booking.model.AuthorizationModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,11 +18,11 @@ class AuthorizationViewModel(
 
     fun logIn() {
         _authorizationState.update { it.copy(isAuthorized = true) }
-        Log.d("AuthorizationStateChange", "LogOut: ${_authorizationState.value}")
+        snackbarManager.showMessage(R.string.authorization_toggle_on)
     }
 
     fun logOut() {
         _authorizationState.update { it.copy(isAuthorized = false) }
-        Log.d("AuthorizationStateChange", "LogOut${_authorizationState.value}")
+        snackbarManager.showMessage(R.string.authorization_toggle_off)
     }
 }

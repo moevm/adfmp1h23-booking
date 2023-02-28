@@ -1,16 +1,10 @@
-package com.etu.booking.control
+package com.etu.booking.utils
 
 import android.content.Context
 import com.etu.booking.R
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
-
-fun <T, R : Comparable<R>> sort(sort: Int, list: List<T>, selector: (T) -> R) = when (sort) {
-    1 -> list.sortedBy(selector = selector)
-    2 -> list.sortedByDescending(selector = selector)
-    else -> list
-}
 
 fun createFile(baseFolder: File, format: String, extension: String) =
     File(

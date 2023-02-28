@@ -18,3 +18,18 @@ fun ProgressIndicator() {
         CircularProgressIndicator()
     }
 }
+
+/**
+ * Creates content if the enable value is **false**,
+ * otherwise creates a [CircularProgressIndicator]
+ */
+@Composable
+fun ProgressIndicator(
+    enable: Boolean,
+    content: @Composable () -> Unit,
+) {
+    when (enable) {
+        true -> ProgressIndicator()
+        false -> content()
+    }
+}
