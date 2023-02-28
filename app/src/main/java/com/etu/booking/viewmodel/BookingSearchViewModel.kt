@@ -46,10 +46,12 @@ class BookingSearchViewModel : ViewModelWithLoading() {
     fun setCheckIn(checkIn: LocalDate) {
         val now = LocalDate.now()
         _booking.update {
+            val isCorrect = now > checkIn || isCheckInValid(checkIn, it.checkOut)
             it.copy(
                 checkIn = checkIn,
                 errorModel = it.errorModel.copy(
-                    checkIn = now > checkIn
+                    checkIn = isCorrect,
+                    checkOut = (it.checkIn != null && now > it.checkOut) || isCorrect,
                 )
             )
         }
@@ -58,10 +60,12 @@ class BookingSearchViewModel : ViewModelWithLoading() {
     fun setCheckOut(checkOut: LocalDate) {
         val now = LocalDate.now()
         _booking.update {
+            val isCorrect = now > checkOut || isCheckOutValid(it.checkIn, checkOut)
             it.copy(
                 checkOut = checkOut,
                 errorModel = it.errorModel.copy(
-                    checkOut = now > checkOut
+                    checkOut = isCorrect,
+                    checkIn = (it.checkIn != null && now > it.checkIn) || isCorrect,
                 )
             )
         }
@@ -162,4 +166,10 @@ class BookingSearchViewModel : ViewModelWithLoading() {
             )
         }
     }
+
+    private fun isCheckInValid(checkIn: LocalDate, checkOut: LocalDate?) =
+        checkOut != null && checkIn > checkOut
+
+    private fun isCheckOutValid(checkIn: LocalDate?, checkOut: LocalDate) =
+        checkIn != null && checkOut < checkIn
 }

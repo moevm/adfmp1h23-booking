@@ -33,7 +33,7 @@ fun Input(
     isError: Boolean = false,
     errorMessage: String = ""
 ) {
-    Column() {
+    Column {
         OutlinedTextField(
             modifier = modifier,
             value = text,
@@ -65,7 +65,7 @@ fun Input(
                 text = errorMessage,
                 color = Color.Red,
                 style = TextStyle(fontSize = 14.sp),
-                modifier = Modifier.padding(start = 16.dp)
+                modifier = Modifier.padding(start = 8.dp)
             )
         }
     }

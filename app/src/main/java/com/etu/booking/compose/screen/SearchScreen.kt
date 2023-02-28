@@ -164,7 +164,8 @@ private fun DateSearch(
     viewModel: BookingSearchViewModel,
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
         CheckInDate(
             bookingSearchModel = bookingSearchModel,
@@ -198,7 +199,7 @@ private fun CheckInDate(
         imeAction = ImeAction.Next,
         isEnabled = false,
         isError = bookingSearchModel.errorModel.checkIn,
-        errorMessage = stringResource(id = R.string.not_past_date_error_message)
+        errorMessage = stringResource(id = R.string.check_in_error_message)
     )
 }
 
@@ -225,7 +226,7 @@ private fun CheckOutDate(
         imeAction = ImeAction.Next,
         isEnabled = false,
         isError = bookingSearchModel.errorModel.checkOut,
-        errorMessage = stringResource(id = R.string.not_past_date_error_message)
+        errorMessage = stringResource(id = R.string.check_out_error_message)
     )
 }
 
@@ -398,8 +399,7 @@ private fun getPickedDateAsString(year: Int, month: Int, day: Int): LocalDate {
 
 private fun isBookEnable(bookingSearchModel: BookingSearchModel): Boolean = bookingSearchModel.run {
     location != null
-            && checkIn != null
-            && checkOut != null
+            && correctDates(checkIn = checkIn, checkOut = checkOut)
             && guestsAmount != null
             && !errorModel.location
             && !errorModel.checkIn
@@ -409,3 +409,7 @@ private fun isBookEnable(bookingSearchModel: BookingSearchModel): Boolean = book
             && !errorModel.maxDistanceToCenterInKm
             && !errorModel.guestsAmount
 }
+
+private fun correctDates(checkIn: LocalDate?, checkOut: LocalDate?) = checkIn != null
+        && checkOut != null
+        && (checkIn.isBefore(checkOut) || checkIn.isEqual(checkOut))

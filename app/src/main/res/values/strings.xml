@@ -66,6 +66,12 @@
     <string name="passport_number_error_message">
         Use only letters and numbers
     </string>
+    <string name="check_in_error_message">
+        Use future date before checkout.
+    </string>
+    <string name="check_out_error_message">
+        Use future date after checkin.
+    </string>
     <string name="not_past_date_error_message">
         Use a date from the future
     </string>
