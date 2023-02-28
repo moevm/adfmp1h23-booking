@@ -31,17 +31,19 @@ import com.etu.booking.compose.component.Input
 import com.etu.booking.compose.component.PushButton
 import com.etu.booking.model.AuthModel
 import com.etu.booking.viewmodel.AuthViewModel
+import com.etu.booking.viewmodel.AuthorizationViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
 fun AuthScreen(
-    viewModel: AuthViewModel,
+    authViewModel: AuthViewModel,
+    authorizationViewModel: AuthorizationViewModel,
     onSignInClick: () -> Unit,
     onSignUpClick: () -> Unit,
     onAddDocumentClick: () -> Unit,
 ) {
-    val authState = viewModel.authState.collectAsState()
+    val authState = authViewModel.authState.collectAsState()
 
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Sign In", "Sign Up")
@@ -63,33 +65,35 @@ fun AuthScreen(
         if (state == 0) {
             SignIn(
                 authState = authState,
-                onLoginChange = viewModel::updateLogin,
-                onPasswordChange = viewModel::updatePassword,
+                onLoginChange = authViewModel::updateLogin,
+                onPasswordChange = authViewModel::updatePassword,
                 onSignInClick = {
                     if (isSignInEnable(authState.value)) {
+                        authorizationViewModel.logIn()
                         onSignInClick()
                     } else {
-                        viewModel.highlightInputs()
+                        authViewModel.highlightInputs()
                     }
                 },
             )
         } else {
             SignUp(
                 authState = authState,
-                onNameChange = viewModel::updateName,
-                onSurnameChange = viewModel::updateSurname,
-                onBirthdateChange = viewModel::updateBirthdate,
-                onNationalityChange = viewModel::updateNationality,
-                onPassportNumberChange = viewModel::updatePassportNumber,
-                onExpiresAtChange = viewModel::updatePassportExpiresAt,
-                onLoginChange = viewModel::updateLogin,
-                onPasswordChange = viewModel::updatePassword,
+                onNameChange = authViewModel::updateName,
+                onSurnameChange = authViewModel::updateSurname,
+                onBirthdateChange = authViewModel::updateBirthdate,
+                onNationalityChange = authViewModel::updateNationality,
+                onPassportNumberChange = authViewModel::updatePassportNumber,
+                onExpiresAtChange = authViewModel::updatePassportExpiresAt,
+                onLoginChange = authViewModel::updateLogin,
+                onPasswordChange = authViewModel::updatePassword,
                 onAddDocumentClick = onAddDocumentClick,
                 onSignUpClick = {
                     if (isSignUpEnable(authState.value)) {
+                        authorizationViewModel.logIn()
                         onSignUpClick()
                     } else {
-                        viewModel.highlightInputs()
+                        authViewModel.highlightInputs()
                     }
                 },
             )

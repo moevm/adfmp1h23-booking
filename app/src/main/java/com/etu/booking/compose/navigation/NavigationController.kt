@@ -75,9 +75,10 @@ fun NavigationController(
         }
         composable(Screen.Auth.route) {
             AuthScreen(
-                viewModel = DIService.authViewModel,
-                onSignInClick = { }, // TODO: add action
-                onSignUpClick = { },  // TODO: add action
+                authViewModel = DIService.authViewModel,
+                authorizationViewModel = DIService.authorizationViewModel,
+                onSignInClick = { navController.navigateUp() },
+                onSignUpClick = { navController.navigateUp() },
                 onAddDocumentClick = { navController.navigate(Screen.SignUpAddDocument.route) },
             )
         }
