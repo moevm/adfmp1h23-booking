@@ -1,6 +1,6 @@
 package com.etu.booking.model.filter
 
-import com.etu.booking.enumerator.BookingStatus
+import com.etu.booking.model.BookingStatus
 
 data class HistoryFilter(
     val checkIn: SortingType = SortingType.DEFAULT,

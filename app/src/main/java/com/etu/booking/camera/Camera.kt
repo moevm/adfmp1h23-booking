@@ -7,7 +7,7 @@ import android.webkit.MimeTypeMap
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCaptureException
 import androidx.core.net.toFile
-import com.etu.booking.compose.screen.getOutputFileOptions
+import com.etu.booking.ui.compose.screen.getOutputFileOptions
 import com.etu.booking.utils.createFile
 import com.etu.booking.utils.getOutputDirectory
 import java.util.concurrent.Executors
@@ -19,7 +19,7 @@ fun ImageCapture.takePicture(
     context: Context,
     lensFacing: Int,
     onImageCaptured: (Uri, Boolean) -> Unit,
-    onError: (ImageCaptureException) -> Unit
+    onError: (ImageCaptureException) -> Unit,
 ) {
     val outputDirectory = context.getOutputDirectory()
     val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)

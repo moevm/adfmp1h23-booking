@@ -1,9 +1,9 @@
 package com.etu.booking.viewmodel
 
-import com.etu.booking.default.DefaultModels
-import com.etu.booking.default.DefaultModels.PERSON_MODEL
 import com.etu.booking.model.AuthModel
 import com.etu.booking.model.PersonModel
+import com.etu.booking.model.default.DefaultModels
+import com.etu.booking.model.default.DefaultModels.PERSON_MODEL
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.drop

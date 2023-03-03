@@ -1,7 +1,7 @@
 package com.etu.booking.viewmodel
 
-import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.HotelModel
+import com.etu.booking.model.default.DefaultModels
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
