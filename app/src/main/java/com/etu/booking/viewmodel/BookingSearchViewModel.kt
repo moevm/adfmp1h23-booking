@@ -1,9 +1,9 @@
 package com.etu.booking.viewmodel
 
-import com.etu.booking.default.DefaultModels
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
 import com.etu.booking.model.LocationModel
+import com.etu.booking.model.default.DefaultModels
 import com.etu.booking.model.filter.BookingSearchFilter
 import com.etu.booking.utils.compareBy
 import com.etu.booking.utils.next

@@ -1,8 +1,8 @@
 package com.etu.booking.viewmodel
 
-import com.etu.booking.default.DefaultModels
-import com.etu.booking.enumerator.BookingStatus
+import com.etu.booking.model.BookingStatus
 import com.etu.booking.model.HistoryHotelModel
+import com.etu.booking.model.default.DefaultModels
 import com.etu.booking.model.filter.HistoryFilter
 import com.etu.booking.utils.compareBy
 import com.etu.booking.utils.getEnumIgnoreCase
