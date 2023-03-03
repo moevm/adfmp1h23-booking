@@ -36,12 +36,12 @@ class HistoryViewModel : ViewModelWithLoading() {
 
     fun nextCheckInSorting() = launchWithLoading {
         _filter.update { it.copy(checkIn = it.checkIn.next()) }
-        updateHotels()
+        updateHotels().join()
     }
 
     fun nextCheckOutSorting() = launchWithLoading {
         _filter.update { it.copy(checkOut = it.checkOut.next()) }
-        updateHotels()
+        updateHotels().join()
     }
 
     fun updateBookingStatusSorting(bookingStatus: String) = launchWithLoading {
@@ -49,6 +49,6 @@ class HistoryViewModel : ViewModelWithLoading() {
             val newValue = getEnumIgnoreCase<BookingStatus>(bookingStatus)
             it.copy(bookingStatus = newValue)
         }
-        updateHotels()
+        updateHotels().join()
     }
 }

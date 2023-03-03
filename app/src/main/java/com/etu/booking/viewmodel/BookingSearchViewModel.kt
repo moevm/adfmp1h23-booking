@@ -136,17 +136,17 @@ class BookingSearchViewModel : ViewModelWithLoading() {
 
     fun nextPriceSorting() = launchWithLoading {
         _filter.update { it.copy(price = it.price.next()) }
-        updateHotels()
+        updateHotels().join()
     }
 
     fun nextRatingSorting() = launchWithLoading {
         _filter.update { it.copy(rating = it.rating.next()) }
-        updateHotels()
+        updateHotels().join()
     }
 
     fun nextDistanceSorting() = launchWithLoading {
         _filter.update { it.copy(distance = it.distance.next()) }
-        updateHotels()
+        updateHotels().join()
     }
 
     fun highlightInputs() {
