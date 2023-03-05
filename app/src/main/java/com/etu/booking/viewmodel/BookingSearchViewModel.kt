@@ -1,35 +1,55 @@
 package com.etu.booking.viewmodel
 
+import com.etu.booking.data.repository.HotelRepository
+import com.etu.booking.data.repository.LocationRepository
+import com.etu.booking.mapper.toCardModel
+import com.etu.booking.mapper.toModel
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
 import com.etu.booking.model.LocationModel
-import com.etu.booking.model.default.DefaultModels
 import com.etu.booking.model.filter.BookingSearchFilter
 import com.etu.booking.utils.compareBy
 import com.etu.booking.utils.next
 import com.etu.booking.utils.thenBy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.random.Random
 
-class BookingSearchViewModel : ViewModelWithLoading() {
+class BookingSearchViewModel(
+    private val hotelRepository: HotelRepository,
+    private val locationRepository: LocationRepository,
+) : ViewModelWithLoading() {
 
     private val _booking = MutableStateFlow(BookingSearchModel())
     private val _filter = MutableStateFlow(BookingSearchFilter())
     private val _hotels = MutableStateFlow(emptyList<HotelCardModel>())
+    private val _locations = MutableStateFlow(emptyList<LocationModel>())
     private val _isSuccessfullyBooked = MutableStateFlow(false)
 
     val booking = _booking.asStateFlow()
     val filter = _filter.asStateFlow()
     val hotels = _hotels.asStateFlow()
+    val locations = _locations.asStateFlow()
     val isSuccessfullyBooked = _isSuccessfullyBooked.asStateFlow()
 
     private val locationPattern = Regex("[A-Za-z- ]{0,30}")
 
     fun setLocation(location: LocationModel) {
+        launchWithLoading {
+            _locations.update {
+                locationRepository.findAllByCityAndCountryRegex(
+                    city = if (location.city != " ") location.city else "",
+                    country = location.country,
+                )
+                    .firstOrNull()
+                    ?.map { it.toModel() } ?: emptyList()
+            }
+        }
         _booking.update {
             it.copy(
                 location = location,
@@ -116,9 +136,25 @@ class BookingSearchViewModel : ViewModelWithLoading() {
         }
     }
 
-    fun updateHotels() = launchWithLoading {
-        _hotels.update { DefaultModels.HOTEL_CARDS_MODELS.applyFilter(_filter.value) }  // TODO: change to a repository call
+    fun updateHotels(bookingSearchModel: BookingSearchModel) = launchWithLoading {
+        _hotels.update {
+            hotelRepository.findAllByFilters(
+                city = bookingSearchModel.location?.city ?: "",
+                country = bookingSearchModel.location?.country ?: "",
+                start = bookingSearchModel.checkIn?.let { dateFormat.format(it) } ?: "",
+                end = bookingSearchModel.checkOut?.let { dateFormat.format(it) } ?: "",
+                minPrice = bookingSearchModel.minPricePerNight ?: Int.MIN_VALUE,
+                maxPrice = bookingSearchModel.maxPricePerNight ?: Int.MAX_VALUE,
+                maxDistance = bookingSearchModel.maxDistanceToCenterInKm ?: Int.MAX_VALUE,
+                guestCount = bookingSearchModel.guestsAmount ?: Int.MIN_VALUE,
+            )
+            .firstOrNull()
+            ?.map { it.toCardModel() }
+            ?.applyFilter(_filter.value) ?: emptyList()
+        }  // TODO: change to a repository call
     }
+
+    private var dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 
     private fun List<HotelCardModel>.applyFilter(
         filter: BookingSearchFilter,
@@ -134,19 +170,19 @@ class BookingSearchViewModel : ViewModelWithLoading() {
         _isSuccessfullyBooked.update { Random.nextBoolean() } // TODO: change to a repository call
     }
 
-    fun nextPriceSorting() = launchWithLoading {
+    fun nextPriceSorting(bookingSearchModel: BookingSearchModel) = launchWithLoading {
         _filter.update { it.copy(price = it.price.next()) }
-        updateHotels().join()
+        updateHotels(bookingSearchModel = bookingSearchModel).join()
     }
 
-    fun nextRatingSorting() = launchWithLoading {
+    fun nextRatingSorting(bookingSearchModel: BookingSearchModel) = launchWithLoading {
         _filter.update { it.copy(rating = it.rating.next()) }
-        updateHotels().join()
+        updateHotels(bookingSearchModel = bookingSearchModel).join()
     }
 
-    fun nextDistanceSorting() = launchWithLoading {
+    fun nextDistanceSorting(bookingSearchModel: BookingSearchModel) = launchWithLoading {
         _filter.update { it.copy(distance = it.distance.next()) }
-        updateHotels().join()
+        updateHotels(bookingSearchModel = bookingSearchModel).join()
     }
 
     fun highlightInputs() {

@@ -37,7 +37,6 @@ import androidx.compose.ui.window.PopupProperties
 import com.etu.booking.R
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.LocationModel
-import com.etu.booking.model.default.DefaultModels
 import com.etu.booking.ui.compose.component.Input
 import com.etu.booking.ui.compose.component.PushButton
 import com.etu.booking.viewmodel.BookingSearchViewModel
@@ -51,6 +50,7 @@ fun SearchScreen(
     onSearch: () -> Unit,
 ) {
 
+    val locations by viewModel.locations.collectAsState()
     val bookingState by viewModel.booking.collectAsState()
 
     val onClick = {
@@ -81,6 +81,7 @@ fun SearchScreen(
         )
         LocationInput(
             bookingSearchModel = bookingState,
+            locations = locations,
             onChange = { viewModel.setLocation(it) },
         )
         DateSearch(viewModel = viewModel, bookingSearchModel = bookingState)
@@ -104,6 +105,7 @@ fun SearchScreen(
 @Composable
 private fun LocationInput(
     bookingSearchModel: BookingSearchModel,
+    locations: List<LocationModel>,
     onChange: (LocationModel) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -130,28 +132,30 @@ private fun LocationInput(
             isError = bookingSearchModel.errorModel.location,
             errorMessage = stringResource(id = R.string.location_error_message)
         )
-        DropdownMenu(
-            modifier = Modifier.fillMaxWidth(),
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            properties = PopupProperties(focusable = false),
-        ) {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .background(shape = RoundedCornerShape(20.dp), color = Color.White)
+        if (locations.isNotEmpty()) {
+            DropdownMenu(
+                modifier = Modifier.fillMaxWidth(),
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                properties = PopupProperties(focusable = false),
             ) {
-                for (city in DefaultModels.CITIES) { // TODO: change to a repository call
-                    Text(
-                        modifier = Modifier
-                            .clickable {
-                                onChange(city)
-                                expanded = false
-                            }
-                            .fillMaxWidth()
-                            .padding(10.dp),
-                        text = "${city.country}, ${city.city}"
-                    )
+                Column(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(shape = RoundedCornerShape(20.dp), color = Color.White)
+                ) {
+                    for (city in locations) {
+                        Text(
+                            modifier = Modifier
+                                .clickable {
+                                    onChange(city)
+                                    expanded = false
+                                }
+                                .fillMaxWidth()
+                                .padding(10.dp),
+                            text = "${city.country}, ${city.city}"
+                        )
+                    }
                 }
             }
         }

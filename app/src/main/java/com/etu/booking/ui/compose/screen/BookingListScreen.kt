@@ -50,7 +50,7 @@ fun BookingListScreen(
     val filter by bookingSearchViewModel.filter.collectAsState()
 
     LaunchedEffect(Unit) {
-        bookingSearchViewModel.updateHotels()
+        bookingSearchViewModel.updateHotels(bookingSearchModel)
     }
 
     BookingListScreen(
@@ -59,9 +59,9 @@ fun BookingListScreen(
         hotels = hotels,
         filter = filter,
         onCardClick = onCardClick,
-        onPriceSortingClick = { bookingSearchViewModel.nextPriceSorting() },
-        onRatingSortingClick = { bookingSearchViewModel.nextRatingSorting() },
-        onDistanceSortingClick = { bookingSearchViewModel.nextDistanceSorting() },
+        onPriceSortingClick = { bookingSearchViewModel.nextPriceSorting(bookingSearchModel) },
+        onRatingSortingClick = { bookingSearchViewModel.nextRatingSorting(bookingSearchModel) },
+        onDistanceSortingClick = { bookingSearchViewModel.nextDistanceSorting(bookingSearchModel) },
     )
 }
 

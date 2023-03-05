@@ -1,5 +1,7 @@
 package com.etu.booking.viewmodel
 
+import com.etu.booking.data.repository.HotelRepository
+import com.etu.booking.mapper.toModel
 import com.etu.booking.model.BookingStatus
 import com.etu.booking.model.HistoryHotelModel
 import com.etu.booking.model.default.DefaultModels
@@ -10,9 +12,12 @@ import com.etu.booking.utils.next
 import com.etu.booking.utils.thenBy
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 
-class HistoryViewModel : ViewModelWithLoading() {
+class HistoryViewModel(
+    private val hotelRepository: HotelRepository,
+) : ViewModelWithLoading() {
 
     private val _hotels = MutableStateFlow(emptyList<HistoryHotelModel>())
     private val _filter = MutableStateFlow(HistoryFilter())

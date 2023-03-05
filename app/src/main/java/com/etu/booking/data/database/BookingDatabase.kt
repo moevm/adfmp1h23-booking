@@ -9,20 +9,27 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.etu.booking.data.constant.BOOKING_DATABASE_NAME
 import com.etu.booking.data.dao.HotelDao
+import com.etu.booking.data.dao.LocationDao
 import com.etu.booking.data.entity.HotelEntity
+import com.etu.booking.data.entity.LocationEntity
+import com.etu.booking.data.entity.PersonEntity
 
 @Database(
-    entities = [HotelEntity::class],
-    version = 2,
+    entities = [HotelEntity::class, PersonEntity::class, LocationEntity::class],
+    version = 4,
 )
 abstract class BookingDatabase : RoomDatabase() {
 
     abstract fun hotelDao(): HotelDao
 
+    abstract fun locationDao(): LocationDao
+
     companion object {
         private const val LOG_TAG = "SQL"
         private const val MIGRATION_PATH = "database/migration/"
         private const val MIGRATION_FILENAME_1_2 = "V1_add_hotels.sql"
+        private const val MIGRATION_FILENAME_2_3 = "V2_add_people.sql"
+        private const val MIGRATION_FILENAME_3_4 = "V3_add_locations.sql"
 
         @Volatile
         private var INSTANCE: BookingDatabase? = null
@@ -33,8 +40,11 @@ abstract class BookingDatabase : RoomDatabase() {
                 klass = BookingDatabase::class.java,
                 name = BOOKING_DATABASE_NAME,
             )
+                .fallbackToDestructiveMigrationOnDowngrade()
                 .addMigrations(
                     getMigration(context, 1, 2, MIGRATION_FILENAME_1_2),
+                    getMigration(context, 2, 3, MIGRATION_FILENAME_2_3),
+                    getMigration(context, 3, 4, MIGRATION_FILENAME_3_4)
                 )
                 .build()
                 .also { INSTANCE = it }
