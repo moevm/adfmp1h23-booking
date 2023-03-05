@@ -11,7 +11,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.etu.booking.dependecyinjection.DIService
 import com.etu.booking.messaging.SnackbarManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -21,7 +20,7 @@ fun rememberBookingAppState(
     scaffoldState: ScaffoldState = rememberScaffoldState(),
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
-    snackbarManager: SnackbarManager = DIService.snackbarManager,
+    snackbarManager: SnackbarManager = SnackbarManager,
     resources: Resources = resources(),
 ) = remember {
     BookingAppState(

@@ -30,8 +30,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.etu.booking.dependecyinjection.provider.RepositoryProvider
 import com.etu.booking.model.HotelModel
 import com.etu.booking.ui.compose.component.NothingToDisplay
 import com.etu.booking.ui.compose.component.ProgressIndicator
@@ -40,7 +38,7 @@ import java.util.*
 
 @Composable
 fun HotelScreen(
-    hotelViewModel: HotelViewModel = viewModel(factory = RepositoryProvider.Factory),
+    hotelViewModel: HotelViewModel,
     hotelId: UUID,
     onBookNowClick: () -> Unit,
 ) {
