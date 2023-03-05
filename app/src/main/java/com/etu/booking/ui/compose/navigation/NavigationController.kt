@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.etu.booking.dependecyinjection.holder.ViewModelHolder
+import com.etu.booking.dependecyinjection.provider.CredentialProvider
 import com.etu.booking.dependecyinjection.provider.ViewModelProvider
 import com.etu.booking.ui.compose.screen.AboutUsScreen
 import com.etu.booking.ui.compose.screen.AuthScreen
@@ -26,6 +27,7 @@ import com.etu.booking.ui.compose.screen.MoreScreen
 import com.etu.booking.ui.compose.screen.ProfileScreen
 import com.etu.booking.ui.compose.screen.SearchScreen
 import com.etu.booking.ui.compose.screen.UnauthorizedScreen
+import com.etu.booking.utils.authorized
 import java.util.*
 
 @Composable
@@ -34,6 +36,7 @@ fun NavigationController(
     navController: NavHostController,
 ) {
     val viewModelHolder = getViewModelHolder()
+        .also { CredentialProvider.setCredentialState(it.credentialViewModel.credentialState) }
 
     NavHost(
         navController = navController,
@@ -62,7 +65,7 @@ fun NavigationController(
         }
         composable(Screen.More.route) {
             MoreScreen(
-                authorizationViewModel = viewModelHolder.authorizationViewModel,
+                credentialViewModel = viewModelHolder.credentialViewModel,
                 onAboutUsCardClick = { navController.navigate(Screen.AboutUs.route) }
             )
         }
@@ -82,9 +85,8 @@ fun NavigationController(
             AuthScreen(
                 authViewModel = viewModelHolder.authViewModel,
                 profileViewModel = viewModelHolder.profileViewModel,
-                authorizationViewModel = viewModelHolder.authorizationViewModel,
-                onSignInClick = { navController.navigateUp() },
-                onSignUpClick = { navController.navigateUp() },
+                credentialViewModel = viewModelHolder.credentialViewModel,
+                onAuthorized = { navController.navigateUp() },
                 onAddDocumentClick = { navController.navigate(Screen.SignUpAddDocument.route) },
             )
         }
@@ -135,15 +137,14 @@ private fun ComposableOrUnauthorizedScreen(
     viewModelHolder: ViewModelHolder,
     content: @Composable () -> Unit,
 ) {
-    val authorizationState = viewModelHolder.authorizationViewModel
-        .authorizationState
+    val credentialState = viewModelHolder.credentialViewModel
+        .credentialState
         .collectAsState()
-    val isNotAuthorized = !authorizationState.value.isAuthorized
 
-    if (isNotAuthorized) {
-        UnauthorizedScreenWrapper(navController)
-    } else {
+    if (credentialState.value.authorized()) {
         content()
+    } else {
+        UnauthorizedScreenWrapper(navController)
     }
 }
 
@@ -157,7 +158,7 @@ private fun UnauthorizedScreenWrapper(navController: NavHostController) {
 @Composable
 private fun getViewModelHolder(): ViewModelHolder {
     return ViewModelHolder(
-        authorizationViewModel = getViewModel(),
+        credentialViewModel = getViewModel(),
         authViewModel = getViewModel(),
         bookingSearchViewModel = getViewModel(),
         documentViewModel = getViewModel(),

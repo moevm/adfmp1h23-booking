@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.etu.booking.data.constant.PERSON_TABLE
+import com.etu.booking.constant.PERSON_TABLE
 
 @Entity(tableName = PERSON_TABLE)
 data class PersonEntity(

@@ -2,8 +2,8 @@ package com.etu.booking.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.etu.booking.data.constant.FACILITY_TABLE
-import com.etu.booking.data.constant.HOTEL_TABLE
+import com.etu.booking.constant.FACILITY_TABLE
+import com.etu.booking.constant.HOTEL_TABLE
 import com.etu.booking.data.entity.FacilityEntity
 import com.etu.booking.data.entity.HotelEntity
 import kotlinx.coroutines.flow.Flow

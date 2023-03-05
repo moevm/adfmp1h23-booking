@@ -50,7 +50,7 @@ fun ProfileScreen(
     val person by profileViewModel.person.collectAsState()
 
     LaunchedEffect(Unit) {
-        profileViewModel.updateProfile()
+        profileViewModel.updatePerson()
     }
 
     Column(

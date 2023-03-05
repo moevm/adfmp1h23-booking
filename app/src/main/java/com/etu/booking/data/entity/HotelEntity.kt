@@ -3,7 +3,7 @@ package com.etu.booking.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.etu.booking.data.constant.HOTEL_TABLE
+import com.etu.booking.constant.HOTEL_TABLE
 import java.util.*
 
 @Entity(tableName = HOTEL_TABLE)

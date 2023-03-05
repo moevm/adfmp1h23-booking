@@ -21,27 +21,35 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
-import com.etu.booking.model.AuthorizationModel
-import com.etu.booking.viewmodel.AuthorizationViewModel
+import com.etu.booking.model.default.DefaultModels.ADMIN_LOGIN
+import com.etu.booking.model.default.DefaultModels.ADMIN_PASSWORD
+import com.etu.booking.ui.compose.component.ProgressIndicator
+import com.etu.booking.utils.authorized
+import com.etu.booking.viewmodel.CredentialViewModel
 
 @Composable
 fun MoreScreen(
-    authorizationViewModel: AuthorizationViewModel,
+    credentialViewModel: CredentialViewModel,
     onAboutUsCardClick: () -> Unit,
 ) {
-    val authorizationState by authorizationViewModel.authorizationState.collectAsState()
+    val credentialState by credentialViewModel.credentialState.collectAsState()
+    val isLoading by credentialViewModel.isLoading.collectAsState()
 
     Column(modifier = Modifier.fillMaxWidth()) {
         MoreTopBar()
-        LazyColumn {
-            item {
-                AuthorizationCard(
-                    authorizationState = authorizationState,
-                    onSwitchEnable = authorizationViewModel::logIn,
-                    onSwitchDisable = authorizationViewModel::logOut,
-                )
+        ProgressIndicator(enable = isLoading) {
+            LazyColumn {
+                item {
+                    AuthorizationCard(
+                        credentialState = credentialState.authorized(),
+                        onSwitchEnable = {
+                            credentialViewModel.signIn(ADMIN_LOGIN, ADMIN_PASSWORD)
+                        },
+                        onSwitchDisable = credentialViewModel::signOut,
+                    )
+                }
+                item { AboutUsCard(onClick = onAboutUsCardClick) }
             }
-            item { AboutUsCard(onClick = onAboutUsCardClick) }
         }
     }
 }
@@ -80,7 +88,7 @@ private fun AboutUsCard(
 
 @Composable
 private fun AuthorizationCard(
-    authorizationState: AuthorizationModel,
+    credentialState: Boolean,
     onSwitchEnable: () -> Unit,
     onSwitchDisable: () -> Unit,
 ) {
@@ -99,7 +107,7 @@ private fun AuthorizationCard(
                 text = stringResource(id = R.string.authorization_toggle),
             )
             Switch(
-                checked = authorizationState.isAuthorized,
+                checked = credentialState,
                 onCheckedChange = {
                     if (it) {
                         onSwitchEnable()

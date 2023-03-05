@@ -1,7 +1,7 @@
 package com.etu.booking.model
 
 import androidx.annotation.DrawableRes
-import java.util.UUID
+import java.util.*
 
 data class HotelModel(
 
@@ -21,6 +21,8 @@ data class HotelModel(
     val currency: String,
 
     val availableSeatsCount: Int,
+
+    val kmFromCenter: Int,
 
     val facilities: List<String>,
 

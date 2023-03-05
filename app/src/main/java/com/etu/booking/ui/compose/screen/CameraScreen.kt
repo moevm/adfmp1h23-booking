@@ -52,6 +52,7 @@ import com.etu.booking.camera.CameraUIAction
 import com.etu.booking.camera.FILENAME
 import com.etu.booking.camera.PHOTO_EXTENSION
 import com.etu.booking.camera.takePicture
+import com.etu.booking.constant.BOOKING_LOG_TAG
 import com.etu.booking.ui.compose.component.FailedAction
 import com.etu.booking.utils.createFile
 import com.etu.booking.utils.getOutputDirectory
@@ -93,7 +94,7 @@ fun CameraScreen(
                 }
                 success.value = true
             },
-            onError = { Log.d("granted", "fuck") },
+            onError = { Log.e(BOOKING_LOG_TAG, "Camera error", it) },
             comeback = comeback,
         )
     }

@@ -7,10 +7,14 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.etu.booking.data.constant.BOOKING_DATABASE_NAME
+import com.etu.booking.constant.BOOKING_DATABASE_NAME
+import com.etu.booking.constant.BOOKING_LOG_TAG
+import com.etu.booking.data.dao.CredentialDao
 import com.etu.booking.data.dao.HistoryDao
 import com.etu.booking.data.dao.HotelDao
 import com.etu.booking.data.dao.LocationDao
+import com.etu.booking.data.dao.PersonDao
+import com.etu.booking.data.entity.CredentialEntity
 import com.etu.booking.data.entity.FacilityEntity
 import com.etu.booking.data.entity.HistoryEntity
 import com.etu.booking.data.entity.HotelEntity
@@ -24,23 +28,26 @@ import com.etu.booking.data.entity.PersonEntity
         LocationEntity::class,
         HistoryEntity::class,
         FacilityEntity::class,
+        CredentialEntity::class,
     ],
-    version = 6,
+    version = 7,
 )
 abstract class BookingDatabase : RoomDatabase() {
 
     abstract fun historyDao(): HistoryDao
     abstract fun hotelDao(): HotelDao
     abstract fun locationDao(): LocationDao
+    abstract fun personDao(): PersonDao
+    abstract fun credentialDao(): CredentialDao
 
     companion object {
-        private const val LOG_TAG = "SQL"
         private const val MIGRATION_PATH = "database/migration/"
         private const val MIGRATION_FILENAME_1_2 = "V1_add_hotels.sql"
         private const val MIGRATION_FILENAME_2_3 = "V2_add_people.sql"
         private const val MIGRATION_FILENAME_3_4 = "V3_add_locations.sql"
         private const val MIGRATION_FILENAME_4_5 = "V4_add_histories.sql"
         private const val MIGRATION_FILENAME_5_6 = "V5_add_facilities.sql"
+        private const val MIGRATION_FILENAME_6_7 = "V6_add_credentials.sql"
 
         @Volatile
         private var INSTANCE: BookingDatabase? = null
@@ -59,6 +66,7 @@ abstract class BookingDatabase : RoomDatabase() {
                     getMigration(context, 3, 4, MIGRATION_FILENAME_3_4),
                     getMigration(context, 4, 5, MIGRATION_FILENAME_4_5),
                     getMigration(context, 5, 6, MIGRATION_FILENAME_5_6),
+                    getMigration(context, 6, 7, MIGRATION_FILENAME_6_7),
                 )
                 .build()
                 .also { INSTANCE = it }
@@ -71,9 +79,9 @@ abstract class BookingDatabase : RoomDatabase() {
             migrationName: String,
         ) = Migration(startVersion, endVersion) {
             val sqlQuery = context.getAssetsFileAsString(fileName = migrationName)
-            Log.d(LOG_TAG, sqlQuery)
+            Log.d(BOOKING_LOG_TAG, sqlQuery)
 
-            Log.i(LOG_TAG, "Migration from $startVersion to $endVersion started")
+            Log.i(BOOKING_LOG_TAG, "Migration from $startVersion to $endVersion started")
             it.executeSqlWithTransaction(sqlQuery)
         }
 
@@ -87,9 +95,9 @@ abstract class BookingDatabase : RoomDatabase() {
             try {
                 execSQL(sqlQuery)
                 setTransactionSuccessful()
-                Log.i(LOG_TAG, "Migration successfully applied")
+                Log.i(BOOKING_LOG_TAG, "Migration successfully applied")
             } catch (expectedException: Exception) {
-                Log.e(LOG_TAG, "Migration failed", expectedException)
+                Log.e(BOOKING_LOG_TAG, "Migration failed", expectedException)
             } finally {
                 endTransaction()
             }

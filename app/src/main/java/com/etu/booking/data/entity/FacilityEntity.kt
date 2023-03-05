@@ -3,7 +3,7 @@ package com.etu.booking.data.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.etu.booking.data.constant.FACILITY_TABLE
+import com.etu.booking.constant.FACILITY_TABLE
 
 @Entity(tableName = FACILITY_TABLE)
 data class FacilityEntity(

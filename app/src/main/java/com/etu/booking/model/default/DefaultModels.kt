@@ -3,6 +3,7 @@ package com.etu.booking.model.default
 import com.etu.booking.R
 import com.etu.booking.model.PersonModel
 import java.time.LocalDate
+import java.util.*
 
 object DefaultModels {
 
@@ -26,17 +27,7 @@ object DefaultModels {
 
     const val DEFAULT_AVATAR: Int = R.drawable.default_avatar
 
-    val PERSON_MODEL = PersonModel(
-        login = "kate",
-        password = "1234",
-        name = "Ekaterina",
-        surname = "Aksyonova",
-        birthdate = LocalDate.of(2001, 11, 14),
-        avatarResource = R.drawable.default_avatar_1,
-        passport = PersonModel.PassportModel(
-            nationality = "Belarus",
-            number = "PP5672456",
-            expiresAt = LocalDate.now(),
-        )
-    )
+    val ADMIN_ID = UUID.fromString("9ed12740-a6ab-46ea-b04a-8986c68278aa")
+    const val ADMIN_LOGIN = "admin"
+    const val ADMIN_PASSWORD = "adminadmin"
 }

@@ -2,8 +2,11 @@ package com.etu.booking.model
 
 import androidx.annotation.DrawableRes
 import java.time.LocalDate
+import java.util.*
 
 data class PersonModel(
+
+    val id: UUID? = null,
 
     val login: String,
 
@@ -19,6 +22,8 @@ data class PersonModel(
     val avatarResource: Int? = null,
 
     val passport: PassportModel,
+
+    var seenDocumentWarning: Boolean,
 ) {
     data class PassportModel(
 
