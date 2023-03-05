@@ -1,13 +1,17 @@
 package com.etu.booking.viewmodel
 
+import com.etu.booking.data.repository.HotelRepository
+import com.etu.booking.mapper.toModel
 import com.etu.booking.model.HotelModel
-import com.etu.booking.model.default.DefaultModels
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import java.util.*
 
-class HotelViewModel : ViewModelWithLoading() {
+class HotelViewModel(
+    private val hotelRepository: HotelRepository,
+) : ViewModelWithLoading() {
 
     private val _hotel = MutableStateFlow<HotelModel?>(null)
 
@@ -15,8 +19,8 @@ class HotelViewModel : ViewModelWithLoading() {
 
     fun updateHotel(hotelId: UUID) = launchWithLoading {
         _hotel.update {
-            DefaultModels.HOTEL_MODELS
-                .first { it.id == hotelId }
+            hotelRepository.findById(hotelId.toString())
+                .firstOrNull()?.toModel()
         }
     }
 }
