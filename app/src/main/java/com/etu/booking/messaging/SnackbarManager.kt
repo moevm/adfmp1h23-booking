@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Class responsible for managing Snackbar messages to show on the screen
  */
-class SnackbarManager {
+object SnackbarManager {
 
     private val _messages: MutableStateFlow<List<Message>> = MutableStateFlow(emptyList())
     val messages: StateFlow<List<Message>> = _messages.asStateFlow()

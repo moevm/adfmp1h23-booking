@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.etu.booking.dependecyinjection.DIService
+import com.etu.booking.dependecyinjection.holder.ViewModelHolder
+import com.etu.booking.dependecyinjection.provider.ViewModelProvider
 import com.etu.booking.ui.compose.screen.AboutUsScreen
 import com.etu.booking.ui.compose.screen.AuthScreen
 import com.etu.booking.ui.compose.screen.BookingListScreen
@@ -30,6 +33,8 @@ fun NavigationController(
     innerPadding: PaddingValues,
     navController: NavHostController,
 ) {
+    val viewModelHolder = getViewModelHolder()
+
     NavHost(
         navController = navController,
         startDestination = Screen.Search.route,
@@ -37,19 +42,19 @@ fun NavigationController(
     ) {
         composable(Screen.Search.route) {
             SearchScreen(
-                viewModel = DIService.bookingSearchViewModel,
+                viewModel = viewModelHolder.bookingSearchViewModel,
                 onSearch = { navController.navigate(Screen.BookingList.route) }
             )
         }
         composable(Screen.History.route) {
-            ComposableOrUnauthorizedScreen(navController) {
-                HistoryScreen(historyViewModel = DIService.historyViewModel)
+            ComposableOrUnauthorizedScreen(navController, viewModelHolder) {
+                HistoryScreen(historyViewModel = viewModelHolder.historyViewModel)
             }
         }
         composable(Screen.Profile.route) {
-            ComposableOrUnauthorizedScreen(navController) {
+            ComposableOrUnauthorizedScreen(navController, viewModelHolder) {
                 ProfileScreen(
-                    profileViewModel = DIService.profileViewModel,
+                    profileViewModel = viewModelHolder.profileViewModel,
                     onAddDocumentClick = { navController.navigate(Screen.AddDocument.route) },
                     onShowDocumentsClick = { navController.navigate(Screen.Document.route) },
                 )
@@ -57,7 +62,7 @@ fun NavigationController(
         }
         composable(Screen.More.route) {
             MoreScreen(
-                authorizationViewModel = DIService.authorizationViewModel,
+                authorizationViewModel = viewModelHolder.authorizationViewModel,
                 onAboutUsCardClick = { navController.navigate(Screen.AboutUs.route) }
             )
         }
@@ -67,7 +72,7 @@ fun NavigationController(
         }
         composable(Screen.BookingList.route) {
             BookingListScreen(
-                bookingSearchViewModel = DIService.bookingSearchViewModel,
+                bookingSearchViewModel = viewModelHolder.bookingSearchViewModel,
                 onCardClick = { hotelId ->
                     navController.navigate(Screen.Hotel.route + "/$hotelId")
                 }
@@ -75,9 +80,9 @@ fun NavigationController(
         }
         composable(Screen.Auth.route) {
             AuthScreen(
-                authViewModel = DIService.authViewModel,
-                profileViewModel = DIService.profileViewModel,
-                authorizationViewModel = DIService.authorizationViewModel,
+                authViewModel = viewModelHolder.authViewModel,
+                profileViewModel = viewModelHolder.profileViewModel,
+                authorizationViewModel = viewModelHolder.authorizationViewModel,
                 onSignInClick = { navController.navigateUp() },
                 onSignUpClick = { navController.navigateUp() },
                 onAddDocumentClick = { navController.navigate(Screen.SignUpAddDocument.route) },
@@ -90,6 +95,7 @@ fun NavigationController(
             val hotelId = UUID.fromString(entry.arguments?.getString(HOTEL_ID))
 
             HotelScreen(
+                hotelViewModel = viewModelHolder.hotelViewModel,
                 hotelId = hotelId,
                 onBookNowClick = {
                     navController.navigate(Screen.HotelBookingScreen.route + "/$hotelId")
@@ -97,7 +103,7 @@ fun NavigationController(
             )
         }
         composable(Screen.Document.route) {
-            DocumentScreen(documentViewModel = DIService.documentViewModel)
+            DocumentScreen(documentViewModel = viewModelHolder.documentViewModel)
         }
         composable(Screen.AddDocument.route) {
             CameraScreen(comeback = { navController.navigateUp() })
@@ -109,11 +115,11 @@ fun NavigationController(
             route = Screen.HotelBookingScreen.route + "/{$HOTEL_ID}",
             arguments = listOf(navArgument(HOTEL_ID) { type = NavType.StringType }),
         ) { entry ->
-            ComposableOrUnauthorizedScreen(navController) {
+            ComposableOrUnauthorizedScreen(navController, viewModelHolder) {
                 val hotelId = UUID.fromString(entry.arguments?.getString(HOTEL_ID))
 
                 HotelBookingScreen(
-                    bookingSearchViewModel = DIService.bookingSearchViewModel,
+                    bookingSearchViewModel = viewModelHolder.bookingSearchViewModel,
                     hotelId = hotelId,
                     onSuccessClick = { navController.navigate(Screen.Search.route) },
                     onFailedClick = { navController.navigate(Screen.Search.route) },
@@ -126,9 +132,12 @@ fun NavigationController(
 @Composable
 private fun ComposableOrUnauthorizedScreen(
     navController: NavHostController,
+    viewModelHolder: ViewModelHolder,
     content: @Composable () -> Unit,
 ) {
-    val authorizationState = DIService.authorizationViewModel.authorizationState.collectAsState()
+    val authorizationState = viewModelHolder.authorizationViewModel
+        .authorizationState
+        .collectAsState()
     val isNotAuthorized = !authorizationState.value.isAuthorized
 
     if (isNotAuthorized) {
@@ -143,6 +152,24 @@ private fun UnauthorizedScreenWrapper(navController: NavHostController) {
     UnauthorizedScreen(
         onStartSignIn = { navController.navigate(Screen.Auth.route) }
     )
+}
+
+@Composable
+private fun getViewModelHolder(): ViewModelHolder {
+    return ViewModelHolder(
+        authorizationViewModel = getViewModel(),
+        authViewModel = getViewModel(),
+        bookingSearchViewModel = getViewModel(),
+        documentViewModel = getViewModel(),
+        historyViewModel = getViewModel(),
+        hotelViewModel = getViewModel(),
+        profileViewModel = getViewModel(),
+    )
+}
+
+@Composable
+private inline fun <reified T : ViewModel> getViewModel(): T {
+    return viewModel(factory = ViewModelProvider.Factory)
 }
 
 private const val HOTEL_ID = "hotelId"
