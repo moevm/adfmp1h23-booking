@@ -90,7 +90,6 @@ fun NavigationController(
             val hotelId = UUID.fromString(entry.arguments?.getString(HOTEL_ID))
 
             HotelScreen(
-                hotelViewModel = DIService.hotelViewModel,
                 hotelId = hotelId,
                 onBookNowClick = {
                     navController.navigate(Screen.HotelBookingScreen.route + "/$hotelId")

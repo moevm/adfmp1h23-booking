@@ -6,7 +6,6 @@ import com.etu.booking.viewmodel.AuthorizationViewModel
 import com.etu.booking.viewmodel.BookingSearchViewModel
 import com.etu.booking.viewmodel.DocumentViewModel
 import com.etu.booking.viewmodel.HistoryViewModel
-import com.etu.booking.viewmodel.HotelViewModel
 import com.etu.booking.viewmodel.ProfileViewModel
 
 object DIService {
@@ -17,6 +16,5 @@ object DIService {
     val bookingSearchViewModel = BookingSearchViewModel()
     val historyViewModel = HistoryViewModel()
     val profileViewModel = ProfileViewModel()
-    val hotelViewModel = HotelViewModel()
     val documentViewModel = DocumentViewModel()
 }

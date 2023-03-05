@@ -46,7 +46,7 @@ object DefaultModels {
 
     val HOTEL_CARDS_MODELS = listOf(
         HotelCardModel(
-            id = UUID.fromString("2e62b815-5c39-417c-b410-32aa54e90de6"),
+            id = UUID.fromString("d7abe994-762a-471a-9dfe-494f2801d69d"),
             imageResource = IMAGES[0],
             name = HOTEL_NAMES[0],
             score = 8,
@@ -55,7 +55,7 @@ object DefaultModels {
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
-            id = UUID.fromString("600ecd98-11b6-49fd-adf4-01d8af2d76b3"),
+            id = UUID.fromString("f91358a4-5f9c-4169-ac20-a9630f218dd4"),
             imageResource = IMAGES[1],
             name = HOTEL_NAMES[1],
             score = 9,
@@ -64,7 +64,7 @@ object DefaultModels {
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
-            id = UUID.fromString("56fbfafd-34d0-435e-9006-005771df79e7"),
+            id = UUID.fromString("b9a8c372-0b0a-44ba-a606-0dad1ffd3c4b"),
             imageResource = IMAGES[2],
             name = HOTEL_NAMES[2],
             score = 7,
@@ -73,7 +73,7 @@ object DefaultModels {
             currency = EURO_CURRENCY,
         ),
         HotelCardModel(
-            id = UUID.fromString("174d4646-91b2-4960-be9f-4b98a4134f9c"),
+            id = UUID.fromString("cbd1e333-8a43-4f88-a6fe-faab2a8bc848"),
             imageResource = IMAGES[3],
             name = HOTEL_NAMES[3],
             score = 8,
@@ -85,7 +85,7 @@ object DefaultModels {
 
     val HOTEL_MODELS = listOf(
         HotelModel(
-            id = UUID.fromString("2e62b815-5c39-417c-b410-32aa54e90de6"),
+            id = UUID.fromString("d7abe994-762a-471a-9dfe-494f2801d69d"),
             imageResource = IMAGES[0],
             name = HOTEL_NAMES[0],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
@@ -97,7 +97,7 @@ object DefaultModels {
             description = "Beautiful hotel with great view"
         ),
         HotelModel(
-            id = UUID.fromString("600ecd98-11b6-49fd-adf4-01d8af2d76b3"),
+            id = UUID.fromString("f91358a4-5f9c-4169-ac20-a9630f218dd4"),
             imageResource = IMAGES[1],
             name = HOTEL_NAMES[1],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
@@ -109,7 +109,7 @@ object DefaultModels {
             description = "Beautiful hotel in historical place"
         ),
         HotelModel(
-            id = UUID.fromString("56fbfafd-34d0-435e-9006-005771df79e7"),
+            id = UUID.fromString("b9a8c372-0b0a-44ba-a606-0dad1ffd3c4b"),
             imageResource = IMAGES[2],
             name = HOTEL_NAMES[2],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
@@ -121,7 +121,7 @@ object DefaultModels {
             description = "Beautiful hotel in historical place"
         ),
         HotelModel(
-            id = UUID.fromString("174d4646-91b2-4960-be9f-4b98a4134f9c"),
+            id = UUID.fromString("cbd1e333-8a43-4f88-a6fe-faab2a8bc848"),
             imageResource = IMAGES[3],
             name = HOTEL_NAMES[3],
             address = "Belarus, Vitebsk, Chapaeva st. 34",
