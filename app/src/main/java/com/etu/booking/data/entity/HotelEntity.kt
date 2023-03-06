@@ -24,6 +24,9 @@ data class HotelEntity(
 
     val currency: String,
 
+    @ColumnInfo("km_from_center")
+    val kmFromCenter: Int,
+
     @ColumnInfo("available_seats_count")
     val availableSeatsCount: Int,
 //    val facilities: List<String>,

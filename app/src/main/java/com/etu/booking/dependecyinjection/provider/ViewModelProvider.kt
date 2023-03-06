@@ -15,12 +15,21 @@ object ViewModelProvider {
     val Factory = viewModelFactory {
         initializer { AuthorizationViewModel(SnackbarManager) }
         initializer { AuthViewModel() }
-        initializer { BookingSearchViewModel() }
+        initializer {
+            BookingSearchViewModel(
+                hotelRepository = bookingApplication().repositoryContext.hotelRepository,
+                locationRepository = bookingApplication().repositoryContext.locationRepository,
+            )
+        }
         initializer { DocumentViewModel() }
-        initializer { HistoryViewModel() }
+        initializer {
+            HistoryViewModel(
+                hotelRepository = bookingApplication().repositoryContext.hotelRepository,
+            )
+        }
         initializer {
             HotelViewModel(
-                hotelRepository = bookingApplication().repositoryContext.hotelRepository
+                hotelRepository = bookingApplication().repositoryContext.hotelRepository,
             )
         }
         initializer { ProfileViewModel() }

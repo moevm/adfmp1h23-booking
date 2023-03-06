@@ -26,4 +26,25 @@ interface HotelDao : CrudDao<HotelEntity> {
         """
     )
     fun findAll(): Flow<List<HotelEntity>>
+
+    @Query(
+        """
+            SELECT *
+            FROM $HOTEL_TABLE
+            WHERE instr(address, :country) AND
+                  instr(address, :city) AND
+                  price_per_night >= :minPrice AND
+                  price_per_night <= :maxPrice AND
+                  km_from_center <= :maxDistance AND
+                  available_seats_count >= :guestCount
+        """
+    )
+    fun findAllByFilters(
+        country: String,
+        city: String,
+        minPrice: Int,
+        maxPrice: Int,
+        maxDistance: Int,
+        guestCount: Int,
+    ): Flow<List<HotelEntity>>
 }

@@ -8,6 +8,23 @@ import kotlinx.coroutines.flow.Flow
 class DefaultHotelRepository(
     private val hotelDao: HotelDao,
 ) : HotelRepository {
+    override fun findAllByFilters(
+        country: String,
+        city: String,
+        start: String,
+        end: String,
+        minPrice: Int,
+        maxPrice: Int,
+        maxDistance: Int,
+        guestCount: Int
+    )  = hotelDao.findAllByFilters(
+        country = country,
+        city = city,
+        minPrice = minPrice,
+        maxPrice = maxPrice,
+        maxDistance = maxDistance,
+        guestCount = guestCount,
+    )
 
     override suspend fun insert(entity: HotelEntity) = hotelDao.insert(entity)
 

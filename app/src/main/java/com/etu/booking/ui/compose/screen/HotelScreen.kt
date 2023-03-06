@@ -104,8 +104,7 @@ private fun MainHotelInfo(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            HotelName(hotelModel = hotelModel)
-            HotelBookButton(onBookNowClick = onBookNowClick)
+            HotelName(hotelModel = hotelModel, onBookNowClick = onBookNowClick)
         }
     }
 }
@@ -187,9 +186,15 @@ private fun HotelFacilities(hotelModel: HotelModel) {
 }
 
 @Composable
-private fun HotelName(hotelModel: HotelModel) {
+private fun HotelName(hotelModel: HotelModel, onBookNowClick: () -> Unit) {
     Column {
-        Text(text = hotelModel.name, style = MaterialTheme.typography.h4)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Text(text = hotelModel.name, style = MaterialTheme.typography.h4)
+            HotelBookButton(onBookNowClick = onBookNowClick)
+        }
         Text(text = hotelModel.address, style = TextStyle(fontSize = 18.sp, color = Color.Black))
     }
 }

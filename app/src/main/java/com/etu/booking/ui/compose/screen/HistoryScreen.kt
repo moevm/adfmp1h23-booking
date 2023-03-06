@@ -39,7 +39,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
-fun HistoryScreen(historyViewModel: HistoryViewModel) {
+fun HistoryScreen(
+    historyViewModel: HistoryViewModel,
+) {
     val isLoading by historyViewModel.isLoading.collectAsState()
     val hotels by historyViewModel.hotels.collectAsState()
     val filter by historyViewModel.filter.collectAsState()
