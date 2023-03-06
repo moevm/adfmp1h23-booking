@@ -34,7 +34,7 @@ abstract class BookingDatabase : RoomDatabase() {
                 name = BOOKING_DATABASE_NAME,
             )
                 .addMigrations(
-                    getMigration(context, 1, 2, MIGRATION_FILENAME_1_2)
+                    getMigration(context, 1, 2, MIGRATION_FILENAME_1_2),
                 )
                 .build()
                 .also { INSTANCE = it }
