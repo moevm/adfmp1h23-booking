@@ -2,7 +2,9 @@ package com.etu.booking.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
+import com.etu.booking.data.constant.FACILITY_TABLE
 import com.etu.booking.data.constant.HOTEL_TABLE
+import com.etu.booking.data.entity.FacilityEntity
 import com.etu.booking.data.entity.HotelEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.*
@@ -47,4 +49,13 @@ interface HotelDao : CrudDao<HotelEntity> {
         maxDistance: Int,
         guestCount: Int,
     ): Flow<List<HotelEntity>>
+
+    @Query(
+        """
+            SELECT * FROM $HOTEL_TABLE
+            JOIN $FACILITY_TABLE ON $HOTEL_TABLE.id = $FACILITY_TABLE.hotel_id
+            WHERE $HOTEL_TABLE.id = :id
+        """
+    )
+    fun findExtendedById(id: String): Flow<Map<HotelEntity, List<FacilityEntity>>>
 }
