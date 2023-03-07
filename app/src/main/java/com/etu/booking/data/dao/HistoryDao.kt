@@ -2,7 +2,7 @@ package com.etu.booking.data.dao
 
 import androidx.room.Dao
 import androidx.room.Query
-import com.etu.booking.data.constant.HISTORY_TABLE
+import com.etu.booking.constant.HISTORY_TABLE
 import com.etu.booking.data.entity.HistoryEntity
 import kotlinx.coroutines.flow.Flow
 import java.util.*

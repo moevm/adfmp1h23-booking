@@ -18,6 +18,7 @@ fun HotelEntity.toModel(facilities: List<FacilityEntity>) =
         pricePerNight = pricePerNight,
         currency = currency,
         availableSeatsCount = availableSeatsCount,
+        kmFromCenter = kmFromCenter,
         imageResource = IMAGES[image] ?: DEFAULT_AVATAR,
         facilities = facilities.map { it.name }
     )

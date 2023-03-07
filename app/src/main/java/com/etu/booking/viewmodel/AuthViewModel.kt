@@ -28,7 +28,8 @@ class AuthViewModel : ViewModel() {
                     number = "",
                     nationality = "",
                     expiresAt = LocalDate.now(),
-                )
+                ),
+                seenDocumentWarning = false,
             ),
             errorModel = AuthErrorModel()
         )

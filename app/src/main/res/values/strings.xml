@@ -78,6 +78,8 @@
     <string name="not_future_date_error_message">
         Use a date from the past
     </string>
+    <string name="user_already_exists">User with this login already exists</string>
+    <string name="user_not_found">Invalid login or password</string>
     <!--AuthorizationScreen-->
 
     <!--BookingSearchScreen-->

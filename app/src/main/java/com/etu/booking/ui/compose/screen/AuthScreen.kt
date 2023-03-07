@@ -27,10 +27,14 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import com.etu.booking.R
 import com.etu.booking.model.AuthModel
+import com.etu.booking.model.CredentialErrorModel
+import com.etu.booking.ui.compose.component.ErrorText
 import com.etu.booking.ui.compose.component.Input
+import com.etu.booking.ui.compose.component.ProgressIndicator
 import com.etu.booking.ui.compose.component.PushButton
+import com.etu.booking.utils.authorized
 import com.etu.booking.viewmodel.AuthViewModel
-import com.etu.booking.viewmodel.AuthorizationViewModel
+import com.etu.booking.viewmodel.CredentialViewModel
 import com.etu.booking.viewmodel.ProfileViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -39,67 +43,74 @@ import java.time.format.DateTimeFormatter
 fun AuthScreen(
     authViewModel: AuthViewModel,
     profileViewModel: ProfileViewModel,
-    authorizationViewModel: AuthorizationViewModel,
-    onSignInClick: () -> Unit,
-    onSignUpClick: () -> Unit,
+    credentialViewModel: CredentialViewModel,
+    onAuthorized: () -> Unit,
     onAddDocumentClick: () -> Unit,
 ) {
     val authState by authViewModel.authState.collectAsState()
+    val credentialErrorModel by credentialViewModel.errorModel.collectAsState()
+    val credentialState by credentialViewModel.credentialState.collectAsState()
+    val isLoading by credentialViewModel.isLoading.collectAsState()
 
     var state by remember { mutableStateOf(0) }
     val titles = listOf("Sign In", "Sign Up")
 
-    Column {
-        TabRow(selectedTabIndex = state) {
-            titles.forEachIndexed { index, title ->
-                Tab(
-                    text = {
-                        Text(text = title)
-                    },
-                    selected = state == index,
-                    onClick = {
-                        state = index
-                    }
-                )
-            }
-        }
-        if (state == 0) {
-            SignIn(
-                authState = authState,
-                onLoginChange = authViewModel::updateLogin,
-                onPasswordChange = authViewModel::updatePassword,
-                onSignInClick = {
-                    if (isSignInEnable(authState)) {
-                        authorizationViewModel.logIn()
-                        profileViewModel.updateProfileFromAuthState(authState)
-                        onSignInClick()
-                    } else {
-                        authViewModel.highlightInputs()
-                    }
-                },
-            )
+    ProgressIndicator(enable = isLoading) {
+        if (credentialState.authorized()) {
+            onAuthorized()
         } else {
-            SignUp(
-                authState = authState,
-                onNameChange = authViewModel::updateName,
-                onSurnameChange = authViewModel::updateSurname,
-                onBirthdateChange = authViewModel::updateBirthdate,
-                onNationalityChange = authViewModel::updateNationality,
-                onPassportNumberChange = authViewModel::updatePassportNumber,
-                onExpiresAtChange = authViewModel::updatePassportExpiresAt,
-                onLoginChange = authViewModel::updateLogin,
-                onPasswordChange = authViewModel::updatePassword,
-                onAddDocumentClick = onAddDocumentClick,
-                onSignUpClick = {
-                    if (isSignUpEnable(authState)) {
-                        authorizationViewModel.logIn()
-                        profileViewModel.updateProfileFromAuthState(authState)
-                        onSignUpClick()
-                    } else {
-                        authViewModel.highlightInputs()
+            Column {
+                TabRow(selectedTabIndex = state) {
+                    titles.forEachIndexed { index, title ->
+                        Tab(
+                            text = {
+                                Text(text = title)
+                            },
+                            selected = state == index,
+                            onClick = {
+                                state = index
+                            }
+                        )
                     }
-                },
-            )
+                }
+                if (state == 0) {
+                    SignIn(
+                        authState = authState,
+                        credentialErrorModel = credentialErrorModel,
+                        onLoginChange = authViewModel::updateLogin,
+                        onPasswordChange = authViewModel::updatePassword,
+                        onSignInClick = {
+                            if (isSignInEnable(authState)) {
+                                credentialViewModel.signIn(authState.login, authState.password)
+                            } else {
+                                authViewModel.highlightInputs()
+                            }
+                        },
+                    )
+                } else {
+                    SignUp(
+                        authState = authState,
+                        credentialErrorModel = credentialErrorModel,
+                        onNameChange = authViewModel::updateName,
+                        onSurnameChange = authViewModel::updateSurname,
+                        onBirthdateChange = authViewModel::updateBirthdate,
+                        onNationalityChange = authViewModel::updateNationality,
+                        onPassportNumberChange = authViewModel::updatePassportNumber,
+                        onExpiresAtChange = authViewModel::updatePassportExpiresAt,
+                        onLoginChange = authViewModel::updateLogin,
+                        onPasswordChange = authViewModel::updatePassword,
+                        onAddDocumentClick = onAddDocumentClick,
+                        onSignUpClick = {
+                            if (isSignUpEnable(authState)) {
+                                credentialViewModel.signUp(authState.login, authState.password)
+                                    .invokeOnCompletion { profileViewModel.insertPerson(authState) }
+                            } else {
+                                authViewModel.highlightInputs()
+                            }
+                        },
+                    )
+                }
+            }
         }
     }
 }
@@ -107,6 +118,7 @@ fun AuthScreen(
 @Composable
 private fun SignIn(
     authState: AuthModel,
+    credentialErrorModel: CredentialErrorModel,
     onLoginChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onSignInClick: () -> Unit,
@@ -123,6 +135,9 @@ private fun SignIn(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        if (credentialErrorModel.notFound) {
+            ErrorText(text = stringResource(id = R.string.user_not_found))
+        }
         Input(
             modifier = Modifier.fillMaxWidth(),
             text = authState.login,
@@ -158,6 +173,7 @@ private fun SignIn(
 @Composable
 private fun SignUp(
     authState: AuthModel,
+    credentialErrorModel: CredentialErrorModel,
     onNameChange: (String) -> Unit,
     onSurnameChange: (String) -> Unit,
     onBirthdateChange: (LocalDate) -> Unit,
@@ -184,6 +200,11 @@ private fun SignUp(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        item {
+            if (credentialErrorModel.alreadyExists) {
+                ErrorText(text = stringResource(id = R.string.user_already_exists))
+            }
+        }
         item {
             Input(
                 modifier = Modifier.fillMaxWidth(),
