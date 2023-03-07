@@ -31,8 +31,8 @@ interface HotelDao : CrudDao<HotelEntity> {
         """
             SELECT *
             FROM $HOTEL_TABLE
-            WHERE instr(address, :country) AND
-                  instr(address, :city) AND
+            WHERE instr(lower(address), lower(:country)) AND
+                  instr(lower(address), lower(:city)) AND
                   price_per_night >= :minPrice AND
                   price_per_night <= :maxPrice AND
                   km_from_center <= :maxDistance AND

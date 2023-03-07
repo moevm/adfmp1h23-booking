@@ -1,10 +1,16 @@
 package com.etu.booking.viewmodel
 
+import android.util.Log
+import com.etu.booking.data.entity.HistoryEntity
+import com.etu.booking.data.repository.HistoryRepository
 import com.etu.booking.data.repository.HotelRepository
 import com.etu.booking.data.repository.LocationRepository
 import com.etu.booking.mapper.toCardModel
+import com.etu.booking.mapper.toHistoryEntity
 import com.etu.booking.mapper.toModel
+import com.etu.booking.model.BookingHotelModel
 import com.etu.booking.model.BookingSearchModel
+import com.etu.booking.model.BookingStatus.BOOKED
 import com.etu.booking.model.HotelCardModel
 import com.etu.booking.model.LocationModel
 import com.etu.booking.model.filter.BookingSearchFilter
@@ -16,13 +22,14 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
+import java.time.Period
 import java.time.format.DateTimeFormatter
 import java.util.*
-import kotlin.random.Random
 
 class BookingSearchViewModel(
     private val hotelRepository: HotelRepository,
     private val locationRepository: LocationRepository,
+    private val historyRepository: HistoryRepository,
 ) : ViewModelWithLoading() {
 
     private val _booking = MutableStateFlow(BookingSearchModel())
@@ -151,7 +158,7 @@ class BookingSearchViewModel(
             .firstOrNull()
             ?.map { it.toCardModel() }
             ?.applyFilter(_filter.value) ?: emptyList()
-        }  // TODO: change to a repository call
+        }
     }
 
     private var dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -167,7 +174,42 @@ class BookingSearchViewModel(
     }
 
     fun book(id: UUID) = launchWithLoading {
-        _isSuccessfullyBooked.update { Random.nextBoolean() } // TODO: change to a repository call
+        _isSuccessfullyBooked.update {
+            try {
+                bookHotel(id)
+                true
+            } catch(ex: Exception) {
+                Log.e("blz", "${ex.message}")
+                false
+            }
+        }
+    }
+
+    private suspend fun bookHotel(id: UUID) {
+        val hotel = hotelRepository.findById(id.toString()).firstOrNull()
+        val history = BookingHotelModel(
+            hotelId = id,
+            personId = UUID.fromString("f02cc00b-9127-4214-9450-b561615b7511"),
+            checkIn = booking.value.checkIn!!,
+            checkOut = booking.value.checkOut!!,
+            fullPrice = Period.between(booking.value.checkIn, booking.value.checkOut).plusDays(1).days * hotel!!.pricePerNight,
+            currency = hotel.currency,
+            status = BOOKED,
+        ).toHistoryEntity()
+        assertNoDuplicateHistory(history = history)
+        historyRepository.insert(history)
+    }
+
+    private fun assertNoDuplicateHistory(history: HistoryEntity) = history.let {
+        if (historyRepository.existByHotelIdAndPersonIdAndDates(
+                hotelId = it.hotelId,
+                personId = it.personId,
+                checkIn = it.checkIn,
+                checkOut = it.checkOut,
+            )
+        ) {
+            throw IllegalAccessException("Duplicate history exception")
+        }
     }
 
     fun nextPriceSorting(bookingSearchModel: BookingSearchModel) = launchWithLoading {

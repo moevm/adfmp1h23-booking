@@ -31,8 +31,8 @@ interface LocationDao : CrudDao<LocationEntity> {
         """
             SELECT *
             FROM $LOCATION_TABLE
-            WHERE instr(country, :country) AND
-                  instr(city, :city)
+            WHERE instr(lower(country), lower(:country)) AND
+                  instr(lower(city), lower(:city))
         """
     )
     fun findAllByFilters(

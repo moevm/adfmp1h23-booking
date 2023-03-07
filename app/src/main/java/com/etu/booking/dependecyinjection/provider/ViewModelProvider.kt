@@ -17,6 +17,7 @@ object ViewModelProvider {
         initializer { AuthViewModel() }
         initializer {
             BookingSearchViewModel(
+                historyRepository = bookingApplication().repositoryContext.historyRepository,
                 hotelRepository = bookingApplication().repositoryContext.hotelRepository,
                 locationRepository = bookingApplication().repositoryContext.locationRepository,
             )
@@ -25,6 +26,7 @@ object ViewModelProvider {
         initializer {
             HistoryViewModel(
                 hotelRepository = bookingApplication().repositoryContext.hotelRepository,
+                historyRepository = bookingApplication().repositoryContext.historyRepository,
             )
         }
         initializer {
