@@ -81,7 +81,6 @@ fun CameraScreen(
         CameraView(
             success = success,
             onImageCaptured = { uri, fromGallery ->
-                // TODO send picture to back
                 if (fromGallery) {
                     val outputDirectory = context.getOutputDirectory()
                     val photoFile = createFile(outputDirectory, FILENAME, PHOTO_EXTENSION)
