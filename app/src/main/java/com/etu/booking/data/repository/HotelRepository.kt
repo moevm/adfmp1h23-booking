@@ -1,5 +1,6 @@
 package com.etu.booking.data.repository
 
+import com.etu.booking.data.entity.FacilityEntity
 import com.etu.booking.data.entity.HotelEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,4 +17,6 @@ interface HotelRepository : CrudRepository<HotelEntity, String> {
         maxDistance: Int,
         guestCount: Int,
     ): Flow<List<HotelEntity>>
+
+    fun findExtendedById(id: String): Flow<Map<HotelEntity, List<FacilityEntity>>>
 }

@@ -11,6 +11,7 @@ import com.etu.booking.data.constant.BOOKING_DATABASE_NAME
 import com.etu.booking.data.dao.HistoryDao
 import com.etu.booking.data.dao.HotelDao
 import com.etu.booking.data.dao.LocationDao
+import com.etu.booking.data.entity.FacilityEntity
 import com.etu.booking.data.entity.HistoryEntity
 import com.etu.booking.data.entity.HotelEntity
 import com.etu.booking.data.entity.LocationEntity
@@ -22,8 +23,9 @@ import com.etu.booking.data.entity.PersonEntity
         PersonEntity::class,
         LocationEntity::class,
         HistoryEntity::class,
+        FacilityEntity::class,
     ],
-    version = 5,
+    version = 6,
 )
 abstract class BookingDatabase : RoomDatabase() {
 
@@ -38,6 +40,7 @@ abstract class BookingDatabase : RoomDatabase() {
         private const val MIGRATION_FILENAME_2_3 = "V2_add_people.sql"
         private const val MIGRATION_FILENAME_3_4 = "V3_add_locations.sql"
         private const val MIGRATION_FILENAME_4_5 = "V4_add_histories.sql"
+        private const val MIGRATION_FILENAME_5_6 = "V5_add_facilities.sql"
 
         @Volatile
         private var INSTANCE: BookingDatabase? = null
@@ -55,6 +58,7 @@ abstract class BookingDatabase : RoomDatabase() {
                     getMigration(context, 2, 3, MIGRATION_FILENAME_2_3),
                     getMigration(context, 3, 4, MIGRATION_FILENAME_3_4),
                     getMigration(context, 4, 5, MIGRATION_FILENAME_4_5),
+                    getMigration(context, 5, 6, MIGRATION_FILENAME_5_6),
                 )
                 .build()
                 .also { INSTANCE = it }

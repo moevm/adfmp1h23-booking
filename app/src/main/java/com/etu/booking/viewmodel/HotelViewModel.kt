@@ -19,8 +19,8 @@ class HotelViewModel(
 
     fun updateHotel(hotelId: UUID) = launchWithLoading {
         _hotel.update {
-            hotelRepository.findById(hotelId.toString())
-                .firstOrNull()?.toModel()
+            hotelRepository.findExtendedById(hotelId.toString())
+                .firstOrNull()?.map { it.key.toModel(it.value) }?.firstOrNull()
         }
     }
 }

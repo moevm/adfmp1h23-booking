@@ -26,6 +26,8 @@ class DefaultHotelRepository(
         guestCount = guestCount,
     )
 
+    override fun findExtendedById(id: String) = hotelDao.findExtendedById(id = id)
+
     override suspend fun insert(entity: HotelEntity) = hotelDao.insert(entity)
 
     override suspend fun update(entity: HotelEntity) = hotelDao.update(entity)

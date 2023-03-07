@@ -8,6 +8,7 @@ import java.util.*
 
 @Entity(tableName = HOTEL_TABLE)
 data class HotelEntity(
+
     @PrimaryKey
     val id: String,
 
@@ -19,6 +20,8 @@ data class HotelEntity(
 
     val score: Int,
 
+    val image: Int,
+
     @ColumnInfo("price_per_night")
     val pricePerNight: Int,
 
@@ -29,5 +32,4 @@ data class HotelEntity(
 
     @ColumnInfo("available_seats_count")
     val availableSeatsCount: Int,
-//    val facilities: List<String>,
 )
