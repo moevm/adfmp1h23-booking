@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.etu.booking.R
+import com.etu.booking.ui.compose.component.NothingToDisplay
 import com.etu.booking.ui.compose.component.PushButton
 import com.etu.booking.utils.getOutputDirectory
 import com.etu.booking.viewmodel.DocumentViewModel
@@ -51,16 +52,20 @@ fun DocumentScreen(documentViewModel: DocumentViewModel) {
             }
         )
     }
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxSize(),
-        state = state,
-        content = {
-            items(getAllPhotos(context)) {
-                ImageCard(file = it)
+    val allPhotos = getAllPhotos(context)
+
+    NothingToDisplay(enable = allPhotos.isEmpty()) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize(),
+            state = state,
+            content = {
+                items(allPhotos) {
+                    ImageCard(file = it)
+                }
             }
-        }
-    )
+        )
+    }
 }
 
 fun getAllPhotos(context: Context): List<String> = context
