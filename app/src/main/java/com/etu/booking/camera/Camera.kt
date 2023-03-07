@@ -12,7 +12,7 @@ import com.etu.booking.utils.createFile
 import com.etu.booking.utils.getOutputDirectory
 import java.util.concurrent.Executors
 
-const val FILENAME = "yyyy-MM-dd-HH-mm-ss-SSS"
+const val FILENAME = "yyyy-MM-dd"
 const val PHOTO_EXTENSION = ".jpg"
 
 fun ImageCapture.takePicture(

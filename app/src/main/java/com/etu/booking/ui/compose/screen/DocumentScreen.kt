@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -71,15 +72,15 @@ private fun ImageCard(file: String) {
         modifier = Modifier.padding(4.dp)
     ) {
         Column(
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceBetween,
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AsyncImage(
                 model = file,
                 contentDescription = "",
                 modifier = Modifier.padding(10.dp),
             )
-            Text(text = "Name: Passport")
-            Text(text = "Uploaded: 01.01.2023")
+            Text(text = "Uploaded: ${file.split("/").last().substring(0, 10)}")
         }
     }
 }
