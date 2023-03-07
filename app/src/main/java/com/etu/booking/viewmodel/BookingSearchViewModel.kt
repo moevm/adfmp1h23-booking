@@ -5,6 +5,7 @@ import com.etu.booking.data.entity.HistoryEntity
 import com.etu.booking.data.repository.HistoryRepository
 import com.etu.booking.data.repository.HotelRepository
 import com.etu.booking.data.repository.LocationRepository
+import com.etu.booking.dependecyinjection.provider.CredentialProvider.getId
 import com.etu.booking.mapper.toCardModel
 import com.etu.booking.mapper.toHistoryEntity
 import com.etu.booking.mapper.toModel
@@ -185,11 +186,11 @@ class BookingSearchViewModel(
         }
     }
 
-    private suspend fun bookHotel(id: UUID) {
+    private suspend fun bookHotel(id: UUID) = getId()?.let {
         val hotel = hotelRepository.findById(id.toString()).firstOrNull()
         val history = BookingHotelModel(
             hotelId = id,
-            personId = UUID.fromString("f02cc00b-9127-4214-9450-b561615b7511"),
+            personId = it,
             checkIn = booking.value.checkIn!!,
             checkOut = booking.value.checkOut!!,
             fullPrice = Period.between(booking.value.checkIn, booking.value.checkOut).plusDays(1).days * hotel!!.pricePerNight,

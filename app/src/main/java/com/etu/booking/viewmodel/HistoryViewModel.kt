@@ -2,6 +2,7 @@ package com.etu.booking.viewmodel
 
 import com.etu.booking.data.repository.HistoryRepository
 import com.etu.booking.data.repository.HotelRepository
+import com.etu.booking.dependecyinjection.provider.CredentialProvider.getId
 import com.etu.booking.mapper.toModel
 import com.etu.booking.model.BookingStatus
 import com.etu.booking.model.HistoryHotelModel
@@ -28,13 +29,13 @@ class HistoryViewModel(
 
     fun updateHotels() = launchWithLoading {
         _hotels.update {
-            historyRepository.findAllByPersonId("f02cc00b-9127-4214-9450-b561615b7511")
+            getId()?.let { historyRepository.findAllByPersonId(it.toString())
                 .firstOrNull()
                 ?.map {
                     val hotel = hotelRepository.findById(it.hotelId).firstOrNull()
                     it.toModel(name = hotel?.name ?: "", address = hotel?.address ?: "")
                 }
-                ?.applyFilter(_filter.value) ?: emptyList()
+                ?.applyFilter(_filter.value) } ?: emptyList()
         }
     }
 

@@ -1,9 +1,6 @@
 package com.etu.booking.model.default
 
 import com.etu.booking.R
-import com.etu.booking.model.PersonModel
-import java.time.LocalDate
-import java.util.*
 
 object DefaultModels {
 
@@ -27,7 +24,6 @@ object DefaultModels {
 
     const val DEFAULT_AVATAR: Int = R.drawable.default_avatar
 
-    val ADMIN_ID = UUID.fromString("9ed12740-a6ab-46ea-b04a-8986c68278aa")
     const val ADMIN_LOGIN = "admin"
     const val ADMIN_PASSWORD = "adminadmin"
 }
