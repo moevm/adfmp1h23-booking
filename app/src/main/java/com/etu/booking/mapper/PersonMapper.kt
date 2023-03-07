@@ -10,8 +10,6 @@ import java.util.*
 fun PersonEntity.toModel() =
     PersonModel(
         id = UUID.fromString(id),
-        login = login,
-        password = password,
         name = name,
         surname = surname,
         birthdate = LocalDate.parse(birthdate, dateFormat),
@@ -26,8 +24,6 @@ fun PersonEntity.toModel() =
 fun PersonModel.toEntity() =
     PersonEntity(
         id = id.toString(),
-        login = login,
-        password = password,
         name = name,
         surname = surname,
         birthdate = dateFormat.format(birthdate),

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.etu.booking.constant.BOOKING_DATABASE_NAME
 import com.etu.booking.constant.BOOKING_LOG_TAG
@@ -30,7 +29,7 @@ import com.etu.booking.data.entity.PersonEntity
         FacilityEntity::class,
         CredentialEntity::class,
     ],
-    version = 7,
+    version = 1,
 )
 abstract class BookingDatabase : RoomDatabase() {
 
@@ -42,12 +41,14 @@ abstract class BookingDatabase : RoomDatabase() {
 
     companion object {
         private const val MIGRATION_PATH = "database/migration/"
-        private const val MIGRATION_FILENAME_1_2 = "V1_add_hotels.sql"
-        private const val MIGRATION_FILENAME_2_3 = "V2_add_people.sql"
-        private const val MIGRATION_FILENAME_3_4 = "V3_add_locations.sql"
-        private const val MIGRATION_FILENAME_4_5 = "V4_add_histories.sql"
-        private const val MIGRATION_FILENAME_5_6 = "V5_add_facilities.sql"
-        private const val MIGRATION_FILENAME_6_7 = "V6_add_credentials.sql"
+        private val MIGRATIONS = listOf(
+            "V1_add_hotels.sql",
+            "V2_add_people.sql",
+            "V3_add_locations.sql",
+            "V4_add_histories.sql",
+            "V5_add_facilities.sql",
+            "V6_add_credentials.sql",
+        )
 
         @Volatile
         private var INSTANCE: BookingDatabase? = null
@@ -60,29 +61,31 @@ abstract class BookingDatabase : RoomDatabase() {
             )
                 .allowMainThreadQueries()
                 .fallbackToDestructiveMigrationOnDowngrade()
-                .addMigrations(
-                    getMigration(context, 1, 2, MIGRATION_FILENAME_1_2),
-                    getMigration(context, 2, 3, MIGRATION_FILENAME_2_3),
-                    getMigration(context, 3, 4, MIGRATION_FILENAME_3_4),
-                    getMigration(context, 4, 5, MIGRATION_FILENAME_4_5),
-                    getMigration(context, 5, 6, MIGRATION_FILENAME_5_6),
-                    getMigration(context, 6, 7, MIGRATION_FILENAME_6_7),
+                .fallbackToDestructiveMigration()
+                .addCallback(
+                    getPrePopulatedCallbackAfterFirstDatabaseCreating(
+                        context = context,
+                        fileNames = MIGRATIONS
+                    )
                 )
                 .build()
                 .also { INSTANCE = it }
         }
 
-        private fun getMigration(
+        private fun getPrePopulatedCallbackAfterFirstDatabaseCreating(
             context: Context,
-            startVersion: Int,
-            endVersion: Int,
-            migrationName: String,
-        ) = Migration(startVersion, endVersion) {
-            val sqlQuery = context.getAssetsFileAsString(fileName = migrationName)
-            Log.d(BOOKING_LOG_TAG, sqlQuery)
+            fileNames: List<String>,
+        ): Callback = object : Callback() {
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
 
-            Log.i(BOOKING_LOG_TAG, "Migration from $startVersion to $endVersion started")
-            it.executeSqlWithTransaction(sqlQuery)
+                fileNames.forEach { filename ->
+                    val sqlQuery = context.getAssetsFileAsString(fileName = filename)
+                    Log.i(BOOKING_LOG_TAG, "Migration started for file = $filename")
+                    Log.d(BOOKING_LOG_TAG, sqlQuery)
+                    db.executeSqlWithTransaction(sqlQuery)
+                }
+            }
         }
 
         private fun Context.getAssetsFileAsString(fileName: String): String =
