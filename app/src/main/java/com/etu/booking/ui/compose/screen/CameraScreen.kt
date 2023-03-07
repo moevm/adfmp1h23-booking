@@ -17,7 +17,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -29,8 +28,8 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.sharp.Menu
-import androidx.compose.material.icons.twotone.AddCircle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -68,7 +67,7 @@ import kotlin.coroutines.suspendCoroutine
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CameraScreen(
-    comeback: () -> Unit
+    comeback: () -> Unit,
 ) {
     val context = LocalContext.current
     val success = remember { mutableStateOf(false) }
@@ -143,7 +142,7 @@ private fun CameraPreviewView(
     imageCapture: ImageCapture,
     lensFacing: Int = CameraSelector.LENS_FACING_BACK,
     comeback: () -> Unit,
-    cameraUIAction: (CameraUIAction) -> Unit
+    cameraUIAction: (CameraUIAction) -> Unit,
 ) {
 
     val context = LocalContext.current
@@ -198,7 +197,7 @@ suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutin
 
 fun getOutputFileOptions(
     lensFacing: Int,
-    photoFile: File
+    photoFile: File,
 ): ImageCapture.OutputFileOptions {
 
     val metadata = ImageCapture.Metadata().apply {
@@ -213,41 +212,32 @@ fun getOutputFileOptions(
 @Composable
 fun CameraControls(cameraUIAction: (CameraUIAction) -> Unit) {
 
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Black)
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically
+            .padding(16.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            horizontalAlignment = Alignment.End
-        ) {
-            CameraControl(
-                imageVector = Icons.TwoTone.AddCircle,
-                contentDescId = R.string.take_shot,
-                modifier = Modifier
-                    .size(64.dp)
-                    .padding(1.dp)
-                    .border(1.dp, Color.White, CircleShape),
-                onClick = { cameraUIAction(CameraUIAction.OnCameraClick) }
-            )
-        }
-        Column(
-            modifier = Modifier.fillMaxWidth(0.5f),
-            horizontalAlignment = Alignment.End
-        ) {
-            CameraControl(
-                Icons.Sharp.Menu,
-                R.string.browse,
-                modifier = Modifier
-                    .size(64.dp)
-                    .padding(start = 20.dp),
-                onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
-            )
-        }
+        CameraControl(
+            imageVector = Icons.Filled.AddCircle,
+            contentDescId = R.string.take_shot,
+            modifier = Modifier
+                .size(64.dp)
+                .padding(1.dp)
+                .border(1.dp, Color.White, CircleShape)
+                .align(Alignment.BottomCenter),
+            onClick = { cameraUIAction(CameraUIAction.OnCameraClick) }
+        )
+
+        CameraControl(
+            Icons.Sharp.Menu,
+            R.string.browse,
+            modifier = Modifier
+                .size(64.dp)
+                .padding(start = 20.dp)
+                .align(Alignment.BottomEnd),
+            onClick = { cameraUIAction(CameraUIAction.OnGalleryViewClick) }
+        )
     }
 }
 
@@ -256,20 +246,19 @@ fun CameraControl(
     imageVector: ImageVector,
     contentDescId: Int,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     IconButton(
         onClick = onClick,
         modifier = modifier
     ) {
         Icon(
-            imageVector,
+            imageVector = imageVector,
             contentDescription = stringResource(id = contentDescId),
             modifier = modifier,
             tint = Color.White
         )
     }
-
 }
 
 @ExperimentalPermissionsApi
@@ -278,7 +267,7 @@ fun Permission(
     permission: String = Manifest.permission.CAMERA,
     rationaleId: Int,
     comeback: () -> Unit,
-    content: @Composable () -> Unit = { }
+    content: @Composable () -> Unit = { },
 ) {
     val permissionState = rememberPermissionState(permission)
     PermissionRequired(
@@ -305,7 +294,7 @@ fun Alert(
     title: String,
     textId: Int,
     comeback: () -> Unit,
-    onRequestPermission: () -> Unit
+    onRequestPermission: () -> Unit,
 ) {
     AlertDialog(
         onDismissRequest = comeback,
