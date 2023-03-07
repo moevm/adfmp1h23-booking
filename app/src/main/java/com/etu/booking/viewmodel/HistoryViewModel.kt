@@ -1,10 +1,10 @@
 package com.etu.booking.viewmodel
 
+import com.etu.booking.data.repository.HistoryRepository
 import com.etu.booking.data.repository.HotelRepository
 import com.etu.booking.mapper.toModel
 import com.etu.booking.model.BookingStatus
 import com.etu.booking.model.HistoryHotelModel
-import com.etu.booking.model.default.DefaultModels
 import com.etu.booking.model.filter.HistoryFilter
 import com.etu.booking.utils.compareBy
 import com.etu.booking.utils.getEnumIgnoreCase
@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 
 class HistoryViewModel(
+    private val historyRepository: HistoryRepository,
     private val hotelRepository: HotelRepository,
 ) : ViewModelWithLoading() {
 
@@ -26,7 +27,15 @@ class HistoryViewModel(
     val filter = _filter.asStateFlow()
 
     fun updateHotels() = launchWithLoading {
-        _hotels.update { DefaultModels.HISTORY_HOTELS_MODELS.applyFilter(_filter.value) } // TODO: change to a repository call
+        _hotels.update {
+            historyRepository.findAllByPersonId("f02cc00b-9127-4214-9450-b561615b7511")
+                .firstOrNull()
+                ?.map {
+                    val hotel = hotelRepository.findById(it.hotelId).firstOrNull()
+                    it.toModel(name = hotel?.name ?: "", address = hotel?.address ?: "")
+                }
+                ?.applyFilter(_filter.value) ?: emptyList()
+        }
     }
 
     private fun List<HistoryHotelModel>.applyFilter(
@@ -49,6 +58,8 @@ class HistoryViewModel(
         updateHotels().join()
     }
 
+
+    // ToDo check what wrong
     fun updateBookingStatusSorting(bookingStatus: String) = launchWithLoading {
         _filter.update {
             val newValue = getEnumIgnoreCase<BookingStatus>(bookingStatus)
