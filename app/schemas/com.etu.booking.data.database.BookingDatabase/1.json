@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d6ab05a9e1c025f64bc09e02fed0ff05",
+    "identityHash": "52c04749238e593929f1de138b8cc6ea",
     "entities": [
       {
         "tableName": "hotel",
@@ -80,23 +80,11 @@
       },
       {
         "tableName": "person",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `login` TEXT NOT NULL, `password` TEXT NOT NULL, `name` TEXT NOT NULL, `surname` TEXT NOT NULL, `birthdate` TEXT NOT NULL, `see_document_warning` INTEGER NOT NULL, `nationality` TEXT NOT NULL, `number` TEXT NOT NULL, `expires_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `surname` TEXT NOT NULL, `birthdate` TEXT NOT NULL, `see_document_warning` INTEGER NOT NULL, `nationality` TEXT NOT NULL, `number` TEXT NOT NULL, `expires_at` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "login",
-            "columnName": "login",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "password",
-            "columnName": "password",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -324,7 +312,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd6ab05a9e1c025f64bc09e02fed0ff05')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '52c04749238e593929f1de138b8cc6ea')"
     ]
   }
 }

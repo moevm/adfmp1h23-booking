@@ -23,15 +23,6 @@ interface PersonDao : CrudDao<PersonEntity> {
         """
             SELECT *
             FROM $PERSON_TABLE
-            WHERE login = :login AND password = :password
-        """
-    )
-    fun findByLoginAndPassword(login: String, password: String,): Flow<PersonEntity>
-
-    @Query(
-        """
-            SELECT *
-            FROM $PERSON_TABLE
         """
     )
     fun findAll(): Flow<List<PersonEntity>>

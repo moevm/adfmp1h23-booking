@@ -11,10 +11,6 @@ data class PersonEntity(
     @PrimaryKey
     val id: String,
 
-    val login: String,
-
-    val password: String,
-
     val name: String,
 
     val surname: String,

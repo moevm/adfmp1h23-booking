@@ -8,9 +8,9 @@ data class PersonModel(
 
     val id: UUID? = null,
 
-    val login: String,
+    val login: String? = null,
 
-    val password: String,
+    val password: String? = null,
 
     val name: String,
 
