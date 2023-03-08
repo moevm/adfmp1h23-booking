@@ -32,6 +32,7 @@ import com.etu.booking.ui.compose.component.ErrorText
 import com.etu.booking.ui.compose.component.Input
 import com.etu.booking.ui.compose.component.ProgressIndicator
 import com.etu.booking.ui.compose.component.PushButton
+import com.etu.booking.ui.compose.component.SuccessAction
 import com.etu.booking.utils.authorized
 import com.etu.booking.viewmodel.AuthViewModel
 import com.etu.booking.viewmodel.CredentialViewModel
@@ -57,7 +58,9 @@ fun AuthScreen(
 
     ProgressIndicator(enable = isLoading) {
         if (credentialState.authorized()) {
-            onAuthorized()
+            SuccessAction(text = stringResource(id = R.string.successfully_logged_in)) {
+                onAuthorized()
+            }
         } else {
             Column {
                 TabRow(selectedTabIndex = state) {

@@ -80,6 +80,7 @@
     </string>
     <string name="user_already_exists">User with this login already exists</string>
     <string name="user_not_found">Invalid login or password</string>
+    <string name="successfully_logged_in">You are successfully logged in</string>
     <!--AuthorizationScreen-->
 
     <!--BookingSearchScreen-->
