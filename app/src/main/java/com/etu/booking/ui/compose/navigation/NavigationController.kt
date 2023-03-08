@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -137,11 +138,11 @@ private fun ComposableOrUnauthorizedScreen(
     viewModelHolder: ViewModelHolder,
     content: @Composable () -> Unit,
 ) {
-    val credentialState = viewModelHolder.credentialViewModel
+    val credentialState by viewModelHolder.credentialViewModel
         .credentialState
         .collectAsState()
 
-    if (credentialState.value.authorized()) {
+    if (credentialState.authorized()) {
         content()
     } else {
         UnauthorizedScreenWrapper(navController)
