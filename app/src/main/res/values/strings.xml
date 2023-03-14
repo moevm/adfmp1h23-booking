@@ -31,6 +31,10 @@
     <string name="guests">" guests"</string>
     <!--BookingListScreen-->
 
+    <!--HotelScreen-->
+    <string name="hotel_title">Hotel</string>
+    <!--HotelScreen-->
+
     <!--HotelBookScreen-->
     <string name="hotel_booking_title">Hotel Booking</string>
     <string name="successfully_booked">Your hotel has been successfully booked</string>
@@ -96,6 +100,8 @@
     <string name="guests_amount_error_message">
         Use value from 1 to 10
     </string>
+    <string name="currency">EUR</string>
+    <string name="distance">km</string>
     <!--BookingSearchScreen-->
 
     <!--DocumentScreen-->

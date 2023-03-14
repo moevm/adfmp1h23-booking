@@ -53,11 +53,14 @@ fun Input(
             placeholder = {
                 Text(
                     text = placeholder,
-                    style = TextStyle(fontSize = 18.sp, color = Color.LightGray)
+                    style = TextStyle(fontSize = 14.sp, color = Color.LightGray)
                 )
             },
             label = {
-                Text(text = placeholder)
+                Text(
+                    text = placeholder,
+                    style = TextStyle(fontSize = 14.sp, color = Color.Gray),
+                )
             }
         )
 

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,6 +18,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -26,7 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.etu.booking.R
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
@@ -41,11 +48,13 @@ import java.util.*
 
 @Composable
 fun BookingListScreen(
+    comeback: () -> Unit,
     bookingSearchViewModel: BookingSearchViewModel,
     onCardClick: (UUID) -> Unit,
 ) {
     val isLoading by bookingSearchViewModel.isLoading.collectAsState()
     val hotels by bookingSearchViewModel.hotels.collectAsState()
+    val isAdditional by bookingSearchViewModel.isAdditional.collectAsState()
     val bookingSearchModel by bookingSearchViewModel.booking.collectAsState()
     val filter by bookingSearchViewModel.filter.collectAsState()
 
@@ -58,6 +67,8 @@ fun BookingListScreen(
         isLoading = isLoading,
         hotels = hotels,
         filter = filter,
+        comeback = comeback,
+        isAdditional = isAdditional,
         onCardClick = onCardClick,
         onPriceSortingClick = { bookingSearchViewModel.nextPriceSorting(bookingSearchModel) },
         onRatingSortingClick = { bookingSearchViewModel.nextRatingSorting(bookingSearchModel) },
@@ -71,19 +82,33 @@ private fun BookingListScreen(
     isLoading: Boolean,
     hotels: List<HotelCardModel>,
     filter: BookingSearchFilter,
+    isAdditional: Boolean,
+    comeback: () -> Unit,
     onCardClick: (UUID) -> Unit,
     onPriceSortingClick: () -> Unit,
     onRatingSortingClick: () -> Unit,
     onDistanceSortingClick: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        BookingSearchTopBar(bookingSearchModel)
+        BookingSearchTopBar(comeback, bookingSearchModel)
         SearchSortButtons(
             filter = filter,
             onPriceSortingClick = onPriceSortingClick,
             onRatingSortingClick = onRatingSortingClick,
             onDistanceSortingClick = onDistanceSortingClick,
         )
+        if (isAdditional && hotels.isNotEmpty()) {
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                textAlign = TextAlign.Center,
+                text = "Found nothing on the request.\n Maybe you will like these hotels.",
+                style = TextStyle(
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp
+                )
+            )
+        }
         ProgressIndicator(enable = isLoading) {
             NothingToDisplay(enable = hotels.isEmpty()) {
                 LazyColumn {
@@ -100,26 +125,39 @@ private fun BookingListScreen(
 }
 
 @Composable
-private fun BookingSearchTopBar(bookingSearchModel: BookingSearchModel) {
+private fun BookingSearchTopBar(
+    comeback: () -> Unit,
+    bookingSearchModel: BookingSearchModel
+) {
     TopAppBar {
-        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-            val unknown = stringResource(id = R.string.unknown)
-            val comma = stringResource(id = R.string.comma_with_space_after)
-            Text(
-                text = (bookingSearchModel.location?.city ?: unknown) +
-                        comma +
-                        (bookingSearchModel.location?.country ?: unknown),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = getFormattedDateOrDefault(bookingSearchModel.checkIn, unknown) +
-                        stringResource(id = R.string.dash_with_spaces_around) +
-                        getFormattedDateOrDefault(bookingSearchModel.checkOut, unknown) +
-                        comma +
-                        (bookingSearchModel.guestsAmount ?: unknown) +
-                        stringResource(id = R.string.guests)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Button(onClick = comeback) {
+                Icon(
+                    imageVector = Icons.TwoTone.ArrowBack,
+                    contentDescription = Icons.TwoTone.ArrowBack.name,
+                )
+            }
+            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                val unknown = stringResource(id = R.string.unknown)
+                val comma = stringResource(id = R.string.comma_with_space_after)
+                Text(
+                    text = (bookingSearchModel.location?.city ?: unknown) +
+                            comma +
+                            (bookingSearchModel.location?.country ?: unknown),
+                    style = MaterialTheme.typography.h6
+                )
+                Text(
+                    text = getFormattedDateOrDefault(bookingSearchModel.checkIn, unknown) +
+                            stringResource(id = R.string.dash_with_spaces_around) +
+                            getFormattedDateOrDefault(bookingSearchModel.checkOut, unknown) +
+                            comma +
+                            (bookingSearchModel.guestsAmount ?: unknown) +
+                            stringResource(id = R.string.guests)
 
-            )
+                )
+            }
         }
     }
 }
@@ -196,6 +234,13 @@ private fun HotelCardImage(hotelCardModel: HotelCardModel) {
 private fun HotelCardDescription(hotelCardModel: HotelCardModel) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(hotelCardModel.name, style = MaterialTheme.typography.h4)
+        Text(
+            stringResource(id = R.string.address) +
+                    stringResource(id = R.string.colon_with_space_after) +
+                    hotelCardModel.address +
+                    stringResource(id = R.string.space) +
+                    stringResource(id = R.string.km)
+        )
         Text(
             stringResource(id = R.string.from_center) +
                     stringResource(id = R.string.colon_with_space_after) +
