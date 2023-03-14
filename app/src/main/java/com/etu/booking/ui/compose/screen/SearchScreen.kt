@@ -11,10 +11,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material.DropdownMenu
+import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Euro
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -263,14 +268,24 @@ private fun MinPrice(
         modifier = Modifier
             .fillMaxWidth(0.5f)
             .padding(start = 8.dp, end = 1.dp, bottom = 2.dp, top = 2.dp),
-        text = if (bookingSearchModel.minPricePerNight != null) bookingSearchModel.minPricePerNight.toString() else "",
+        text = if (bookingSearchModel.minPricePerNight != null)
+            "${bookingSearchModel.minPricePerNight}"
+        else
+            "",
         placeholder = "Min price per night",
         onChange = {
             if (it.isEmpty()) {
                 onChange(null)
-            } else if (it.last().isDigit()) {
+            } else if (it.first().isDigit()) {
                 onChange(it.toInt())
             }
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Rounded.Euro,
+                contentDescription = Icons.Rounded.Euro.name,
+                modifier = Modifier.size(18.dp),
+            )
         },
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Decimal,
@@ -288,14 +303,24 @@ private fun MaxPrice(
     Input(
         modifier = Modifier
             .padding(start = 1.dp, end = 8.dp, bottom = 2.dp, top = 2.dp),
-        text = if (bookingSearchModel.maxPricePerNight != null) bookingSearchModel.maxPricePerNight.toString() else "",
+        text = if (bookingSearchModel.maxPricePerNight != null)
+            "${bookingSearchModel.maxPricePerNight}"
+        else
+            "",
         placeholder = "Max price per night",
         onChange = {
             if (it.isEmpty()) {
                 onChange(null)
-            } else if (it.last().isDigit()) {
+            } else if (it.first().isDigit()) {
                 onChange(it.toInt())
             }
+        },
+        leadingIcon = {
+            Icon(
+                imageVector = Icons.Rounded.Euro,
+                contentDescription = Icons.Rounded.Euro.name,
+                modifier = Modifier.size(18.dp),
+            )
         },
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Decimal,
@@ -314,7 +339,7 @@ private fun MaxDistance(
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 2.dp),
         text = if (bookingSearchModel.maxDistanceToCenterInKm != null)
-            bookingSearchModel.maxDistanceToCenterInKm.toString()
+            "${bookingSearchModel.maxDistanceToCenterInKm}"
         else
             "",
         placeholder = "Max destination from center",
@@ -324,6 +349,13 @@ private fun MaxDistance(
             } else if (it.last().isDigit()) {
                 onChange(it.toInt())
             }
+        },
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.km),
+                contentDescription = "km",
+                modifier = Modifier.size(22.dp),
+            )
         },
         imeAction = ImeAction.Next,
         keyboardType = KeyboardType.Decimal,

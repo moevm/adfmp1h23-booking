@@ -100,6 +100,8 @@
     <string name="guests_amount_error_message">
         Use value from 1 to 10
     </string>
+    <string name="currency">EUR</string>
+    <string name="distance">km</string>
     <!--BookingSearchScreen-->
 
     <!--DocumentScreen-->
