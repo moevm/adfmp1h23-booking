@@ -17,7 +17,9 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,9 +29,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.etu.booking.R
 import com.etu.booking.model.HotelModel
 import com.etu.booking.ui.compose.component.NothingToDisplay
 import com.etu.booking.ui.compose.component.ProgressIndicator
@@ -40,6 +44,7 @@ import java.util.*
 fun HotelScreen(
     hotelViewModel: HotelViewModel,
     hotelId: UUID,
+    comeback: () -> Unit,
     onBookNowClick: () -> Unit,
 ) {
     val isLoading by hotelViewModel.isLoading.collectAsState()
@@ -51,7 +56,7 @@ fun HotelScreen(
 
     ProgressIndicator(enable = isLoading) {
         NothingToDisplay(enable = (hotel == null)) {
-            HotelScreen(hotel!!, onBookNowClick)
+            HotelScreen(hotel!!, comeback, onBookNowClick)
         }
     }
 }
@@ -59,12 +64,14 @@ fun HotelScreen(
 @Composable
 private fun HotelScreen(
     hotel: HotelModel,
+    comeback: () -> Unit,
     onBookNowClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxHeight(),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
+        HotelScreenTopBar(comeback = comeback)
         Banner(hotelModel = hotel)
         MainHotelInfo(
             hotelModel = hotel,
@@ -76,6 +83,29 @@ private fun HotelScreen(
     }
 }
 
+@Composable
+private fun HotelScreenTopBar(
+    comeback: () -> Unit,
+) {
+    TopAppBar {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Button(onClick = comeback) {
+                Icon(
+                    imageVector = Icons.TwoTone.ArrowBack,
+                    contentDescription = Icons.TwoTone.ArrowBack.name,
+                )
+            }
+            Column(modifier = Modifier.padding(vertical = 8.dp, horizontal = 8.dp)) {
+                Text(
+                    text = stringResource(id = R.string.hotel_title),
+                    style = MaterialTheme.typography.h6
+                )
+            }
+        }
+    }
+}
 
 @Composable
 private fun Banner(hotelModel: HotelModel) {

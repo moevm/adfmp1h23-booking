@@ -76,6 +76,7 @@ fun NavigationController(
         }
         composable(Screen.BookingList.route) {
             BookingListScreen(
+                comeback = { navController.navigateUp() },
                 bookingSearchViewModel = viewModelHolder.bookingSearchViewModel,
                 onCardClick = { hotelId ->
                     navController.navigate(Screen.Hotel.route + "/$hotelId")
@@ -100,6 +101,7 @@ fun NavigationController(
             HotelScreen(
                 hotelViewModel = viewModelHolder.hotelViewModel,
                 hotelId = hotelId,
+                comeback = { navController.navigateUp() },
                 onBookNowClick = {
                     navController.navigate(Screen.HotelBookingScreen.route + "/$hotelId")
                 },

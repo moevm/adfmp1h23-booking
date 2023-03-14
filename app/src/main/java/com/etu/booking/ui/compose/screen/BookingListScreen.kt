@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -17,6 +18,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.twotone.ArrowBack
 import androidx.compose.material.icons.twotone.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -41,6 +43,7 @@ import java.util.*
 
 @Composable
 fun BookingListScreen(
+    comeback: () -> Unit,
     bookingSearchViewModel: BookingSearchViewModel,
     onCardClick: (UUID) -> Unit,
 ) {
@@ -58,6 +61,7 @@ fun BookingListScreen(
         isLoading = isLoading,
         hotels = hotels,
         filter = filter,
+        comeback = comeback,
         onCardClick = onCardClick,
         onPriceSortingClick = { bookingSearchViewModel.nextPriceSorting(bookingSearchModel) },
         onRatingSortingClick = { bookingSearchViewModel.nextRatingSorting(bookingSearchModel) },
@@ -71,13 +75,14 @@ private fun BookingListScreen(
     isLoading: Boolean,
     hotels: List<HotelCardModel>,
     filter: BookingSearchFilter,
+    comeback: () -> Unit,
     onCardClick: (UUID) -> Unit,
     onPriceSortingClick: () -> Unit,
     onRatingSortingClick: () -> Unit,
     onDistanceSortingClick: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
-        BookingSearchTopBar(bookingSearchModel)
+        BookingSearchTopBar(comeback, bookingSearchModel)
         SearchSortButtons(
             filter = filter,
             onPriceSortingClick = onPriceSortingClick,
@@ -100,26 +105,39 @@ private fun BookingListScreen(
 }
 
 @Composable
-private fun BookingSearchTopBar(bookingSearchModel: BookingSearchModel) {
+private fun BookingSearchTopBar(
+    comeback: () -> Unit,
+    bookingSearchModel: BookingSearchModel
+) {
     TopAppBar {
-        Column(modifier = Modifier.padding(horizontal = 8.dp)) {
-            val unknown = stringResource(id = R.string.unknown)
-            val comma = stringResource(id = R.string.comma_with_space_after)
-            Text(
-                text = (bookingSearchModel.location?.city ?: unknown) +
-                        comma +
-                        (bookingSearchModel.location?.country ?: unknown),
-                style = MaterialTheme.typography.h6
-            )
-            Text(
-                text = getFormattedDateOrDefault(bookingSearchModel.checkIn, unknown) +
-                        stringResource(id = R.string.dash_with_spaces_around) +
-                        getFormattedDateOrDefault(bookingSearchModel.checkOut, unknown) +
-                        comma +
-                        (bookingSearchModel.guestsAmount ?: unknown) +
-                        stringResource(id = R.string.guests)
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Button(onClick = comeback) {
+                Icon(
+                    imageVector = Icons.TwoTone.ArrowBack,
+                    contentDescription = Icons.TwoTone.ArrowBack.name,
+                )
+            }
+            Column(modifier = Modifier.padding(horizontal = 8.dp)) {
+                val unknown = stringResource(id = R.string.unknown)
+                val comma = stringResource(id = R.string.comma_with_space_after)
+                Text(
+                    text = (bookingSearchModel.location?.city ?: unknown) +
+                            comma +
+                            (bookingSearchModel.location?.country ?: unknown),
+                    style = MaterialTheme.typography.h6
+                )
+                Text(
+                    text = getFormattedDateOrDefault(bookingSearchModel.checkIn, unknown) +
+                            stringResource(id = R.string.dash_with_spaces_around) +
+                            getFormattedDateOrDefault(bookingSearchModel.checkOut, unknown) +
+                            comma +
+                            (bookingSearchModel.guestsAmount ?: unknown) +
+                            stringResource(id = R.string.guests)
 
-            )
+                )
+            }
         }
     }
 }
