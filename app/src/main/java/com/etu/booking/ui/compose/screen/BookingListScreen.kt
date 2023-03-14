@@ -28,7 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.etu.booking.R
 import com.etu.booking.model.BookingSearchModel
 import com.etu.booking.model.HotelCardModel
@@ -49,6 +54,7 @@ fun BookingListScreen(
 ) {
     val isLoading by bookingSearchViewModel.isLoading.collectAsState()
     val hotels by bookingSearchViewModel.hotels.collectAsState()
+    val isAdditional by bookingSearchViewModel.isAdditional.collectAsState()
     val bookingSearchModel by bookingSearchViewModel.booking.collectAsState()
     val filter by bookingSearchViewModel.filter.collectAsState()
 
@@ -62,6 +68,7 @@ fun BookingListScreen(
         hotels = hotels,
         filter = filter,
         comeback = comeback,
+        isAdditional = isAdditional,
         onCardClick = onCardClick,
         onPriceSortingClick = { bookingSearchViewModel.nextPriceSorting(bookingSearchModel) },
         onRatingSortingClick = { bookingSearchViewModel.nextRatingSorting(bookingSearchModel) },
@@ -75,6 +82,7 @@ private fun BookingListScreen(
     isLoading: Boolean,
     hotels: List<HotelCardModel>,
     filter: BookingSearchFilter,
+    isAdditional: Boolean,
     comeback: () -> Unit,
     onCardClick: (UUID) -> Unit,
     onPriceSortingClick: () -> Unit,
@@ -89,6 +97,18 @@ private fun BookingListScreen(
             onRatingSortingClick = onRatingSortingClick,
             onDistanceSortingClick = onDistanceSortingClick,
         )
+        if (isAdditional && hotels.isNotEmpty()) {
+            Text(
+                modifier = Modifier.fillMaxWidth().padding(start = 8.dp),
+                textAlign = TextAlign.Center,
+                text = "Found nothing on the request.\n Maybe you will like these hotels.",
+                style = TextStyle(
+                    fontFamily = FontFamily.Default,
+                    fontWeight = FontWeight.Normal,
+                    fontSize = 18.sp
+                )
+            )
+        }
         ProgressIndicator(enable = isLoading) {
             NothingToDisplay(enable = hotels.isEmpty()) {
                 LazyColumn {
@@ -214,6 +234,13 @@ private fun HotelCardImage(hotelCardModel: HotelCardModel) {
 private fun HotelCardDescription(hotelCardModel: HotelCardModel) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(hotelCardModel.name, style = MaterialTheme.typography.h4)
+        Text(
+            stringResource(id = R.string.address) +
+                    stringResource(id = R.string.colon_with_space_after) +
+                    hotelCardModel.address +
+                    stringResource(id = R.string.space) +
+                    stringResource(id = R.string.km)
+        )
         Text(
             stringResource(id = R.string.from_center) +
                     stringResource(id = R.string.colon_with_space_after) +

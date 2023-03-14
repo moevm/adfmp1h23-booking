@@ -28,6 +28,7 @@ fun HotelEntity.toCardModel() =
         id = UUID.fromString(id),
         imageResource = IMAGES[image] ?: DEFAULT_AVATAR,
         name = name,
+        address = address,
         score = score,
         pricePerNight = pricePerNight,
         currency = currency,

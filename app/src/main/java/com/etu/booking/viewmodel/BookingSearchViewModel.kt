@@ -36,12 +36,14 @@ class BookingSearchViewModel(
     private val _booking = MutableStateFlow(BookingSearchModel())
     private val _filter = MutableStateFlow(BookingSearchFilter())
     private val _hotels = MutableStateFlow(emptyList<HotelCardModel>())
+    private val _isAdditional = MutableStateFlow(false)
     private val _locations = MutableStateFlow(emptyList<LocationModel>())
     private val _isSuccessfullyBooked = MutableStateFlow(false)
 
     val booking = _booking.asStateFlow()
     val filter = _filter.asStateFlow()
     val hotels = _hotels.asStateFlow()
+    val isAdditional = _isAdditional.asStateFlow()
     val locations = _locations.asStateFlow()
     val isSuccessfullyBooked = _isSuccessfullyBooked.asStateFlow()
 
@@ -55,7 +57,8 @@ class BookingSearchViewModel(
                     country = location.country,
                 )
                     .firstOrNull()
-                    ?.map { it.toModel() } ?: emptyList()
+                    ?.map { it.toModel() }
+                    ?: emptyList()
             }
         }
         _booking.update {
@@ -145,9 +148,34 @@ class BookingSearchViewModel(
     }
 
     fun updateHotels(bookingSearchModel: BookingSearchModel) = launchWithLoading {
+        val result = updateHotelList(bookingSearchModel)
         _hotels.update {
-            hotelRepository.findAllByFilters(
-                city = bookingSearchModel.location?.city ?: "",
+            result.second
+        }
+        _isAdditional.update {
+            result.first
+        }
+    }
+
+    private suspend fun updateHotelList(
+        bookingSearchModel: BookingSearchModel,
+    ): Pair<Boolean, List<HotelCardModel>> {
+        var isAdditional = false
+        var hotels = hotelRepository.findAllByFilters(
+            city = bookingSearchModel.location?.city ?: "",
+            country = bookingSearchModel.location?.country ?: "",
+            start = bookingSearchModel.checkIn?.let { dateFormat.format(it) } ?: "",
+            end = bookingSearchModel.checkOut?.let { dateFormat.format(it) } ?: "",
+            minPrice = bookingSearchModel.minPricePerNight ?: Int.MIN_VALUE,
+            maxPrice = bookingSearchModel.maxPricePerNight ?: Int.MAX_VALUE,
+            maxDistance = bookingSearchModel.maxDistanceToCenterInKm ?: Int.MAX_VALUE,
+            guestCount = bookingSearchModel.guestsAmount ?: Int.MIN_VALUE,
+        ).firstOrNull()
+
+        if (hotels == null || hotels.isEmpty()) {
+            isAdditional = true
+            hotels = hotelRepository.findAllByFilters(
+                city = "",
                 country = bookingSearchModel.location?.country ?: "",
                 start = bookingSearchModel.checkIn?.let { dateFormat.format(it) } ?: "",
                 end = bookingSearchModel.checkOut?.let { dateFormat.format(it) } ?: "",
@@ -155,11 +183,28 @@ class BookingSearchViewModel(
                 maxPrice = bookingSearchModel.maxPricePerNight ?: Int.MAX_VALUE,
                 maxDistance = bookingSearchModel.maxDistanceToCenterInKm ?: Int.MAX_VALUE,
                 guestCount = bookingSearchModel.guestsAmount ?: Int.MIN_VALUE,
-            )
-            .firstOrNull()
-            ?.map { it.toCardModel() }
-            ?.applyFilter(_filter.value) ?: emptyList()
+            ).firstOrNull()
+
         }
+
+        if (hotels == null || hotels.isEmpty()) {
+            isAdditional = true
+            hotels = hotelRepository.findAllByFilters(
+                city = "",
+                country = bookingSearchModel.location?.country?.substring(0, 1) ?: "",
+                start = bookingSearchModel.checkIn?.let { dateFormat.format(it) } ?: "",
+                end = bookingSearchModel.checkOut?.let { dateFormat.format(it) } ?: "",
+                minPrice = bookingSearchModel.minPricePerNight ?: Int.MIN_VALUE,
+                maxPrice = bookingSearchModel.maxPricePerNight ?: Int.MAX_VALUE,
+                maxDistance = bookingSearchModel.maxDistanceToCenterInKm ?: Int.MAX_VALUE,
+                guestCount = bookingSearchModel.guestsAmount ?: Int.MIN_VALUE,
+            ).firstOrNull()
+        }
+
+        val result = hotels?.map { it.toCardModel() }
+            ?.applyFilter(_filter.value) ?: emptyList()
+
+        return Pair(isAdditional, result)
     }
 
     private var dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd")

@@ -12,6 +12,8 @@ data class HotelCardModel(
 
     val name: String,
 
+    val address: String,
+
     val score: Int,
 
     val kmFromCenter: Int,
